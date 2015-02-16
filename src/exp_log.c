@@ -17,15 +17,21 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <time.h>
+#include <sys/time.h>
 
 #include "exp_log.h"
 
-static void taglog() {
+static void taglog(level_t level) {
    struct timeval tm;
    char buffer[20];
+   static char *tag[] = {
+      "WARN ",
+      "INFO ",
+      "DEBUG"
+   };
    gettimeofday(&tm, NULL);
    strftime(buffer, 20, "%Y/%m/%d %H:%M:%S", localtime(&tm.tv_sec));
-   fprintf(stderr, "[%s.%06d] - ", buffer, tm.tv_usec);
+   fprintf(stderr, "%s.%06d [%s] ", buffer, tm.tv_usec, tag[level]);
 }
 
 static int warn_logger(level_t level, char *format, ...) {
@@ -33,7 +39,7 @@ static int warn_logger(level_t level, char *format, ...) {
    va_list arg;
    if(level <= warn) {
       va_start(arg, format);
-      taglog();
+      taglog(level);
       result = vfprintf(stderr, format, arg);
       va_end(arg);
    }
@@ -45,7 +51,7 @@ static int info_logger(level_t level, char *format, ...) {
    va_list arg;
    if(level <= info) {
       va_start(arg, format);
-      taglog();
+      taglog(level);
       result = vfprintf(stderr, format, arg);
       va_end(arg);
    }
@@ -57,7 +63,7 @@ static int debug_logger(level_t level, char *format, ...) {
    va_list arg;
    if(level <= debug) {
       va_start(arg, format);
-      taglog();
+      taglog(level);
       result = vfprintf(stderr, format, arg);
       va_end(arg);
    }
