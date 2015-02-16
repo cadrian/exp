@@ -14,40 +14,7 @@
   along with exp.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef __EXP_H__
-#define __EXP_H__
+#include <stdlib.h>
+#include <stdarg.h>
 
-#include "cad_shared.h"
-
-#define EXP_VERSION_MAJOR 0
-#define EXP_VERSION_MINOR 1
-
-/**
- * The boolean type.
- */
-typedef enum {
-   false=0,
-   true
-} bool_t;
-
-typedef enum {
-   sample_none=0,
-   sample_threshold=1,
-   sample_all=2
-} sample_t;
-
-typedef enum {
-   mode_undefined=0,
-   mode_hash,
-   mode_wordcount,
-   mode_daemon,
-   mode_host,
-   mode_sgraph,
-   mode_mgraph,
-   mode_hgraph,
-   mode_dgraph,
-   mode_mograph,
-   mode_ygraph
-} expmode_t;
-
-#endif /* __EXP_H__ */
+#include "exp_input.h"

@@ -21,54 +21,58 @@
 
 #include "exp.h"
 #include "exp_log.h"
+#include "exp_input.h"
+#include "exp_output.h"
 
 static level_t   verbose     = warn;
+static expmode_t mode        = mode_undefined;
+
 static sample_t  sample      = sample_none;
 static bool_t    filter      = true;
-static bool_t    wide        = false;
-static expmode_t mode        = mode_undefined;
 static char*     tick        = "#";
+static bool_t    wide        = false;
 static bool_t    fingerprint = false;
+
+static struct option long_options[] = {
+   {"verbose", no_argument, NULL, 'v'},
+
+   {"sample", no_argument, (int*)&sample, sample_threshold},
+   {"nosample", no_argument, (int*)&sample, sample_none},
+   {"allsample", no_argument, (int*)&sample, sample_all},
+
+   {"filter", no_argument, (int*)&filter, true},
+   {"nofilter", no_argument, (int*)&filter, false},
+
+   {"wide", no_argument, (int*)&wide, true},
+   {"tick", required_argument, NULL, 't'},
+   {"fingerprint", no_argument, (int*)&fingerprint, true},
+
+   {"version", no_argument, NULL, 'V'},
+
+   {"hash",      no_argument, NULL, 'x'},
+   {"wordcount", no_argument, NULL, 'w'},
+   {"daemon",    no_argument, NULL, 'D'},
+   {"host",      no_argument, NULL, 'H'},
+   {"sgraph",    no_argument, NULL, 's'},
+   {"mgraph",    no_argument, NULL, 'm'},
+   {"hgraph",    no_argument, NULL, 'h'},
+   {"dgraph",    no_argument, NULL, 'd'},
+   {"mograph",   no_argument, NULL, 'M'},
+   {"ygraph",    no_argument, NULL, 'y'},
+
+   {0,0,0,0}
+};
 
 /**
  * Returns the first non-option index
  */
 static int parse_options(int argc, char **argv) {
-   static struct option long_options[] = {
-      {"verbose", no_argument, NULL, 'v'},
-
-      {"sample", no_argument, (int*)&sample, sample_threshold},
-      {"nosample", no_argument, (int*)&sample, sample_none},
-      {"allsample", no_argument, (int*)&sample, sample_all},
-
-      {"filter", no_argument, (int*)&filter, true},
-      {"nofilter", no_argument, (int*)&filter, false},
-
-      {"wide", no_argument, (int*)&wide, true},
-      {"tick", required_argument, NULL, 't'},
-      {"fingerprint", no_argument, (int*)&fingerprint, true},
-
-      {"version", no_argument, NULL, 'V'},
-
-      {"hash",      no_argument, NULL, 'x'},
-      {"wordcount", no_argument, NULL, 'w'},
-      {"host",      no_argument, NULL, 'H'},
-      {"sgraph",    no_argument, NULL, 's'},
-      {"mgraph",    no_argument, NULL, 'm'},
-      {"hgraph",    no_argument, NULL, 'h'},
-      {"dgraph",    no_argument, NULL, 'd'},
-      {"mograph",   no_argument, NULL, 'M'},
-      {"ygraph",    no_argument, NULL, 'y'},
-
-      {0,0,0,0}
-   };
-
    int option_index = 0;
    int c;
    bool_t done = false;
 
    while (!done) {
-      c = getopt_long(argc, argv, "vt:VxwHsmhdMy", long_options, &option_index);
+      c = getopt_long(argc, argv, "vt:VxwDHsmhdMy", long_options, &option_index);
       switch(c) {
       case 0:
          /* flag was set */
@@ -97,6 +101,7 @@ static int parse_options(int argc, char **argv) {
 
       case 'x': mode = mode_hash;      break;
       case 'w': mode = mode_wordcount; break;
+      case 'D': mode = mode_daemon;    break;
       case 'H': mode = mode_host;      break;
       case 's': mode = mode_sgraph;    break;
       case 'm': mode = mode_mgraph;    break;
@@ -115,12 +120,57 @@ static int parse_options(int argc, char **argv) {
 
 int main(int argc, char **argv) {
    logger_t log;
+   input_t *input;
+   output_t *output;
    int argindex = parse_options(argc, argv);
    log = new_logger(verbose);
 
-   log(warn, "warning\n");
-   log(info, "info\n");
-   log(debug, "debug\n");
+   // log(warn, "warning\n");
+   // log(info, "info\n");
+   // log(debug, "debug\n");
+
+   input = new_input(log);
+   switch(mode) {
+   case mode_hash:
+      output = new_output_hash(log, input, filter, fingerprint);
+      break;
+   case mode_wordcount:
+      output = new_output_wordcount(log, input, filter, fingerprint);
+      break;
+   case mode_daemon:
+      output = new_output_daemon(log, input, filter, fingerprint);
+      break;
+   case mode_host:
+      output = new_output_host(log, input, filter, fingerprint);
+      break;
+   case mode_sgraph:
+      output = new_output_sgraph(log, input, tick, wide);
+      break;
+   case mode_mgraph:
+      output = new_output_mgraph(log, input, tick, wide);
+      break;
+   case mode_hgraph:
+      output = new_output_hgraph(log, input, tick, wide);
+      break;
+   case mode_dgraph:
+      output = new_output_dgraph(log, input, tick, wide);
+      break;
+   case mode_mograph:
+      output = new_output_mograph(log, input, tick, wide);
+      break;
+   case mode_ygraph:
+      output = new_output_ygraph(log, input, tick, wide);
+      break;
+   default:
+      fprintf(stderr, "Undefined mode!\n");
+      exit(2);
+   }
+
+   while (optind < argc) {
+      input->parse(input, argv[optind++]);
+   }
+
+   output->display(output);
 
    return 0;
 }

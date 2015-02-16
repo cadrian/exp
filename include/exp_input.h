@@ -14,40 +14,20 @@
   along with exp.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef __EXP_H__
-#define __EXP_H__
+#ifndef __EXP_INPUT_H__
+#define __EXP_INPUT_H__
 
-#include "cad_shared.h"
+#include "exp.h"
+#include "exp_log.h"
 
-#define EXP_VERSION_MAJOR 0
-#define EXP_VERSION_MINOR 1
+typedef struct input_s input_t;
 
-/**
- * The boolean type.
- */
-typedef enum {
-   false=0,
-   true
-} bool_t;
+typedef void (*input_parse_fn)(input_t *this, char *filename);
 
-typedef enum {
-   sample_none=0,
-   sample_threshold=1,
-   sample_all=2
-} sample_t;
+struct input_s {
+   input_parse_fn parse;
+};
 
-typedef enum {
-   mode_undefined=0,
-   mode_hash,
-   mode_wordcount,
-   mode_daemon,
-   mode_host,
-   mode_sgraph,
-   mode_mgraph,
-   mode_hgraph,
-   mode_dgraph,
-   mode_mograph,
-   mode_ygraph
-} expmode_t;
+input_t *new_input(logger_t log);
 
-#endif /* __EXP_H__ */
+#endif /* __EXP_INPUT_H__ */

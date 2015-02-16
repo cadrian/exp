@@ -31,7 +31,7 @@ static void taglog(level_t level) {
    };
    gettimeofday(&tm, NULL);
    strftime(buffer, 20, "%Y/%m/%d %H:%M:%S", localtime(&tm.tv_sec));
-   fprintf(stderr, "%s.%06d [%s] ", buffer, tm.tv_usec, tag[level]);
+   fprintf(stderr, "%s.%06ld [%s] ", buffer, tm.tv_usec, tag[level]);
 }
 
 static int warn_logger(level_t level, char *format, ...) {
