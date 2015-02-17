@@ -69,7 +69,7 @@ static struct option long_options[] = {
 /**
  * Returns the first non-option index
  */
-static int parse_options(int argc, char **argv) {
+static void parse_options(int argc, char **argv) {
    int option_index = 0;
    int c;
    bool_t done = false;
@@ -117,20 +117,15 @@ static int parse_options(int argc, char **argv) {
          abort();
       }
    }
-
-   return optind;
 }
 
 int main(int argc, char **argv) {
    logger_t log;
    input_t *input;
    output_t *output;
-   int argindex = parse_options(argc, argv);
-   log = new_logger(verbose);
 
-   // log(warn, "warning\n");
-   // log(info, "info\n");
-   // log(debug, "debug\n");
+   parse_options(argc, argv);
+   log = new_logger(verbose);
 
    input = new_input(log);
    switch(mode) {

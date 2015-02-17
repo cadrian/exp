@@ -30,3 +30,13 @@ entry_factory_t *entry_factories[] = {
      &syslog_entry_factory,
      NULL
 };
+
+size_t entry_factories_length(void) {
+     static size_t result = 0;
+     if (result == 0) {
+          while (entry_factories[result] != NULL) {
+               result++;
+          }
+     }
+     return result;
+}
