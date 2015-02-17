@@ -2,7 +2,7 @@
 
 #General description
 
-`exp` is to `log̀ what `less` is to `more`.
+`exp` is to *log* what `less` is to `more`.
 
 Also, exp is "Extra Petit".
 

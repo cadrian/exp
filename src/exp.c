@@ -28,10 +28,13 @@ static level_t   verbose     = warn;
 static expmode_t mode        = mode_undefined;
 
 static sample_t  sample      = sample_none;
-static bool_t    filter      = true;
-static char*     tick        = "#";
-static bool_t    wide        = false;
-static bool_t    fingerprint = false;
+
+static output_options_t options = {
+     .filter = true,
+     .fingerprint = false,
+     .tick = "#",
+     .wide = false,
+}
 
 static struct option long_options[] = {
    {"verbose", no_argument, NULL, 'v'},
@@ -40,12 +43,12 @@ static struct option long_options[] = {
    {"nosample", no_argument, (int*)&sample, sample_none},
    {"allsample", no_argument, (int*)&sample, sample_all},
 
-   {"filter", no_argument, (int*)&filter, true},
-   {"nofilter", no_argument, (int*)&filter, false},
+   {"filter", no_argument, (int*)&options.filter, true},
+   {"nofilter", no_argument, (int*)&options.filter, false},
 
-   {"wide", no_argument, (int*)&wide, true},
+   {"wide", no_argument, (int*)&options.wide, true},
    {"tick", required_argument, NULL, 't'},
-   {"fingerprint", no_argument, (int*)&fingerprint, true},
+   {"fingerprint", no_argument, (int*)&options.fingerprint, true},
 
    {"version", no_argument, NULL, 'V'},
 
@@ -132,34 +135,34 @@ int main(int argc, char **argv) {
    input = new_input(log);
    switch(mode) {
    case mode_hash:
-      output = new_output_hash(log, input, filter, fingerprint);
+      output = new_output_hash(log, input, options);
       break;
    case mode_wordcount:
-      output = new_output_wordcount(log, input, filter, fingerprint);
+      output = new_output_wordcount(log, input, options);
       break;
    case mode_daemon:
-      output = new_output_daemon(log, input, filter, fingerprint);
+      output = new_output_daemon(log, input, options);
       break;
    case mode_host:
-      output = new_output_host(log, input, filter, fingerprint);
+      output = new_output_host(log, input, options);
       break;
    case mode_sgraph:
-      output = new_output_sgraph(log, input, tick, wide);
+      output = new_output_sgraph(log, input, options);
       break;
    case mode_mgraph:
-      output = new_output_mgraph(log, input, tick, wide);
+      output = new_output_mgraph(log, input, options);
       break;
    case mode_hgraph:
-      output = new_output_hgraph(log, input, tick, wide);
+      output = new_output_hgraph(log, input, options);
       break;
    case mode_dgraph:
-      output = new_output_dgraph(log, input, tick, wide);
+      output = new_output_dgraph(log, input, options);
       break;
    case mode_mograph:
-      output = new_output_mograph(log, input, tick, wide);
+      output = new_output_mograph(log, input, options);
       break;
    case mode_ygraph:
-      output = new_output_ygraph(log, input, tick, wide);
+      output = new_output_ygraph(log, input, options);
       break;
    default:
       fprintf(stderr, "Undefined mode!\n");

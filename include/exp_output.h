@@ -29,16 +29,23 @@ struct output_s {
    output_display_fn display;
 };
 
-output_t *new_output_hash     (logger_t log, input_t *input, bool_t filter, bool_t fingerprint);
-output_t *new_output_wordcount(logger_t log, input_t *input, bool_t filter, bool_t fingerprint);
-output_t *new_output_daemon   (logger_t log, input_t *input, bool_t filter, bool_t fingerprint);
-output_t *new_output_host     (logger_t log, input_t *input, bool_t filter, bool_t fingerprint);
+typedef struct {
+     bool_t filter;
+     bool_t fingerprint;
+     char *tick;
+     bool_t wide;
+} output_options_t;
 
-output_t *new_output_sgraph (logger_t log, input_t *input, char *tick, bool_t wide);
-output_t *new_output_mgraph (logger_t log, input_t *input, char *tick, bool_t wide);
-output_t *new_output_hgraph (logger_t log, input_t *input, char *tick, bool_t wide);
-output_t *new_output_dgraph (logger_t log, input_t *input, char *tick, bool_t wide);
-output_t *new_output_mograph(logger_t log, input_t *input, char *tick, bool_t wide);
-output_t *new_output_ygraph (logger_t log, input_t *input, char *tick, bool_t wide);
+output_t *new_output_hash     (logger_t log, input_t *input, output_options_t options);
+output_t *new_output_wordcount(logger_t log, input_t *input, output_options_t options);
+output_t *new_output_daemon   (logger_t log, input_t *input, output_options_t options);
+output_t *new_output_host     (logger_t log, input_t *input, output_options_t options);
+
+output_t *new_output_sgraph (logger_t log, input_t *input, output_options_t options);
+output_t *new_output_mgraph (logger_t log, input_t *input, output_options_t options);
+output_t *new_output_hgraph (logger_t log, input_t *input, output_options_t options);
+output_t *new_output_dgraph (logger_t log, input_t *input, output_options_t options);
+output_t *new_output_mograph(logger_t log, input_t *input, output_options_t options);
+output_t *new_output_ygraph (logger_t log, input_t *input, output_options_t options);
 
 #endif /* __EXP_OUTPUT_H__ */
