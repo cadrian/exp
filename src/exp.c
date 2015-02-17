@@ -34,7 +34,7 @@ static output_options_t options = {
      .fingerprint = false,
      .tick = "#",
      .wide = false,
-}
+};
 
 static struct option long_options[] = {
    {"verbose", no_argument, NULL, 'v'},
@@ -90,8 +90,8 @@ static int parse_options(int argc, char **argv) {
          break;
 
       case 't':
-         tick = malloc(strlen(optarg) + 1);
-         strcpy(tick, optarg);
+         options.tick = malloc(strlen(optarg) + 1);
+         strcpy(options.tick, optarg);
          break;
 
       case 'V':
