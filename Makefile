@@ -1,4 +1,4 @@
-LIBRARIES=libcad
+LIBRARIES=libcad libpcre
 
 include /usr/share/libcad/Makefile
 
@@ -11,4 +11,4 @@ run-test: target target/$(PROJECT) $(TST)
 exe: target target/$(PROJECT)
 
 target/$(PROJECT): $(PIC_OBJ)
-	$(CC) -o $@ $(PIC_OBJ) $(LINK_LIBS)
+	$(CC) -g -o $@ $(PIC_OBJ) $(LINK_LIBS)

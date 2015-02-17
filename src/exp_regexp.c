@@ -39,7 +39,11 @@ typedef struct {
 } match_impl_t;
 
 static const char *match_impl_substring(match_impl_t *this, int index) {
-     int status = pcre_get_substring(this->string, this->subs, this->subslen, index, &(this->sub));
+   int status;
+   if (this->sub != NULL) {
+      pcre_free_substring(this->sub);
+   }
+   status = pcre_get_substring(this->string, this->subs, this->subslen, index, &(this->sub));
      if (status < 0) {
           return NULL;
      }
@@ -67,25 +71,26 @@ static match_t match_impl_fn = {
      .free = (regexp_match_free_fn)match_impl_free,
 };
 
-static match_t *regexp_impl_match(regexp_impl_t *this, const char *string, int pcre_flags) {
+static match_t *regexp_impl_match(regexp_impl_t *this, const char *string, int start, int length, int pcre_flags) {
      int subsmax = this->max_substrings * 3;
      match_impl_t *result = malloc(sizeof(match_impl_t) + sizeof(int) * subsmax);
      int status;
 
      result->fn = match_impl_fn;
+     result->regexp = this;
      result->string = string;
      result->sub = NULL;
      result->subsmax = subsmax;
-     status = pcre_exec(this->re, this->extra, string, strlen(string), 0, pcre_flags, result->subs, subsmax);
+     status = pcre_exec(this->re, this->extra, string, length, start, pcre_flags, result->subs, subsmax);
      if (status < 0) {
           switch(status) {
-          case PCRE_ERROR_NOMATCH     :                                                               break;
-          case PCRE_ERROR_NULL        : fprintf(stderr, "Something was null\n");                      break;
-          case PCRE_ERROR_BADOPTION   : fprintf(stderr, "A bad option was passed\n");                 break;
-          case PCRE_ERROR_BADMAGIC    : fprintf(stderr, "Magic number bad (compiled re corrupt?)\n"); break;
-          case PCRE_ERROR_UNKNOWN_NODE: fprintf(stderr, "Something kooky in the compiled re\n");      break;
-          case PCRE_ERROR_NOMEMORY    : fprintf(stderr, "Ran out of memory\n");                       break;
-          default                     : fprintf(stderr, "Unknown error\n");                           break;
+          case PCRE_ERROR_NOMATCH     :                                                                    break;
+          case PCRE_ERROR_NULL        : fprintf(stderr, "**** Something was null\n");                      break;
+          case PCRE_ERROR_BADOPTION   : fprintf(stderr, "**** A bad option was passed\n");                 break;
+          case PCRE_ERROR_BADMAGIC    : fprintf(stderr, "**** Magic number bad (compiled re corrupt?)\n"); break;
+          case PCRE_ERROR_UNKNOWN_NODE: fprintf(stderr, "**** Something kooky in the compiled re\n");      break;
+          case PCRE_ERROR_NOMEMORY    : fprintf(stderr, "**** Ran out of memory\n");                       break;
+          default                     : fprintf(stderr, "**** Unknown error\n");                           break;
           }
           free(result);
           return NULL;

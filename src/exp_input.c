@@ -55,7 +55,7 @@ static line_t *read_all_lines(input_impl_t *this, FILE *in) {
      size_t line_length = 0;
      size_t buffer_index;
      bool_t line_too_long_flag = false;
-     size_t count_lines_too_long;
+     size_t count_lines_too_long = 0;
 
      this->length = 0;
 
@@ -71,6 +71,7 @@ static line_t *read_all_lines(input_impl_t *this, FILE *in) {
                     this->length++;
                } else if (line_length >= BUFFER_SIZE) {
                     if (!line_too_long_flag) {
+                         this->log(info, "Truncating line %d\n", this->length);
                          count_lines_too_long++;
                          line_too_long_flag = true;
                          line[BUFFER_SIZE - 1] = '\0';
@@ -93,11 +94,13 @@ static line_t *read_all_lines(input_impl_t *this, FILE *in) {
           if (result == NULL) {
                result = last;
           }
+          this->length++;
      }
 
      if (count_lines_too_long > 0) {
           this->log(warn, "%lu line%s too long, truncated to %d characters\n", (unsigned long)count_lines_too_long, count_lines_too_long > 1 ? "s" : "", BUFFER_SIZE - 1);
      }
+     this->log(debug, "Read %lu line%s\n", (unsigned long)this->length, this->length > 1 ? "s" : "");
 
      return result;
 }
@@ -119,6 +122,10 @@ static entry_factory_t *select_entry_factory(input_impl_t *this, line_t *lines) 
      }
 
      for (f = 0; result == NULL && (factory = entry_factories[f]) != NULL; f++) {
+        this->log(debug, "tally[%d] = %d\n", f, tally[f]);
+     }
+
+     for (f = 0; result == NULL && (factory = entry_factories[f]) != NULL; f++) {
           if (factory->tally_logic(factory, tally[f], TALLY_THRESHOLD, SAMPLE_SIZE)) {
                result = factory;
           }
@@ -132,9 +139,14 @@ static void do_parse(input_impl_t *this, FILE *in) {
      entry_factory_t *factory = select_entry_factory(this, lines);
      line_t *line;
      int i = 0;
-     this->entries = malloc(this->length * sizeof(entry_t*));
-     for (line = lines; line != NULL; line = line->next) {
-          this->entries[i++] = factory->new_entry(factory, line);
+
+     if (factory == NULL) {
+        this->log(warn, "Factory not found!!\n");
+     } else {
+        this->entries = malloc(this->length * sizeof(entry_t*));
+        for (line = lines; line != NULL; line = line->next) {
+           this->entries[i++] = factory->new_entry(factory, line);
+        }
      }
 }
 
@@ -142,14 +154,14 @@ static void impl_parse(input_impl_t *this, char *filename) {
      FILE *in;
      if (!strcmp("-", filename)) {
           in = stdin;
-          this->log(debug, "Using stdin");
+          this->log(debug, "Using stdin\n");
      } else {
           in = fopen(filename, "r");
           if (!in) {
-               this->log(warn, "Unknown file: %s", filename);
+               this->log(warn, "%s: %s\n", strerror(errno), filename);
                return;
           }
-          this->log(debug, "Opening file: %s", filename);
+          this->log(debug, "Opening file: %s\n", filename);
      }
 
      do_parse(this, in);

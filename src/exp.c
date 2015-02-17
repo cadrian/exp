@@ -165,8 +165,10 @@ int main(int argc, char **argv) {
    }
 
    while (optind < argc) {
+      log(debug, "more input %d/%d %s\n", optind, argc, argv[optind]);
       input->parse(input, argv[optind++]);
    }
+   log(debug, "input done\n");
 
    output->display(output);
 

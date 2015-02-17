@@ -32,7 +32,7 @@ struct output_s {
 typedef struct {
      bool_t filter;
      bool_t fingerprint;
-     char *tick;
+     char  *tick;
      bool_t wide;
 } output_options_t;
 

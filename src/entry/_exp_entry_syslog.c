@@ -17,6 +17,7 @@
 #ifndef __EXP_ENTRY_SYSLOG_C__
 #define __EXP_ENTRY_SYSLOG_C__
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
@@ -29,7 +30,7 @@
 static regexp_t *syslog_regexp(void) {
      static regexp_t *result = NULL;
      if (result == NULL) {
-          result = new_regexp("^(?P<date>(?P<month>[A-Z][a-z]{2}) +(?P<day>[0-9][0-9]?) +(?P<hour>[0-9]{2}):(?P<minute>[0-9]{2}):(?P<second>[0-9]{2})) +(?P<host>[^ ]+) +(?P<daemon>[^ ]+): +(?P<log>.*)$", PCRE_EXTENDED, 9);
+          result = new_regexp("^(?<date>(?<month>[A-Z][a-z]{2}) +(?<day>[0-9][0-9]?) +(?<hour>[0-9]{2}):(?<minute>[0-9]{2}):(?<second>[0-9]{2})) +(?<host>[^ ]+) +(?<daemon>[^ ]+): +(?<log>.*)$", 0, 10);
           if (result == NULL) {
                exit(1);
           }
@@ -40,7 +41,7 @@ static regexp_t *syslog_regexp(void) {
 static bool_t syslog_is_type(entry_factory_t *this, line_t *line) {
      bool_t result = false;
      regexp_t *regexp = syslog_regexp();
-     match_t *match = regexp->match(regexp, line->buffer, 0);
+     match_t *match = regexp->match(regexp, line->buffer, 0, line->length, 0);
      const char *string;
      if (match != NULL) {
           string = match->named_substring(match, "daemon");
@@ -124,7 +125,7 @@ static entry_t *syslog_new_entry(entry_factory_t *this, line_t *line) {
      syslog_entry_t *result = malloc(sizeof(syslog_entry_t));
 
      regexp_t *regexp = syslog_regexp();
-     match_t *match = regexp->match(regexp, line->buffer, 0);
+     match_t *match = regexp->match(regexp, line->buffer, 0, line->length, 0);
      time_t tm;
 
      if (match != NULL) {

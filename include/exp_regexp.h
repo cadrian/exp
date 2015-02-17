@@ -22,7 +22,7 @@
 typedef struct regexp_s regexp_t;
 typedef struct match_s match_t;
 
-typedef match_t *(*regexp_match_fn)(regexp_t *this, const char *string, int pcre_flags);
+typedef match_t *(*regexp_match_fn)(regexp_t *this, const char *string, int start, int length, int pcre_flags);
 typedef void (*regexp_free_fn)(regexp_t *this);
 typedef const char *(*regexp_match_substring_fn)(match_t *this, int index);
 typedef const char *(*regexp_match_named_substring_fn)(match_t *this, const char *name);

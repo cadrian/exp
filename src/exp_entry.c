@@ -15,6 +15,7 @@
 */
 
 #include "exp_entry.h"
+#include "exp_log.h"
 
 #include "entry/_exp_entry_log.c"
 #include "entry/_exp_entry_syslog.c"
