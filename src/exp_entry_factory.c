@@ -28,10 +28,10 @@ static void resize_list() {
      entry_factory_t **new_list;
      if (list_capacity == 0) {
           new_capacity = DEFAULT_CAPACITY;
-          new_list = calloc(new_capacity, sizeof(entry_factory_t*));
+          new_list = malloc(new_capacity * sizeof(entry_factory_t*));
      } else {
           new_capacity = list_capacity * 2;
-          new_list = realloc(list, new_capacity);
+          new_list = realloc(list, new_capacity * sizeof(entry_factory_t*));
      }
      list_capacity = new_capacity;
      list = new_list;

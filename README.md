@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/cadrian/exp.png?branch=master)](https://travis-ci.org/cadrian/exp)
 
-#General description
+# General description
 
 `exp` is to *log* what `less` is to `more`.
 
@@ -12,3 +12,10 @@ because it is written in Python. Also, petit's last commit is getting
 old. Is it still maintained?
 
 That's why I wanted to code a clone in C.
+
+`exp` is designed as a drop-in replacement of *petit*. Its internal
+design also follows *petit*'s with the following changes:
+
+* allow multiple filenames
+* per-log type filter scrubbing is externalized in configuration files
+  instead of being hard-coded

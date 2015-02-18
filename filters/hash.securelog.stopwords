@@ -1,0 +1,15 @@
+/session closed for.*/session closed for #/
+/session opened for.*/session opened for #/
+/Accepted publickey for.*/Accepted publickey for #/
+/Accepted password for.*/Accepted password for #/
+/Postponed publickey for.*/Postponed publickey for #/
+/input_userauth_request: invalid user.*/input_userauth_request: invalid user #/
+/Invalid user.*/Invalid user #/
+/reverse mapping checking getaddrinfo for.*/reverse mapping checking getaddrinfo for #/
+/Connection closed by.*/Connection closed by #/
+/Failed password for invalid user.*/Failed password for invalid user #/
+/Failed password for.*from.*/Failed password for # from #/
+/error retrieving information about user.*/error retrieving information about user #/
+/authentication failure.*/authentication failure #/
+/Received disconnect from.*/Received disconnect from #/
+/Could not reverse map address.*/Could not reverse map address #/

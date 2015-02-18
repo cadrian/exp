@@ -31,11 +31,13 @@ struct line_s {
 
 typedef struct file_s file_t;
 
-typedef line_t *(*file_get_lines_fn)(file_t *this);
+typedef size_t (*file_lines_count_fn)(file_t *this);
+typedef line_t *(*file_lines_fn)(file_t *this);
 typedef void (*file_free_fn)(file_t *this);
 
 struct file_s {
-     file_get_lines_fn get_lines;
+     file_lines_count_fn lines_count;
+     file_lines_fn lines;
      file_free_fn free;
 };
 

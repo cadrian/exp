@@ -126,8 +126,8 @@ int main(int argc, char **argv) {
 
    parse_options(argc, argv);
    log = new_logger(verbose);
-
    input = new_input(log);
+
    switch(mode) {
    case mode_hash:
       output = new_output_hash(log, input, options);

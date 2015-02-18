@@ -30,7 +30,11 @@ struct file_impl_s {
      line_t *lines;
 };
 
-static line_t *impl_get_lines(file_impl_t *this) {
+static size_t impl_lines_count(file_impl_t *this) {
+     return this->length;
+}
+
+static line_t *impl_lines(file_impl_t *this) {
      return this->lines;
 }
 
@@ -46,17 +50,20 @@ static void impl_free(file_impl_t *this) {
 }
 
 static file_t file_impl_fn = {
-     .get_lines = (file_get_lines_fn)impl_get_lines,
+     .lines_count = (file_lines_count_fn)impl_lines_count,
+     .lines = (file_lines_fn)impl_lines,
      .free = (file_free_fn)impl_free,
 };
 
 static line_t *new_line(line_t *previous, size_t length, char *content) {
      line_t *result = malloc(sizeof(line_t) + length + 1);
+     char *line = (char*)result->buffer;
      if (previous != NULL) {
           previous->next = result;
      }
      result->length = length;
-     memcpy((char*)result->buffer, content, length + 1);
+     memcpy(line, content, length + 1);
+     line[length] = '\0';
      return result;
 }
 

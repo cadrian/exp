@@ -43,7 +43,7 @@ static regexp_t *syslog_regexp(logger_t log) {
      return result;
 }
 
-static const char *syslog_get_name(syslog_entry_factory_t *this) {
+static const char *syslog_get_name(void *this) {
      return "syslog";
 }
 
@@ -124,15 +124,16 @@ static const char *syslog_entry_logline(syslog_entry_t *this) {
 }
 
 static entry_t syslog_entry_fn = {
-     .year    = (entry_year_fn   )syslog_entry_year   ,
-     .month   = (entry_month_fn  )syslog_entry_month  ,
-     .day     = (entry_day_fn    )syslog_entry_day    ,
-     .hour    = (entry_hour_fn   )syslog_entry_hour   ,
-     .minute  = (entry_minute_fn )syslog_entry_minute ,
-     .second  = (entry_second_fn )syslog_entry_second ,
-     .host    = (entry_host_fn   )syslog_entry_host   ,
-     .daemon  = (entry_daemon_fn )syslog_entry_daemon ,
-     .logline = (entry_logline_fn)syslog_entry_logline,
+     .get_name = (entry_get_name_fn)syslog_get_name     ,
+     .year     = (entry_year_fn    )syslog_entry_year   ,
+     .month    = (entry_month_fn   )syslog_entry_month  ,
+     .day      = (entry_day_fn     )syslog_entry_day    ,
+     .hour     = (entry_hour_fn    )syslog_entry_hour   ,
+     .minute   = (entry_minute_fn  )syslog_entry_minute ,
+     .second   = (entry_second_fn  )syslog_entry_second ,
+     .host     = (entry_host_fn    )syslog_entry_host   ,
+     .daemon   = (entry_daemon_fn  )syslog_entry_daemon ,
+     .logline  = (entry_logline_fn )syslog_entry_logline,
 };
 
 static entry_t *syslog_new_entry(syslog_entry_factory_t *this, line_t *line) {
@@ -175,10 +176,10 @@ static entry_t *syslog_new_entry(syslog_entry_factory_t *this, line_t *line) {
 }
 
 static entry_factory_t syslog_entry_factory_fn = {
-     .get_name = (get_name_fn)syslog_get_name,
-     .tally_logic = (tally_logic_fn)syslog_tally_logic,
-     .is_type = (is_type_fn)syslog_is_type,
-     .new_entry = (new_entry_fn)syslog_new_entry
+     .get_name = (entry_factory_get_name_fn)syslog_get_name,
+     .tally_logic = (entry_factory_tally_logic_fn)syslog_tally_logic,
+     .is_type = (entry_factory_is_type_fn)syslog_is_type,
+     .new_entry = (entry_factory_new_entry_fn)syslog_new_entry
 };
 
 entry_factory_t *new_syslog_entry_factory(logger_t log) {

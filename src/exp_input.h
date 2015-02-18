@@ -20,17 +20,31 @@
 #include "exp.h"
 #include "exp_log.h"
 #include "exp_entry.h"
+#include "exp_entry_factory.h"
 
 typedef struct input_s input_t;
+typedef struct input_file_s input_file_t;
 
-typedef void (*input_parse_fn)(input_t *this, char *filename);
-typedef size_t (*input_entries_length_fn)(input_t *this);
-typedef entry_t *(*input_entry_fn)(input_t *this, int index);
+typedef input_file_t *(*input_parse_fn)(input_t *this, const char *filename);
+typedef size_t (*input_files_length_fn)(input_t *this);
+typedef input_file_t *(*input_file_fn)(input_t *this, int index);
 
 struct input_s {
      input_parse_fn parse;
-     input_entries_length_fn entries_length;
-     input_entry_fn entry;
+     input_files_length_fn files_length;
+     input_file_fn file;
+};
+
+typedef entry_factory_t *(*input_file_get_factory_fn)(input_file_t *this);
+typedef const char *(*input_file_get_name_fn)(input_file_t *this);
+typedef size_t (*input_file_entries_length_fn)(input_file_t *this);
+typedef entry_t *(*input_file_entry_fn)(input_file_t *this, int index);
+
+struct input_file_s {
+     input_file_get_factory_fn get_factory;
+     input_file_get_name_fn get_name;
+     input_file_entries_length_fn entries_length;
+     input_file_entry_fn entry;
 };
 
 input_t *new_input(logger_t log);

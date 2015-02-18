@@ -43,6 +43,7 @@ struct filter_impl_s {
      size_t length;
      size_t capacity;
      regexp_t **stopwords;
+     char **replacements;
 };
 
 static const char *impl_scrub(filter_impl_t *this, const char *line) {
@@ -53,7 +54,7 @@ static const char *impl_scrub(filter_impl_t *this, const char *line) {
      result[MAX_LINE_SIZE-1] = '\0';
      for (i = 0; i < n; i++) {
           stopword = this->stopwords[i];
-          stopword->replace_all(stopword, "#", result);
+          stopword->replace_all(stopword, this->replacements[i], result);
      }
      return result;
 }
@@ -63,32 +64,99 @@ static bool_t impl_bleach(filter_impl_t *this, const char *line) {
      return !strcmp("#", scrubbed);
 }
 
-static void add_regexp(filter_impl_t *this, regexp_t *regexp) {
+static void add_regexp(filter_impl_t *this, regexp_t *regexp, const char *replacement) {
      if (this->capacity == this->length) {
           if (this->capacity == 0) {
                this->capacity = DEFAULT_CAPACITY;
-               this->stopwords = calloc(this->capacity, sizeof(regexp_t*));
+               this->stopwords = malloc(this->capacity * sizeof(regexp_t*));
+               this->replacements = malloc(this->capacity * sizeof(char*));
           } else {
                this->capacity = this->capacity * 2;
-               this->stopwords = realloc(this->stopwords, this->capacity);
+               this->stopwords = realloc(this->stopwords, this->capacity * sizeof(regexp_t*));
+               this->replacements = realloc(this->replacements, this->capacity * sizeof(char*));
           }
      }
-     this->stopwords[this->length++] = regexp;
+     this->stopwords[this->length] = regexp;
+     this->replacements[this->length] = strdup(replacement);
+     this->length++;
 }
 
-static void impl_init(filter_impl_t *this, const char *dir, const char *filename) {
+static char *split(char **regexp) {
+     char *string = *regexp;
+     char *result = NULL;
+     char separator = *string;
+     char c;
+     int state = 0;
+
+     if (separator < ' ' || (separator >= '0' && separator <= '9') || (separator >= 'A' && separator <= 'Z') || (separator >= 'a' && separator <= 'z')) {
+          // not a separator
+     } else {
+          while (state >= 0) {
+               string++;
+               c = *string;
+               if (c == '\0') {
+                    break;
+               }
+               switch(state) {
+               case 0:
+                    if (c == '\\') {
+                         state = 1;
+                    } else if (c == separator) {
+                         *string = '\0';
+                         result = string + 1;
+                         (*regexp)++;
+                         state = 2;
+                    }
+                    break;
+               case 1:
+                    state = 0;
+                    break;
+               case 2:
+                    if (c == '\\') {
+                         state = 3;
+                    } else if (c == separator) {
+                         *string = '\0';
+                         state = -1;
+                    }
+                    break;
+               case 3:
+                    state = 2;
+                    break;
+               }
+          }
+     }
+
+     return result;
+}
+
+static void impl_extend_(filter_impl_t *this, const char *dir, const char *filename, const char *replacement) {
      char *path = malloc(strlen(dir) + strlen(filename) + 2);
      file_t *file;
      line_t *line;
      regexp_t *regexp;
-     sprintf(path, "%s/%s", dir, filename);
+     bool_t has_replacement = replacement != NULL;
+     static char re_[MAX_LINE_SIZE];
+     char *re;
+
+     sprintf(path, "%s%s", dir, filename);
      file = new_file(this->log, debug, path);
      if (file != NULL) {
-          line = file->get_lines(file);
+          line = file->lines(file);
           while (line != NULL) {
-               regexp = new_regexp(this->log, line->buffer, 0, 0);
+               if (has_replacement) {
+                    re = (char*)line->buffer;
+               } else {
+                    strncpy(re_, line->buffer, line->length);
+                    re_[line->length] = '\0';
+                    re = re_;
+                    replacement = split(&re);
+                    if (replacement == NULL) {
+                         replacement = "#";
+                    }
+               }
+               regexp = new_regexp(this->log, re, 0, 0);
                if (regexp != NULL) {
-                    add_regexp(this, regexp);
+                    add_regexp(this, regexp, replacement);
                }
           }
           file->free(file);
@@ -96,20 +164,27 @@ static void impl_init(filter_impl_t *this, const char *dir, const char *filename
      free(path);
 }
 
+static void impl_extend(filter_impl_t *this, const char *filename, const char *replacement) {
+     const char *dir;
+     int i;
+     for (i = 0; (dir = dirs[i]) != NULL; i++) {
+          impl_extend_(this, dir, filename, replacement);
+     }
+}
+
 static filter_t filter_impl_fn = {
+     .extend = (filter_extend_fn)impl_extend,
      .scrub = (filter_scrub_fn)impl_scrub,
      .bleach = (filter_bleach_fn)impl_bleach,
 };
 
-filter_t *new_filter(logger_t log, const char *filename) {
+filter_t *new_filter(logger_t log) {
      filter_impl_t *result = malloc(sizeof(filter_impl_t));
-     const char *dir;
+
      result->fn = filter_impl_fn;
      result->log = log;
-     result->length = 0;
-     result->capacity = 0;
-     for (dir = dirs[0]; dir != NULL; dir++) {
-          impl_init(result, dir, filename);
-     }
+     result->length = result->capacity = 0;
+     result->stopwords = NULL;
+
      return &(result->fn);
 }

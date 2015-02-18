@@ -22,16 +22,16 @@
 
 typedef struct entry_factory_s entry_factory_t;
 
-typedef const char *(*get_name_fn)(entry_factory_t *this);
-typedef bool_t (*tally_logic_fn)(entry_factory_t *this, size_t tally, size_t tally_threshold, size_t max_sample_lines);
-typedef bool_t (*is_type_fn)(entry_factory_t *this, line_t *line);
-typedef entry_t *(*new_entry_fn)(entry_factory_t *this, line_t *line);
+typedef const char *(*entry_factory_get_name_fn)(entry_factory_t *this);
+typedef bool_t (*entry_factory_tally_logic_fn)(entry_factory_t *this, size_t tally, size_t tally_threshold, size_t max_sample_lines);
+typedef bool_t (*entry_factory_is_type_fn)(entry_factory_t *this, line_t *line);
+typedef entry_t *(*entry_factory_new_entry_fn)(entry_factory_t *this, line_t *line);
 
 struct entry_factory_s {
-     get_name_fn get_name;
-     tally_logic_fn tally_logic;
-     is_type_fn is_type;
-     new_entry_fn new_entry;
+     entry_factory_get_name_fn get_name;
+     entry_factory_tally_logic_fn tally_logic;
+     entry_factory_is_type_fn is_type;
+     entry_factory_new_entry_fn new_entry;
 };
 
 void register_all_factories(logger_t log);

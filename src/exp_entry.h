@@ -22,6 +22,7 @@
 
 typedef struct entry_s entry_t;
 
+typedef const char *(*entry_get_name_fn)(entry_t *this);
 typedef int (*entry_year_fn)(entry_t *this);
 typedef int (*entry_month_fn)(entry_t *this);
 typedef int (*entry_day_fn)(entry_t *this);
@@ -33,6 +34,7 @@ typedef const char *(*entry_daemon_fn)(entry_t *this);
 typedef const char *(*entry_logline_fn)(entry_t *this);
 
 struct entry_s {
+     entry_get_name_fn get_name;
      entry_year_fn    year   ;
      entry_month_fn   month  ;
      entry_day_fn     day    ;

@@ -22,14 +22,16 @@
 
 typedef struct filter_s filter_t;
 
+typedef void (*filter_extend_fn)(filter_t *this, const char *filename, const char *replacement);
 typedef const char *(*filter_scrub_fn)(filter_t *this, const char *line);
 typedef bool_t (*filter_bleach_fn)(filter_t *this, const char *line);
 
 struct filter_s {
+     filter_extend_fn extend;
      filter_scrub_fn scrub;
      filter_bleach_fn bleach;
 };
 
-filter_t *new_filter(logger_t log, const char *filename);
+filter_t *new_filter(logger_t log);
 
 #endif /* __EXP_FILTER_H__ */

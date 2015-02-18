@@ -28,22 +28,55 @@
 #define TALLY_THRESHOLD (SAMPLE_SIZE / 4)
 
 typedef struct {
-     input_t fn;
+     input_file_t fn;
      logger_t log;
      file_t *file;
+     entry_factory_t *factory;
      size_t length;
      entry_t **entries;
-} input_impl_t;
+     char filename[0];
+} input_file_impl_t;
 
-static size_t impl_entries_length(input_impl_t *this) {
+static entry_factory_t *impl_get_factory(input_file_impl_t *this) {
+     return this->factory;
+}
+
+static const char *impl_get_name(input_file_impl_t *this) {
+     return this->filename;
+}
+
+static size_t impl_entries_length(input_file_impl_t *this) {
      return this->length;
 }
 
-static entry_t *impl_entry(input_impl_t *this, int index) {
+static entry_t *impl_entry(input_file_impl_t *this, int index) {
      return this->entries[index];
 }
 
-static entry_factory_t *select_entry_factory(input_impl_t *this, line_t *lines) {
+static input_file_t input_file_impl_fn = {
+     .get_factory = (input_file_get_factory_fn)impl_get_factory,
+     .get_name = (input_file_get_name_fn)impl_get_name,
+     .entries_length = (input_file_entries_length_fn)impl_entries_length,
+     .entry = (input_file_entry_fn)impl_entry,
+};
+
+typedef struct {
+     input_t fn;
+     logger_t log;
+     size_t count;
+     size_t capacity;
+     input_file_impl_t **files;
+} input_impl_t;
+
+static size_t impl_files_length(input_impl_t *this) {
+     return this->count;
+}
+
+static input_file_t *impl_file(input_impl_t *this, int index) {
+     return &(this->files[index]->fn);
+}
+
+static entry_factory_t *select_entry_factory(logger_t log, line_t *lines) {
      entry_factory_t *result = NULL;
      int i, f;
      int nf = entry_factories_length();
@@ -63,7 +96,7 @@ static entry_factory_t *select_entry_factory(input_impl_t *this, line_t *lines) 
 
      for (f = 0; f < nf; f++) {
           factory = entry_factory(f);
-          this->log(debug, "tally[%s] = %lu\n", factory->get_name(factory), (unsigned long)tally[f]);
+          log(debug, "tally[%s] = %lu\n", factory->get_name(factory), (unsigned long)tally[f]);
      }
 
      for (f = 0; f < nf; f++) {
@@ -76,39 +109,64 @@ static entry_factory_t *select_entry_factory(input_impl_t *this, line_t *lines) 
      return result;
 }
 
-static void do_parse(input_impl_t *this) {
-     line_t *lines = this->file->get_lines(this->file);
-     entry_factory_t *factory = select_entry_factory(this, lines);
+static input_file_impl_t *do_parse(input_impl_t *this, file_t *in, const char *filename) {
+     input_file_impl_t *result = NULL;
+     line_t *lines = in->lines(in);
+     entry_factory_t *factory = select_entry_factory(this->log, lines);
      line_t *line;
      int i = 0;
 
      if (factory == NULL) {
-        this->log(warn, "Factory not found!!\n");
+          this->log(warn, "Input factory not found for file %s\n", filename);
      } else {
-        this->entries = malloc(this->length * sizeof(entry_t*));
-        for (line = lines; line != NULL; line = line->next) {
-           this->entries[i++] = factory->new_entry(factory, line);
-        }
+          result = malloc(sizeof(input_file_impl_t) + strlen(filename + 1));
+          result->fn = input_file_impl_fn;
+          result->log = this->log;
+          result->file = in;
+          result->factory = factory;
+          result->length = in->lines_count(in);
+          result->entries = malloc(result->length * sizeof(entry_t*));
+          strcpy(result->filename, filename);
+          for (line = lines; line != NULL; line = line->next) {
+               result->entries[i++] = factory->new_entry(factory, line);
+          }
      }
+
+     return result;
 }
 
-static void impl_parse(input_impl_t *this, char *filename) {
+static input_file_impl_t *impl_parse(input_impl_t *this, const char *filename) {
+     input_file_impl_t *result = NULL;
      file_t *in = new_file(this->log, warn, filename);
-     this->file = in;
      if (in != NULL) {
-          do_parse(this);
+          result = do_parse(this, in, filename);
+          if (result != NULL) {
+               if (this->count == this->capacity) {
+                    if (this->capacity == 0) {
+                         this->capacity = 4;
+                         this->files = malloc(this->capacity * sizeof(input_file_t*));
+                    } else {
+                         this->capacity *= 2;
+                         this->files = realloc(this->files, this->capacity * sizeof(input_file_t*));
+                    }
+               }
+               this->files[this->count++] = result;
+          }
      }
+     return result;
 }
 
-input_t input_impl_fn = {
+static input_t input_impl_fn = {
      .parse = (input_parse_fn)impl_parse,
-     .entries_length = (input_entries_length_fn)impl_entries_length,
-     .entry = (input_entry_fn)impl_entry,
+     .files_length = (input_files_length_fn)impl_files_length,
+     .file = (input_file_fn)impl_file,
 };
 
 input_t *new_input(logger_t log) {
      input_impl_t *result = malloc(sizeof(input_impl_t));
      result->fn = input_impl_fn;
      result->log = log;
+     result->count = result->capacity = 0;
+     result->files = NULL;
      return &(result->fn);
 }
