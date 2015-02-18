@@ -9,9 +9,14 @@ cd $(dirname $(dirname $(readlink -f $0)))/src
     echo '#include "exp_entry_factory.h"'
     echo
 
-    for entryfile in exp_*_entry.c; do
-        entry=$(echo $entryfile | sed -r 's/exp_([^_]+)_entry\.c/\1/')
-        echo "extern entry_factory_t *new_${entry}_entry_factory(logger_t);"
+    factories=($(
+        for entryfile in exp_*.c; do
+            egrep -o '^entry_factory_t *\* *new_[^_]+_entry_factory\(logger_t +[[:alnum:]]+\) *{' $entryfile | egrep -o 'new_[^_]+_entry_factory'
+        done
+    ))
+
+    for factory in "${factories[@]}"; do
+        echo "extern entry_factory_t *${factory}(logger_t);"
     done
     echo
 
@@ -19,9 +24,8 @@ cd $(dirname $(dirname $(readlink -f $0)))/src
     echo "    static bool_t registered = false;"
     echo "    if (!registered) {"
     echo "        registered = true;"
-    for entryfile in exp_*_entry.c; do
-        entry=$(echo $entryfile | sed -r 's/exp_([^_]+)_entry\.c/\1/')
-        echo "        register_factory(new_${entry}_entry_factory(log));"
+    for factory in "${factories[@]}"; do
+        echo "        register_factory($factory(log));"
     done
     echo "    }"
     echo "}"

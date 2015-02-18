@@ -43,6 +43,6 @@ struct match_s {
      regexp_match_free_fn free;
 };
 
-regexp_t *new_regexp(logger_t log, const char *regex, int pcre_flags, size_t max_substrings);
+regexp_t *new_regexp(logger_t log, const char *regex, int pcre_flags);
 
 #endif /* __EXP_REGEXP_H__ */

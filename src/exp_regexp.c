@@ -157,15 +157,17 @@ static regexp_t regexp_impl_fn = {
      .free = (regexp_free_fn)regexp_impl_free,
 };
 
-regexp_t *new_regexp(logger_t log, const char *regex, int pcre_flags, size_t max_substrings) {
+regexp_t *new_regexp(logger_t log, const char *regex, int pcre_flags) {
      regexp_impl_t *result = malloc(sizeof(regexp_impl_t));
      const char *pcre_error_string;
      int pcre_error_index;
+     int max_substrings;
+     int capturecount, namecount;
 
      result->re = pcre_compile(regex, pcre_flags, &pcre_error_string, &pcre_error_index, NULL);
      if (result->re == NULL) {
           free(result);
-          fprintf(stderr, "Error while compiling regexp %s\n%s at %d\n", regex, pcre_error_string, pcre_error_index);
+          log(warn, "Error while compiling regexp %s\n%s at %d\n", regex, pcre_error_string, pcre_error_index);
           return NULL;
      }
 
@@ -173,13 +175,13 @@ regexp_t *new_regexp(logger_t log, const char *regex, int pcre_flags, size_t max
      if (pcre_error_string != NULL) {
           pcre_free(result->re);
           free(result);
-          fprintf(stderr, "Error while optimizing regexp %s\n%s\n", regex, pcre_error_string);
+          log(warn, "Error while optimizing regexp %s\n%s\n", regex, pcre_error_string);
           return NULL;
      }
 
-     if (max_substrings == 0) {
-          pcre_fullinfo(result->re, result->extra, PCRE_INFO_CAPTURECOUNT, &max_substrings);
-     }
+     pcre_fullinfo(result->re, result->extra, PCRE_INFO_CAPTURECOUNT, &capturecount);
+     pcre_fullinfo(result->re, result->extra, PCRE_INFO_NAMECOUNT, &namecount);
+     max_substrings = capturecount + namecount;
 
      result->fn = regexp_impl_fn;
      result->log = log;

@@ -154,7 +154,7 @@ static void impl_extend_(filter_impl_t *this, const char *dir, const char *filen
                          replacement = "#";
                     }
                }
-               regexp = new_regexp(this->log, re, 0, 0);
+               regexp = new_regexp(this->log, re, 0);
                if (regexp != NULL) {
                     add_regexp(this, regexp, replacement);
                }
