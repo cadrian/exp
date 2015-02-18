@@ -127,8 +127,8 @@ static void hash_prepare(output_hash_t *this) {
      hash_fill(this);
 }
 
-static int dict_comp(const dict_entry_t *e1, const dict_entry_t *e2) {
-     return strcmp(e1->key, e2->key);
+static int dict_comp(const dict_entry_t **e1, const dict_entry_t **e2) {
+     return strcmp((*e1)->key, (*e2)->key);
 }
 
 typedef struct {
@@ -148,6 +148,7 @@ static void hash_display_count(output_hash_t *this, size_t count) {
      dict_entry_t **entries = malloc(this->dict->count(this->dict) * sizeof(dict_entry_t*));
      dict_sort_buf buf = { count, 0, entries };
      entry_t *entry;
+
      this->dict->iterate(this->dict, (cad_hash_iterator_fn)hash_display_fill_buf, &buf);
      qsort(entries, buf.n, sizeof(dict_entry_t*), (int(*)(const void*,const void*))dict_comp);
 
