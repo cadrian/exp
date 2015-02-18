@@ -164,11 +164,16 @@ int main(int argc, char **argv) {
       exit(2);
    }
 
-   while (optind < argc) {
-      log(debug, "more input %d/%d %s\n", optind, argc, argv[optind]);
-      input->parse(input, argv[optind++]);
+   if (optind == argc) {
+        log(info, "Input: stdin\n");
+        input->parse(input, "-");
+   } else{
+        while (optind < argc) {
+             log(info, "Input: %d/%d %s\n", optind, argc, argv[optind]);
+             input->parse(input, argv[optind++]);
+        }
    }
-   log(debug, "input done\n");
+   log(debug, "Input done\n");
 
    output->display(output);
 
