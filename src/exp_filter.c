@@ -28,7 +28,7 @@
 static const char *dirs[] = {
      "/var/lib/exp/filters/",
      "/usr/local/exp/var/lib/filters/",
-     "/opt/exp/var/lib/filters/"
+     "/opt/exp/var/lib/filters/",
      "/var/lib/petit/filters/",
      "/usr/local/petit/var/lib/filters/",
      "/opt/petit/var/lib/filters/",
@@ -158,6 +158,7 @@ static void impl_extend_(filter_impl_t *this, const char *dir, const char *filen
                if (regexp != NULL) {
                     add_regexp(this, regexp, replacement);
                }
+               line = line->next;
           }
           file->free(file);
      }

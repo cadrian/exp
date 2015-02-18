@@ -86,13 +86,14 @@ static match_impl_t *regexp_impl_match(regexp_impl_t *this, const char *string, 
      status = pcre_exec(this->re, this->extra, string, length, start, pcre_flags, result->subs, subsmax);
      if (status < 0) {
           switch(status) {
-          case PCRE_ERROR_NOMATCH     :                                                                    break;
-          case PCRE_ERROR_NULL        : fprintf(stderr, "**** Something was null\n");                      break;
-          case PCRE_ERROR_BADOPTION   : fprintf(stderr, "**** A bad option was passed\n");                 break;
-          case PCRE_ERROR_BADMAGIC    : fprintf(stderr, "**** Magic number bad (compiled re corrupt?)\n"); break;
-          case PCRE_ERROR_UNKNOWN_NODE: fprintf(stderr, "**** Something kooky in the compiled re\n");      break;
-          case PCRE_ERROR_NOMEMORY    : fprintf(stderr, "**** Ran out of memory\n");                       break;
-          default                     : fprintf(stderr, "**** Unknown error\n");                           break;
+          case PCRE_ERROR_NOMATCH     :                                                               break;
+          case PCRE_ERROR_NULL        : this->log(warn, "Something was null\n");                      break;
+          case PCRE_ERROR_BADOPTION   : this->log(warn, "A bad option was passed\n");                 break;
+          case PCRE_ERROR_BADMAGIC    : this->log(warn, "Magic number bad (compiled re corrupt?)\n"); break;
+          case PCRE_ERROR_UNKNOWN_NODE: this->log(warn, "Something kooky in the compiled re\n");      break;
+          case PCRE_ERROR_NOMEMORY    : this->log(warn, "Ran out of memory\n");                       break;
+          case PCRE_ERROR_BADOFFSET   : this->log(warn, "Bad offset\n");                              break;
+          default                     : this->log(warn, "PCRE error %d\n", status);                   break;
           }
           free(result);
           return NULL;
@@ -112,6 +113,7 @@ static void regexp_impl_replace_all(regexp_impl_t *this, const char *replace, ch
      int len_replace = strlen(replace);
      match_impl_t *match;
      int start, end, lost = 0, delta;
+     char *whole = string;
 
      match = regexp_impl_match(this, string, 0, len_string, 0);
      while (match != NULL) {
@@ -123,11 +125,11 @@ static void regexp_impl_replace_all(regexp_impl_t *this, const char *replace, ch
                delta = end - start - len_replace;
                lost += delta;
                if (delta < 0) {
-                    memcpy(string + len_replace, string + end, len_string - end);
+                    bcopy(string + end, string + end - delta, len_string - delta);
                }
                memcpy(string + start, replace, len_replace);
                if (delta > 0) {
-                    memcpy(string + len_replace, string + end, len_string - end);
+                    bcopy(string + end, string + end - delta, len_string - delta);
                }
                len_string -= delta;
                string[len_string] = '\0';
@@ -137,7 +139,9 @@ static void regexp_impl_replace_all(regexp_impl_t *this, const char *replace, ch
           if (end >= len_string) {
                match = NULL;
           } else {
-               match = regexp_impl_match(this, string, end, len_string - end, PCRE_NOTEMPTY_ATSTART | PCRE_ANCHORED);
+               len_string -= end;
+               string += end;
+               match = regexp_impl_match(this, string, 0, len_string, PCRE_NOTEMPTY_ATSTART | PCRE_ANCHORED);
           }
      }
 }
@@ -186,7 +190,7 @@ regexp_t *new_regexp(logger_t log, const char *regex, int pcre_flags) {
      result->fn = regexp_impl_fn;
      result->log = log;
      result->regex = strdup(regex);
-     result->max_substrings = max_substrings;
+     result->max_substrings = max_substrings + 1;
 
      return &(result->fn);
 }

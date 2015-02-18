@@ -171,7 +171,7 @@ int main(int argc, char **argv) {
         input->parse(input, "-");
    } else{
         while (optind < argc) {
-             log(info, "Input: %d/%d %s\n", optind, argc, argv[optind]);
+             log(info, "Input %d/%d: %s\n", optind - 2, argc - 3, argv[optind]);
              input->parse(input, argv[optind++]);
         }
    }

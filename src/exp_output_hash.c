@@ -144,31 +144,33 @@ static void hash_display_fill_buf(cad_hash_t *dict, int index, const char *key, 
 }
 
 static void hash_display_count(output_hash_t *this, size_t count) {
-     int i;
+     int i, r;
      dict_entry_t **entries = malloc(this->dict->count(this->dict) * sizeof(dict_entry_t*));
      dict_sort_buf buf = { count, 0, entries };
      entry_t *entry;
 
      this->dict->iterate(this->dict, (cad_hash_iterator_fn)hash_display_fill_buf, &buf);
-     qsort(entries, buf.n, sizeof(dict_entry_t*), (int(*)(const void*,const void*))dict_comp);
-
-     for (i = 0; i < buf.n; i++) {
-          switch(this->options.sample) {
-          case sample_none:
-               printf("%lu:\t%s\n", (unsigned long)count, entries[i]->key);
-               break;
-          case sample_threshold:
-               if (count <= SAMPLE_THRESHOLD) {
-                    entry = entries[i]->entries[0];
-                    printf("%lu:\t%s\n", (unsigned long)count, entry->logline(entry));
-               } else {
+     if (buf.n > 0) {
+          qsort(entries, buf.n, sizeof(dict_entry_t*), (int(*)(const void*,const void*))dict_comp);
+          for (i = 0; i < buf.n; i++) {
+               switch(this->options.sample) {
+               case sample_none:
                     printf("%lu:\t%s\n", (unsigned long)count, entries[i]->key);
+                    break;
+               case sample_threshold:
+                    if (count <= SAMPLE_THRESHOLD) {
+                         entry = entries[i]->entries[0];
+                         printf("%lu:\t%s\n", (unsigned long)count, entry->logline(entry));
+                    } else {
+                         printf("%lu:\t%s\n", (unsigned long)count, entries[i]->key);
+                    }
+                    break;
+               case sample_all:
+                    r = rand() % count;
+                    entry = entries[i]->entries[r];
+                    printf("%lu:\t%s\n", (unsigned long)count, entry->logline(entry));
+                    break;
                }
-               break;
-          case sample_all:
-               entry = entries[i]->entries[(int)(rand() % count + 1)];
-               printf("%lu:        %s\n", (unsigned long)count, entry->logline(entry));
-               break;
           }
      }
 

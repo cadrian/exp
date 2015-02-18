@@ -11,7 +11,7 @@ cd $(dirname $(dirname $(readlink -f $0)))/src
 
     factories=($(
         for entryfile in exp_*.c; do
-            egrep -o '^entry_factory_t *\* *new_[^_]+_entry_factory\(logger_t +[[:alnum:]]+\) *{' $entryfile | egrep -o 'new_[^_]+_entry_factory'
+            egrep -o '^entry_factory_t *\* *new_([0-9A-Za-z_]+)_entry_factory\(logger_t +[[:alnum:]]+\) *{' $entryfile | egrep -o 'new_([0-9A-Za-z_]+)_entry_factory'
         done
     ))
 

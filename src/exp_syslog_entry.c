@@ -27,14 +27,18 @@
 #include "exp_entry.h"
 #include "exp_entry_factory.h"
 
-typedef regexp_t *(*regexp_fn)(logger_t log);
+typedef struct syslog_entry_factory_s syslog_entry_factory_t;
 
-typedef struct {
+typedef regexp_t *(*regexp_fn)(logger_t log);
+typedef bool_t (*extra_is_type_fn)(syslog_entry_factory_t *this, match_t *match);
+
+struct syslog_entry_factory_s {
      entry_factory_t fn;
      logger_t log;
      regexp_fn regexp;
      const char *name;
-} syslog_entry_factory_t;
+     extra_is_type_fn extra_is_type;
+};
 
 static regexp_t *syslog_regexp(logger_t log) {
      static regexp_t *result = NULL;
@@ -53,8 +57,62 @@ static regexp_t *rsyslog_regexp(logger_t log) {
      static regexp_t *result = NULL;
      if (result == NULL) {
           result = new_regexp(log,
-                              "^(?<date>(?<year>[0-9]{4})-(?<month>[0-9]{2})-(?<day>[0-9]{2})T(?<hour>[0-9]{2}):(?<minute>[0-9]{2}):(?<second>[0-9]{2})\\.[0-9]+(\\+-)[0-9]{2}:[0-9]{2}) +"
+                              "^(?<date>(?<year>[0-9]{4})-(?<month>[0-9]{2})-(?<day>[0-9]{2})T(?<hour>[0-9]{2}):(?<minute>[0-9]{2}):(?<second>[0-9]{2})\\.[0-9]+[-+][0-9]{2}:[0-9]{2}) +"
                               "(?<host>[^ ]+) +(?<daemon>[^ ]+): +(?<log>.*)$", 0);
+          if (result == NULL) {
+               exit(1);
+          }
+     }
+     return result;
+}
+
+static regexp_t *apache_access_regexp(logger_t log) {
+     static regexp_t *result = NULL;
+     if (result == NULL) {
+          // 127.0.0.1 - frank [10/Oct/2000:13:55:36 -0700] "GET /apache_pb.gif HTTP/1.0" 200 2326
+          result = new_regexp(log,
+                              "^(?<ip>[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}) - (?<user>[^ ]*) - "
+                              "\\[(?<date>(?<day>[0-9][0-9]?)/+(?<strmonth>[A-Z][a-z]{2})/(?<year>[0-9]{4}):(?<hour>[0-9]{2}):(?<minute>[0-9]{2}):(?<second>[0-9]{2}) +[-+][0-9]{4})\\] +"
+                              "(?<log>\"(?<query>[^\"]+)\" +(?<status>[0-9]{3}) +(?<contentlength>([0-9]+|-)))$", 0);
+          if (result == NULL) {
+               exit(1);
+          }
+     }
+     return result;
+}
+
+static regexp_t *apache_error_regexp(logger_t log) {
+     static regexp_t *result = NULL;
+     if (result == NULL) {
+          // [Wed Oct 11 14:32:52 2000] [error] [client 127.0.0.1] client denied by server configuration: /export/home/live/ap/htdocs/test
+          result = new_regexp(log,
+                              "^\\[(?<date>(?<strday>[A-Z][a-z]{2}) +(?<strmonth>[A-Z][a-z]{2}) +(?<day>[0-9][0-9]?) +(?<hour>[0-9]{2}):(?<minute>[0-9]{2}):(?<second>[0-9]{2}) +(?<year>[0-9]{4}))\\] +"
+                              "(?<log>\\[(?<level>[a-z]+)\\] +\\[(?<client>[^]]+)\\] +(?<message>.*))$", 0);
+          if (result == NULL) {
+               exit(1);
+          }
+     }
+     return result;
+}
+
+static regexp_t *snort_regexp(logger_t log) {
+     static regexp_t *result = NULL;
+     if (result == NULL) {
+          result = new_regexp(log,
+                              "^(?<date>(?<month>[0-9]{2})/(?<day>[0-9]{2}):(?<hour>[0-9]{2}):(?<minute>[0-9]{2}):(?<second>[0-9]{2})\\.[0-9]+) +"
+                              "(?<log>.*)$", 0);
+          if (result == NULL) {
+               exit(1);
+          }
+     }
+     return result;
+}
+
+static regexp_t *raw_regexp(logger_t log) {
+     static regexp_t *result = NULL;
+     if (result == NULL) {
+          result = new_regexp(log,
+                              "^(?<log>.*)$", 0);
           if (result == NULL) {
                exit(1);
           }
@@ -70,22 +128,38 @@ static bool_t syslog_tally_logic(syslog_entry_factory_t *this, size_t tally, siz
      return tally > tally_threshold;
 }
 
+static bool_t securelog_tally_logic(syslog_entry_factory_t *this, size_t tally, size_t tally_threshold, size_t max_sample_lines) {
+     return tally > max_sample_lines;
+}
+
+static bool_t securelog_extra_is_type(syslog_entry_factory_t *this, match_t *match) {
+     bool_t result = false;
+     const char *string;
+     string = match->named_substring(match, "daemon");
+     if (strlen(string) >= 5 && !strncmp("sshd[", string, 5)) {
+          result = true;
+     } else {
+          string = match->named_substring(match, "log");
+          if (strlen(string) >= 4 && !strncmp("pam_", string, 4)) {
+               result = true;
+          }
+     }
+     return result;
+}
+
+static bool_t syslog_extra_is_type(syslog_entry_factory_t *this, match_t *match) {
+     return !securelog_extra_is_type(this, match);
+}
+
 static bool_t syslog_is_type(syslog_entry_factory_t *this, line_t *line) {
      bool_t result = false;
      regexp_t *regexp = this->regexp(this->log);
      match_t *match = regexp->match(regexp, line->buffer, 0, line->length, 0);
-     const char *string;
      if (match != NULL) {
-          string = match->named_substring(match, "daemon");
-          if (strlen(string) >= 5 && !strncmp("sshd[", string, 5)) {
-               this->log(debug, "syslog filter out match for daemon %s\n", string);
+          if (this->extra_is_type == NULL) {
+               result = true;
           } else {
-               string = match->named_substring(match, "log");
-               if (strlen(string) >= 4 && !strncmp("pam_", string, 4)) {
-                    this->log(debug, "syslog filter out match for log pam\n");
-               } else {
-                    result = true;
-               }
+               result = this->extra_is_type(this, match);
           }
           match->free(match);
      }
@@ -188,13 +262,20 @@ static int one(match_t *match) {
 }
 
 static int str_month(match_t *match) {
-     return month_of(match->named_substring(match, "strmonth"));
+     int result;
+     const char *strmonth = match->named_substring(match, "strmonth");
+     if (strmonth == NULL) {
+          result = 1;
+     } else {
+          result = month_of(strmonth);
+     }
+     return result;
 }
 
 static char *string_clone(const char *string) {
      char *result;
      if (string == NULL) {
-          result = "";
+          result = NULL;
      } else {
           result = strdup(string);
      }
@@ -251,6 +332,7 @@ entry_factory_t *new_syslog_entry_factory(logger_t log) {
      result->log = log;
      result->regexp = syslog_regexp;
      result->name = "syslog";
+     result->extra_is_type = syslog_extra_is_type;
      return &(result->fn);
 }
 
@@ -260,6 +342,58 @@ entry_factory_t *new_rsyslog_entry_factory(logger_t log) {
      result->log = log;
      result->regexp = rsyslog_regexp;
      result->name = "rsyslog";
+     result->extra_is_type = NULL;
+     return &(result->fn);
+}
+
+entry_factory_t *new_apache_access_entry_factory(logger_t log) {
+     syslog_entry_factory_t *result = malloc(sizeof(syslog_entry_factory_t));
+     result->fn = syslog_entry_factory_fn;
+     result->log = log;
+     result->regexp = apache_access_regexp;
+     result->name = "apache_access";
+     result->extra_is_type = NULL;
+     return &(result->fn);
+}
+
+entry_factory_t *new_apache_error_entry_factory(logger_t log) {
+     syslog_entry_factory_t *result = malloc(sizeof(syslog_entry_factory_t));
+     result->fn = syslog_entry_factory_fn;
+     result->log = log;
+     result->regexp = apache_error_regexp;
+     result->name = "apache_error";
+     result->extra_is_type = NULL;
+     return &(result->fn);
+}
+
+entry_factory_t *new_securelog_entry_factory(logger_t log) {
+     syslog_entry_factory_t *result = malloc(sizeof(syslog_entry_factory_t));
+     result->fn = syslog_entry_factory_fn;
+     result->fn.tally_logic = (entry_factory_tally_logic_fn)securelog_tally_logic;
+     result->log = log;
+     result->regexp = syslog_regexp;
+     result->name = "securelog";
+     result->extra_is_type = securelog_extra_is_type;
+     return &(result->fn);
+}
+
+entry_factory_t *new_snort_entry_factory(logger_t log) {
+     syslog_entry_factory_t *result = malloc(sizeof(syslog_entry_factory_t));
+     result->fn = syslog_entry_factory_fn;
+     result->log = log;
+     result->regexp = snort_regexp;
+     result->name = "snort";
+     result->extra_is_type = NULL;
+     return &(result->fn);
+}
+
+entry_factory_t *new_raw_entry_factory(logger_t log) {
+     syslog_entry_factory_t *result = malloc(sizeof(syslog_entry_factory_t));
+     result->fn = syslog_entry_factory_fn;
+     result->log = log;
+     result->regexp = raw_regexp;
+     result->name = "raw";
+     result->extra_is_type = NULL;
      return &(result->fn);
 }
 

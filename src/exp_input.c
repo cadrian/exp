@@ -99,7 +99,7 @@ static entry_factory_t *select_entry_factory(logger_t log, line_t *lines) {
           log(debug, "tally[%s] = %lu\n", factory->get_name(factory), (unsigned long)tally[f]);
      }
 
-     for (f = 0; f < nf; f++) {
+     for (f = 0; result == NULL && f < nf; f++) {
           factory = entry_factory(f);
           if (factory->tally_logic(factory, tally[f], TALLY_THRESHOLD, SAMPLE_SIZE)) {
                result = factory;
@@ -119,6 +119,7 @@ static input_file_impl_t *do_parse(input_impl_t *this, file_t *in, const char *f
      if (factory == NULL) {
           this->log(warn, "Input factory not found for file %s\n", filename);
      } else {
+          this->log(info, "Using factory \"%s\" for file %s\n", factory->get_name(factory), filename);
           result = malloc(sizeof(input_file_impl_t) + strlen(filename + 1));
           result->fn = input_file_impl_fn;
           result->log = this->log;
