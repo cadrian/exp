@@ -24,8 +24,13 @@
 
 #include "exp.h"
 #include "exp_regexp.h"
+#include "exp_entry.h"
+#include "exp_entry_factory.h"
 
-#include "_exp_entry_log.c"
+typedef struct {
+     entry_factory_t fn;
+     logger_t log;
+} syslog_entry_factory_t;
 
 static regexp_t *syslog_regexp(void) {
      static regexp_t *result = NULL;
@@ -38,19 +43,27 @@ static regexp_t *syslog_regexp(void) {
      return result;
 }
 
-static bool_t syslog_is_type(entry_factory_t *this, line_t *line) {
+static const char *syslog_get_name(syslog_entry_factory_t *this) {
+     return "syslog";
+}
+
+static bool_t syslog_tally_logic(syslog_entry_factory_t *this, size_t tally, size_t tally_threshold, size_t max_sample_lines) {
+     return tally > tally_threshold;
+}
+
+static bool_t syslog_is_type(syslog_entry_factory_t *this, line_t *line) {
      bool_t result = false;
      regexp_t *regexp = syslog_regexp();
      match_t *match = regexp->match(regexp, line->buffer, 0, line->length, 0);
      const char *string;
      if (match != NULL) {
           string = match->named_substring(match, "daemon");
-          if (string == NULL || (strlen(string) >= 5 && !strncmp("sshd[", string, 5))) {
-               // don't match
+          if (strlen(string) >= 5 && !strncmp("sshd[", string, 5)) {
+               this->log(debug, "syslog filter out match for daemon %s\n", string);
           } else {
                string = match->named_substring(match, "log");
-               if (string == NULL || (strlen(string) >= 4 && !strncmp("pam_", string, 4))) {
-                    // don't match
+               if (strlen(string) >= 4 && !strncmp("pam_", string, 4)) {
+                    this->log(debug, "syslog filter out match for log pam\n");
                } else {
                     result = true;
                }
@@ -70,7 +83,8 @@ typedef struct {
      int second;
      const char *host;
      const char *daemon;
-     const char *log;
+     const char *logline;
+     logger_t log;
 } syslog_entry_t;
 
 static int syslog_entry_year(syslog_entry_t *this) {
@@ -105,23 +119,23 @@ static const char *syslog_entry_daemon(syslog_entry_t *this) {
      return this->daemon;
 }
 
-static const char *syslog_entry_log(syslog_entry_t *this) {
-     return this->log;
+static const char *syslog_entry_logline(syslog_entry_t *this) {
+     return this->logline;
 }
 
 static entry_t syslog_entry_fn = {
-     .year   = (entry_year_fn  )syslog_entry_year  ,
-     .month  = (entry_month_fn )syslog_entry_month ,
-     .day    = (entry_day_fn   )syslog_entry_day   ,
-     .hour   = (entry_hour_fn  )syslog_entry_hour  ,
-     .minute = (entry_minute_fn)syslog_entry_minute,
-     .second = (entry_second_fn)syslog_entry_second,
-     .host   = (entry_host_fn  )syslog_entry_host  ,
-     .daemon = (entry_daemon_fn)syslog_entry_daemon,
-     .log    = (entry_log_fn   )syslog_entry_log   ,
+     .year    = (entry_year_fn   )syslog_entry_year   ,
+     .month   = (entry_month_fn  )syslog_entry_month  ,
+     .day     = (entry_day_fn    )syslog_entry_day    ,
+     .hour    = (entry_hour_fn   )syslog_entry_hour   ,
+     .minute  = (entry_minute_fn )syslog_entry_minute ,
+     .second  = (entry_second_fn )syslog_entry_second ,
+     .host    = (entry_host_fn   )syslog_entry_host   ,
+     .daemon  = (entry_daemon_fn )syslog_entry_daemon ,
+     .logline = (entry_logline_fn)syslog_entry_logline,
 };
 
-static entry_t *syslog_new_entry(entry_factory_t *this, line_t *line) {
+static entry_t *syslog_new_entry(syslog_entry_factory_t *this, line_t *line) {
      syslog_entry_t *result = malloc(sizeof(syslog_entry_t));
 
      regexp_t *regexp = syslog_regexp();
@@ -133,15 +147,17 @@ static entry_t *syslog_new_entry(entry_factory_t *this, line_t *line) {
 
           result->fn = syslog_entry_fn;
 
-          result->year   = localtime(&tm)->tm_year + 1900;
-          result->day    = atoi(match->named_substring(match, "day"));
-          result->month  = month_of(match->named_substring(match, "month"));
-          result->hour   = atoi(match->named_substring(match, "hour"));
-          result->minute = atoi(match->named_substring(match, "minute"));
-          result->second = atoi(match->named_substring(match, "second"));
-          result->host   = strdup(match->named_substring(match, "host"));
-          result->daemon = strdup(match->named_substring(match, "daemon"));
-          result->log    = strdup(match->named_substring(match, "log"));
+          result->year    = localtime(&tm)->tm_year + 1900;
+          result->day     = atoi(match->named_substring(match, "day"));
+          result->month   = month_of(match->named_substring(match, "month"));
+          result->hour    = atoi(match->named_substring(match, "hour"));
+          result->minute  = atoi(match->named_substring(match, "minute"));
+          result->second  = atoi(match->named_substring(match, "second"));
+          result->host    = strdup(match->named_substring(match, "host"));
+          result->daemon  = strdup(match->named_substring(match, "daemon"));
+          result->logline = strdup(match->named_substring(match, "log"));
+
+          result->log     = this->log;
 
           match->free(match);
      } else {
@@ -149,19 +165,27 @@ static entry_t *syslog_new_entry(entry_factory_t *this, line_t *line) {
           result->day = result->month = result->hour = result->minute = result->second = 1;
           result->host = result->daemon = "#";
           if (line->length > 0) {
-               result->log = line->buffer;
+               result->logline = line->buffer;
           } else {
-               result->log = "#";
+               result->logline = "#";
           }
      }
 
      return &(result->fn);
 }
 
-static entry_factory_t syslog_entry_factory = {
-     .tally_logic = log_tally_logic,
-     .is_type = syslog_is_type,
-     .new_entry = syslog_new_entry
+static entry_factory_t syslog_entry_factory_fn = {
+     .get_name = (get_name_fn)syslog_get_name,
+     .tally_logic = (tally_logic_fn)syslog_tally_logic,
+     .is_type = (is_type_fn)syslog_is_type,
+     .new_entry = (new_entry_fn)syslog_new_entry
 };
+
+entry_factory_t *new_syslog_entry_factory(logger_t log) {
+     syslog_entry_factory_t *result = malloc(sizeof(syslog_entry_factory_t));
+     result->fn = syslog_entry_factory_fn;
+     result->log = log;
+     return &(result->fn);
+}
 
 #endif /* __EXP_ENTRY_SYSLOG_C__ */

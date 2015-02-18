@@ -14,14 +14,10 @@
   along with exp.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef __EXP_ENTRY_LOG_C__
-#define __EXP_ENTRY_LOG_C__
-
 #include <stdlib.h>
 #include <string.h>
 
 #include "exp.h"
-
 static char *months[] = {
      "",
      "Jan",
@@ -38,7 +34,7 @@ static char *months[] = {
      "Dec",
 };
 
-static int month_of(const char *month) {
+int month_of(const char *month) {
      int result = 0;
      int index;
      for (index = 1; result == 0 && index <= 12; index++) {
@@ -48,9 +44,3 @@ static int month_of(const char *month) {
      }
      return result;
 }
-
-static bool_t log_tally_logic(entry_factory_t *this, size_t tally, size_t tally_threshold, size_t max_sample_lines) {
-     return tally > tally_threshold;
-}
-
-#endif /* __EXP_ENTRY_LOG_C__ */

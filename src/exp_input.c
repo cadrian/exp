@@ -22,6 +22,7 @@
 
 #include "exp_input.h"
 #include "exp_entry.h"
+#include "exp_entry_factory.h"
 
 #define BUFFER_SIZE 4096
 #define SAMPLE_SIZE 10
@@ -71,7 +72,7 @@ static line_t *read_all_lines(input_impl_t *this, FILE *in) {
                     this->length++;
                } else if (line_length >= BUFFER_SIZE) {
                     if (!line_too_long_flag) {
-                         this->log(info, "Truncating line %d\n", this->length);
+                         this->log(info, "Truncating line %lu\n", (unsigned long)this->length);
                          count_lines_too_long++;
                          line_too_long_flag = true;
                          line[BUFFER_SIZE - 1] = '\0';
@@ -107,25 +108,29 @@ static line_t *read_all_lines(input_impl_t *this, FILE *in) {
 
 static entry_factory_t *select_entry_factory(input_impl_t *this, line_t *lines) {
      entry_factory_t *result = NULL;
-     int i, f = entry_factories_length();
+     int i, f;
+     int nf = entry_factories_length();
      line_t *line = lines;
      entry_factory_t *factory;
-     size_t *tally = malloc(sizeof(size_t) * f);
-     memset(tally, 0, sizeof(size_t) * f);
+     size_t *tally = malloc(sizeof(size_t) * nf);
+     memset(tally, 0, sizeof(size_t) * nf);
 
      for (i = 0; line != NULL && i < SAMPLE_SIZE; i++, line = line->next) {
-          for (f = 0; (factory = entry_factories[f]) != NULL; f++) {
+          for (f = 0; f < nf; f++) {
+               factory = entry_factory(f);
                if (factory->is_type(factory, line)) {
                     tally[f]++;
                }
           }
      }
 
-     for (f = 0; result == NULL && (factory = entry_factories[f]) != NULL; f++) {
-        this->log(debug, "tally[%d] = %d\n", f, tally[f]);
+     for (f = 0; f < nf; f++) {
+          factory = entry_factory(f);
+          this->log(debug, "tally[%s] = %lu\n", factory->get_name(factory), (unsigned long)tally[f]);
      }
 
-     for (f = 0; result == NULL && (factory = entry_factories[f]) != NULL; f++) {
+     for (f = 0; f < nf; f++) {
+          factory = entry_factory(f);
           if (factory->tally_logic(factory, tally[f], TALLY_THRESHOLD, SAMPLE_SIZE)) {
                result = factory;
           }

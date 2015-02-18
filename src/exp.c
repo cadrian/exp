@@ -23,6 +23,7 @@
 #include "exp_log.h"
 #include "exp_input.h"
 #include "exp_output.h"
+#include "exp_entry_factory.h"
 
 static level_t   verbose     = warn;
 static expmode_t mode        = mode_undefined;
@@ -163,6 +164,8 @@ int main(int argc, char **argv) {
       fprintf(stderr, "Undefined mode!\n");
       exit(2);
    }
+
+   register_all_factories(log);
 
    if (optind == argc) {
         log(info, "Input: stdin\n");

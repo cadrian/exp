@@ -1,6 +1,6 @@
 #!/usr/bin/make -f
 
-OBJ=$(shell ls -1 src/*.c | sed -r 's|^src/|target/out/|g;s|\.c|.o|g')
+OBJ=$(shell { echo src/_exp_entry_registry.c ; ls -1 src/*.c ; } | sed -r 's|^src/|target/out/|g;s|\.c|.o|g' | sort -u)
 
 ifeq "$(wildcard ../libcad)" ""
 LIBCADINCLUDE=
@@ -16,6 +16,7 @@ all: exe
 
 clean:
 	rm -rf target
+	rm -f src/_exp_entry_registry.c
 
 exe: target/exp
 
@@ -27,11 +28,15 @@ target/out: target
 
 target/exp: $(OBJ) libcad
 	@echo "Compiling executable: $<"
-	$(CC) $(CFLAGS) -g -o $@ $(OBJ) -L target -lpcre -lcad
+	$(CC) $(CFLAGS) -o $@ $(OBJ) -L target -lpcre -lcad
 
 target/out/%.o: src/%.c src/*.h target/out
 	@echo "Compiling object: $<"
 	$(CC) $(CFLAGS) -I src $(LIBCADINCLUDE) -Wall -c $< -o $@
+
+src/_exp_entry_registry.c: src/exp_*_entry.c
+	@echo "Generating factory registry: $<"
+	utils/generate_factory_registry.sh
 
 ifeq "$(wildcard ../libcad)" ""
 libcad:

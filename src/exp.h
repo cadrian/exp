@@ -50,4 +50,6 @@ typedef enum {
    mode_ygraph
 } expmode_t;
 
+int month_of(const char *month);
+
 #endif /* __EXP_H__ */
