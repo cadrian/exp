@@ -1,14 +1,27 @@
-LIBRARIES=libcad libpcre
+#!/usr/bin/make -f
 
-include /usr/share/libcad/Makefile
+OBJ=$(shell ls -1 src/*.c | sed -r 's|^src/|target/out/|g;s|\.c|.o|g')
 
-all: run-test exe doc
+CFLAGS ?= -g
+LDFLAGS ?=
+
+all: exe
 	@echo
 
-run-test: target target/$(PROJECT) $(TST)
-	@echo
+clean:
+	rm -rf target
 
-exe: target target/$(PROJECT)
+exe: target target/exp
 
-target/$(PROJECT): $(PIC_OBJ)
-	$(CC) -g -o $@ $(PIC_OBJ) $(LINK_LIBS)
+target:
+	mkdir target
+
+target/exp: $(OBJ)
+	@echo "Compiling executable: $<"
+	$(CC) $(CFLAGS) -g -o $@ -lpcre -lcad $(OBJ)
+
+target/out/%.o: src/%.c src/*.h
+	@echo "Compiling object: $<"
+	$(CC) $(CFLAGS) -Wall -c $< -o $@
+
+.PHONY: all clean
