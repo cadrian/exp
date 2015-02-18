@@ -20,13 +20,6 @@
 #include "exp.h"
 #include "exp_log.h"
 
-typedef struct line_s line_t;
-struct line_s {
-     line_t *next;
-     size_t length;
-     char buffer[0];
-};
-
 typedef struct entry_s entry_t;
 
 typedef int (*entry_year_fn)(entry_t *this);

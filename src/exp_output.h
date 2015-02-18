@@ -30,10 +30,11 @@ struct output_s {
 };
 
 typedef struct {
-     bool_t filter;
-     bool_t fingerprint;
-     char  *tick;
-     bool_t wide;
+     bool_t   filter;
+     bool_t   fingerprint;
+     char    *tick;
+     bool_t   wide;
+     sample_t sample;
 } output_options_t;
 
 output_t *new_output_hash     (logger_t log, input_t *input, output_options_t options);

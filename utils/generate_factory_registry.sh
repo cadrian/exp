@@ -5,6 +5,7 @@ cd $(dirname $(dirname $(readlink -f $0)))/src
 {
     echo "/* File generated on $(date -R) */"
     echo '#include "exp_log.h"'
+    echo '#include "exp_file.h"'
     echo '#include "exp_entry_factory.h"'
     echo
 

@@ -32,10 +32,10 @@ typedef struct {
      logger_t log;
 } syslog_entry_factory_t;
 
-static regexp_t *syslog_regexp(void) {
+static regexp_t *syslog_regexp(logger_t log) {
      static regexp_t *result = NULL;
      if (result == NULL) {
-          result = new_regexp("^(?<date>(?<month>[A-Z][a-z]{2}) +(?<day>[0-9][0-9]?) +(?<hour>[0-9]{2}):(?<minute>[0-9]{2}):(?<second>[0-9]{2})) +(?<host>[^ ]+) +(?<daemon>[^ ]+): +(?<log>.*)$", 0, 10);
+          result = new_regexp(log, "^(?<date>(?<month>[A-Z][a-z]{2}) +(?<day>[0-9][0-9]?) +(?<hour>[0-9]{2}):(?<minute>[0-9]{2}):(?<second>[0-9]{2})) +(?<host>[^ ]+) +(?<daemon>[^ ]+): +(?<log>.*)$", 0, 10);
           if (result == NULL) {
                exit(1);
           }
@@ -53,7 +53,7 @@ static bool_t syslog_tally_logic(syslog_entry_factory_t *this, size_t tally, siz
 
 static bool_t syslog_is_type(syslog_entry_factory_t *this, line_t *line) {
      bool_t result = false;
-     regexp_t *regexp = syslog_regexp();
+     regexp_t *regexp = syslog_regexp(this->log);
      match_t *match = regexp->match(regexp, line->buffer, 0, line->length, 0);
      const char *string;
      if (match != NULL) {
@@ -138,7 +138,7 @@ static entry_t syslog_entry_fn = {
 static entry_t *syslog_new_entry(syslog_entry_factory_t *this, line_t *line) {
      syslog_entry_t *result = malloc(sizeof(syslog_entry_t));
 
-     regexp_t *regexp = syslog_regexp();
+     regexp_t *regexp = syslog_regexp(this->log);
      match_t *match = regexp->match(regexp, line->buffer, 0, line->length, 0);
      time_t tm;
 

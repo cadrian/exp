@@ -28,21 +28,20 @@
 static level_t   verbose     = warn;
 static expmode_t mode        = mode_undefined;
 
-static sample_t  sample      = sample_none;
-
 static output_options_t options = {
      .filter = true,
      .fingerprint = false,
      .tick = "#",
      .wide = false,
+     .sample = sample_none,
 };
 
 static struct option long_options[] = {
    {"verbose", no_argument, NULL, 'v'},
 
-   {"sample", no_argument, (int*)&sample, sample_threshold},
-   {"nosample", no_argument, (int*)&sample, sample_none},
-   {"allsample", no_argument, (int*)&sample, sample_all},
+   {"sample", no_argument, (int*)&options.sample, sample_threshold},
+   {"nosample", no_argument, (int*)&options.sample, sample_none},
+   {"allsample", no_argument, (int*)&options.sample, sample_all},
 
    {"filter", no_argument, (int*)&options.filter, true},
    {"nofilter", no_argument, (int*)&options.filter, false},

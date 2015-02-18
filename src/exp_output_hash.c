@@ -23,8 +23,28 @@ typedef struct {
    output_options_t options;
 } output_hash_t;
 
+static void hash_prepare(output_hash_t *this, entry_t *entry) {
+     if (this->options.filter) {
+          // TODO hash_filter(this, entry, "hash.stopwords");
+     }
+     if (this->options.fingerprint) {
+          // TODO hash_fingerprint(this, entry);
+     }
+     // TODO
+}
+
+static void hash_display(output_hash_t *this, entry_t *entry) {
+     // TODO
+}
+
 static void output_hash_display(output_hash_t *this) {
-   this->log(debug, "yeah hash\n");
+     int i, n = this->input->entries_length(this->input);
+     for (i = 0; i < n; i++) {
+          hash_prepare(this, this->input->entry(this->input, i));
+     }
+     for (i = 0; i < n; i++) {
+          hash_display(this, this->input->entry(this->input, i));
+     }
 }
 
 static output_t output_hash_fn = {

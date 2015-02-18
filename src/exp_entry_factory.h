@@ -18,6 +18,7 @@
 #define __EXP_ENTRY_FACTORY_H__
 
 #include "exp_entry.h"
+#include "exp_file.h"
 
 typedef struct entry_factory_s entry_factory_t;
 

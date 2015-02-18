@@ -18,13 +18,15 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "exp_log.h"
 #include "exp_regexp.h"
 
 typedef struct {
      regexp_t fn;
+     logger_t log;
      pcre *re;
      pcre_extra *extra;
-     const char *regex;
+     char *regex;
      int max_substrings;
 } regexp_impl_t;
 
@@ -71,7 +73,7 @@ static match_t match_impl_fn = {
      .free = (regexp_match_free_fn)match_impl_free,
 };
 
-static match_t *regexp_impl_match(regexp_impl_t *this, const char *string, int start, int length, int pcre_flags) {
+static match_impl_t *regexp_impl_match(regexp_impl_t *this, const char *string, int start, int length, int pcre_flags) {
      int subsmax = this->max_substrings * 3;
      match_impl_t *result = malloc(sizeof(match_impl_t) + sizeof(int) * subsmax);
      int status;
@@ -102,7 +104,42 @@ static match_t *regexp_impl_match(regexp_impl_t *this, const char *string, int s
           result->subslen = status;
      }
 
-     return &(result->fn);
+     return result;
+}
+
+static void regexp_impl_replace_all(regexp_impl_t *this, const char *replace, char *string) {
+     int len_string = strlen(string);
+     int len_replace = strlen(replace);
+     match_impl_t *match;
+     int start, end, lost = 0, delta;
+
+     match = regexp_impl_match(this, string, 0, len_string, 0);
+     while (match != NULL) {
+          start = match->subs[0];
+          end = match->subs[1];
+          if (len_replace > end - start + lost) {
+               this->log(warn, "string replacement longer that matched substring, cannot replace\n");
+          } else {
+               delta = end - start - len_replace;
+               lost += delta;
+               if (delta < 0) {
+                    memcpy(string + len_replace, string + end, len_string - end);
+               }
+               memcpy(string + start, replace, len_replace);
+               if (delta > 0) {
+                    memcpy(string + len_replace, string + end, len_string - end);
+               }
+               len_string -= delta;
+               string[len_string] = '\0';
+               end = start + len_replace;
+          }
+          match_impl_free(match);
+          if (end >= len_string) {
+               match = NULL;
+          } else {
+               match = regexp_impl_match(this, string, end, len_string - end, PCRE_NOTEMPTY_ATSTART | PCRE_ANCHORED);
+          }
+     }
 }
 
 static void regexp_impl_free(regexp_impl_t *this) {
@@ -110,22 +147,20 @@ static void regexp_impl_free(regexp_impl_t *this) {
      if (this->extra != NULL) {
           pcre_free_study(this->extra);
      }
+     free(this->regex);
      free(this);
 }
 
 static regexp_t regexp_impl_fn = {
      .match = (regexp_match_fn)regexp_impl_match,
+     .replace_all = (regexp_replace_all_fn)regexp_impl_replace_all,
      .free = (regexp_free_fn)regexp_impl_free,
 };
 
-regexp_t *new_regexp(const char *regex, int pcre_flags, size_t max_substrings) {
+regexp_t *new_regexp(logger_t log, const char *regex, int pcre_flags, size_t max_substrings) {
      regexp_impl_t *result = malloc(sizeof(regexp_impl_t));
      const char *pcre_error_string;
      int pcre_error_index;
-
-     result->fn = regexp_impl_fn;
-     result->regex = regex;
-     result->max_substrings = max_substrings;
 
      result->re = pcre_compile(regex, pcre_flags, &pcre_error_string, &pcre_error_index, NULL);
      if (result->re == NULL) {
@@ -141,6 +176,15 @@ regexp_t *new_regexp(const char *regex, int pcre_flags, size_t max_substrings) {
           fprintf(stderr, "Error while optimizing regexp %s\n%s\n", regex, pcre_error_string);
           return NULL;
      }
+
+     if (max_substrings == 0) {
+          pcre_fullinfo(result->re, result->extra, PCRE_INFO_CAPTURECOUNT, &max_substrings);
+     }
+
+     result->fn = regexp_impl_fn;
+     result->log = log;
+     result->regex = strdup(regex);
+     result->max_substrings = max_substrings;
 
      return &(result->fn);
 }

@@ -14,25 +14,22 @@
   along with exp.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef __EXP_INPUT_H__
-#define __EXP_INPUT_H__
+#ifndef __EXP_FILTER_H__
+#define __EXP_FILTER_H__
 
 #include "exp.h"
 #include "exp_log.h"
-#include "exp_entry.h"
 
-typedef struct input_s input_t;
+typedef struct filter_s filter_t;
 
-typedef void (*input_parse_fn)(input_t *this, char *filename);
-typedef size_t (*input_entries_length_fn)(input_t *this);
-typedef entry_t *(*input_entry_fn)(input_t *this, int index);
+typedef const char *(*filter_scrub_fn)(filter_t *this, const char *line);
+typedef bool_t (*filter_bleach_fn)(filter_t *this, const char *line);
 
-struct input_s {
-     input_parse_fn parse;
-     input_entries_length_fn entries_length;
-     input_entry_fn entry;
+struct filter_s {
+     filter_scrub_fn scrub;
+     filter_bleach_fn bleach;
 };
 
-input_t *new_input(logger_t log);
+filter_t *new_filter(logger_t log, const char *filename);
 
-#endif /* __EXP_INPUT_H__ */
+#endif /* __EXP_FILTER_H__ */

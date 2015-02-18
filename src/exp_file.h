@@ -14,25 +14,31 @@
   along with exp.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef __EXP_INPUT_H__
-#define __EXP_INPUT_H__
+#ifndef __EXP_FILE_H__
+#define __EXP_FILE_H__
 
 #include "exp.h"
 #include "exp_log.h"
-#include "exp_entry.h"
 
-typedef struct input_s input_t;
+#define MAX_LINE_SIZE 4096
 
-typedef void (*input_parse_fn)(input_t *this, char *filename);
-typedef size_t (*input_entries_length_fn)(input_t *this);
-typedef entry_t *(*input_entry_fn)(input_t *this, int index);
-
-struct input_s {
-     input_parse_fn parse;
-     input_entries_length_fn entries_length;
-     input_entry_fn entry;
+typedef struct line_s line_t;
+struct line_s {
+     line_t *next;
+     size_t length;
+     const char buffer[0];
 };
 
-input_t *new_input(logger_t log);
+typedef struct file_s file_t;
 
-#endif /* __EXP_INPUT_H__ */
+typedef line_t *(*file_get_lines_fn)(file_t *this);
+typedef void (*file_free_fn)(file_t *this);
+
+struct file_s {
+     file_get_lines_fn get_lines;
+     file_free_fn free;
+};
+
+file_t *new_file(logger_t log, level_t error_level, const char *path);
+
+#endif /* __EXP_FILE_H__ */
