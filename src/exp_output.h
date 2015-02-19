@@ -68,10 +68,12 @@ typedef struct {
      bool_t sample;
 } options_set_t;
 
+typedef bool_t (*output_fingerprint_file_fn)(output_t *this, int index, void *data);
 typedef options_set_t (*output_options_set_fn)(output_t *this);
 typedef void (*output_display_fn)(output_t *this);
 
 struct output_s {
+     output_fingerprint_file_fn fingerprint_file;
      output_options_set_fn options_set;
      output_display_fn display;
 };

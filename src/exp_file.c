@@ -55,7 +55,7 @@ static file_t file_impl_fn = {
      .free = (file_free_fn)impl_free,
 };
 
-static line_t *new_line(line_t *previous, size_t length, char *content) {
+line_t *new_line(line_t *previous, size_t length, const char *content) {
      line_t *result = malloc(sizeof(line_t) + length + 1);
      char *line = (char*)result->buffer;
      if (previous != NULL) {

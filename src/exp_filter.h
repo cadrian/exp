@@ -19,12 +19,13 @@
 
 #include "exp.h"
 #include "exp_log.h"
+#include "exp_entry.h"
 
 typedef struct filter_s filter_t;
 
 typedef void (*filter_extend_fn)(filter_t *this, const char *filename, const char *replacement);
-typedef const char *(*filter_scrub_fn)(filter_t *this, const char *line);
-typedef bool_t (*filter_bleach_fn)(filter_t *this, const char *line);
+typedef const char *(*filter_scrub_fn)(filter_t *this, const entry_t *entry);
+typedef bool_t (*filter_bleach_fn)(filter_t *this, const entry_t *entry);
 
 struct filter_s {
      filter_extend_fn extend;

@@ -36,7 +36,7 @@ will be ported.
   * snort
   * raw
 * Outputs
-  * hash **(todo: fingerprint)**
+  * hash
 
 ## Todo
 

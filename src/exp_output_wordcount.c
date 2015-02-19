@@ -31,6 +31,7 @@ static options_set_t output_wordcount_options_set(output_wordcount_t *this) {
 }
 
 static output_t output_wordcount_fn = {
+     .fingerprint_file = NULL,
      .options_set = (output_options_set_fn)output_wordcount_options_set,
      .display = (output_display_fn)output_wordcount_display,
 };

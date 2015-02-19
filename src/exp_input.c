@@ -76,6 +76,14 @@ static input_file_t *impl_file(input_impl_t *this, int index) {
      return &(this->files[index]->fn);
 }
 
+static int impl_file_comparator(input_file_impl_t **file1, input_file_impl_t **file2) {
+     return (*file2)->length - (*file1)->length;
+}
+
+static void impl_sort_files(input_impl_t *this) {
+     return qsort(&(this->files), this->count, sizeof(input_file_impl_t*), (int(*)(const void*, const void*))impl_file_comparator);
+}
+
 static entry_factory_t *select_entry_factory(logger_t log, line_t *lines) {
      entry_factory_t *result = NULL;
      int i, f;
@@ -161,6 +169,7 @@ static input_t input_impl_fn = {
      .parse = (input_parse_fn)impl_parse,
      .files_length = (input_files_length_fn)impl_files_length,
      .file = (input_file_fn)impl_file,
+     .sort_files = (input_sort_files_fn)impl_sort_files,
 };
 
 input_t *new_input(logger_t log) {

@@ -46,21 +46,32 @@ struct filter_impl_s {
      char **replacements;
 };
 
-static const char *impl_scrub(filter_impl_t *this, const char *line) {
+static const char *impl_scrub(filter_impl_t *this, entry_t *entry) {
      static char result[MAX_LINE_SIZE];
      int i, n = this->length;
      regexp_t *stopword;
-     strncpy(result, line, MAX_LINE_SIZE);
-     result[MAX_LINE_SIZE-1] = '\0';
-     for (i = 0; i < n; i++) {
-          stopword = this->stopwords[i];
-          stopword->replace_all(stopword, this->replacements[i], result);
+     const char *daemon, *logline;
+     daemon = entry->daemon(entry);
+     logline = entry->logline(entry);
+     if (logline == NULL) {
+          strcpy(result, "#");
+     } else {
+          if (daemon == NULL) {
+               strncpy(result, logline, MAX_LINE_SIZE);
+               result[MAX_LINE_SIZE-1] = '\0';
+          } else {
+               snprintf(result, MAX_LINE_SIZE, "%s %s", daemon, logline);
+          }
+          for (i = 0; i < n; i++) {
+               stopword = this->stopwords[i];
+               stopword->replace_all(stopword, this->replacements[i], result);
+          }
      }
      return result;
 }
 
-static bool_t impl_bleach(filter_impl_t *this, const char *line) {
-     const char *scrubbed = impl_scrub(this, line);
+static bool_t impl_bleach(filter_impl_t *this, entry_t *entry) {
+     const char *scrubbed = impl_scrub(this, entry);
      return !strcmp("#", scrubbed);
 }
 
@@ -130,7 +141,7 @@ static char *split(char **regexp) {
 }
 
 static void impl_extend_(filter_impl_t *this, const char *dir, const char *filename, const char *replacement) {
-     char *path = malloc(strlen(dir) + strlen(filename) + 2);
+     char *path = malloc(strlen(dir) + strlen(filename) + 1);
      file_t *file;
      line_t *line;
      regexp_t *regexp;

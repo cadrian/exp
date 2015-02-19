@@ -31,6 +31,7 @@ static options_set_t output_daemon_options_set(output_daemon_t *this) {
 }
 
 static output_t output_daemon_fn = {
+     .fingerprint_file = NULL,
      .options_set = (output_options_set_fn)output_daemon_options_set,
      .display = (output_display_fn)output_daemon_display,
 };

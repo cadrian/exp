@@ -21,6 +21,8 @@
 
 #include "exp_output.h"
 #include "exp_filter.h"
+#include "exp_fingerprint.h"
+#include "exp_file.h"
 
 #include <cad_hash.h>
 
@@ -35,6 +37,7 @@ typedef struct {
      filter_t **filters;
      cad_hash_t *dict;
      size_t max_count;
+     fingerprint_t *fingerprint;
 } output_hash_t;
 
 typedef struct {
@@ -43,6 +46,29 @@ typedef struct {
      entry_t **entries;
      char key[0];
 } dict_entry_t;
+
+static bool_t fingerprint_has_key(output_hash_t *data, const char *key) {
+     return data->dict->get(data->dict, key) != NULL;
+}
+
+static void fingerprint_del_key(output_hash_t *data, const char *key) {
+     data->dict->del(data->dict, key);
+}
+
+typedef struct {
+     size_t count;
+     output_hash_t *data;
+} fingerprint_data_t;
+
+static void fingerprint_file_count(cad_hash_t *dict, int index, const char *key, dict_entry_t *value, fingerprint_data_t *data) {
+     if (fingerprint_has_key(data->data, key)) {
+          data->count++;
+     }
+}
+
+static void fingerprint_file_del_key(cad_hash_t *dict, int index, const char *key, dict_entry_t *value, fingerprint_data_t *data) {
+     fingerprint_del_key(data->data, key);
+}
 
 static void hash_increment(output_hash_t *this, const char *key, entry_t *value) {
      dict_entry_t *entry = this->dict->get(this->dict, key);
@@ -63,21 +89,46 @@ static void hash_increment(output_hash_t *this, const char *key, entry_t *value)
      }
 }
 
+static void fingerprint_increment(output_hash_t *this, input_file_t *file) {
+     entry_factory_t *factory;
+     entry_t *fingerprint_entry;
+     line_t *fingerprint_line;
+     const char *filename;
+
+     factory = file->get_factory(file);
+     filename = file->get_name(file);
+     fingerprint_line = new_line(NULL, strlen(filename), filename);
+     fingerprint_entry = factory->new_entry(factory, fingerprint_line);
+     hash_increment(this, filename, fingerprint_entry);
+}
+
+static bool_t output_hash_fingerprint_file(output_hash_t *this, int index, output_hash_t *data) {
+     // This function runs in the "output" embedded in the fingerprint object.
+     // The given "data" is the actual output to filter if a fingerprint is found.
+     bool_t result = false;
+     fingerprint_data_t fingerprint = { 0, data };
+     input_file_t *file = this->input->file(this->input, index);
+     size_t threshold = (int)(THRESHOLD_COEFFICIENT * (float)file->entries_length(file) + 0.5);
+     this->log(info, "Threshold: %lu/%lu\n", (unsigned long)threshold, (unsigned long)file->entries_length(file));
+
+     this->dict->iterate(this->dict, (cad_hash_iterator_fn)fingerprint_file_count, &fingerprint);
+
+     if (fingerprint.count > threshold) {
+          this->dict->iterate(this->dict, (cad_hash_iterator_fn)fingerprint_file_del_key, &fingerprint);
+          fingerprint_increment(this, file);
+          result = true;
+     }
+
+     return result;
+}
+
 static void hash_fill_(output_hash_t *this, input_file_t *file, filter_t *filter) {
      int i, n = file->entries_length(file);
      entry_t *entry;
-     static char input[MAX_LINE_SIZE];
-     const char *key, *daemon, *logline;
+     const char *key;
      for (i = 0; i < n; i++) {
           entry = file->entry(file, i);
-          daemon = entry->daemon(entry);
-          logline = entry->logline(entry);
-          if (daemon == NULL) {
-               key = filter->scrub(filter, logline);
-          } else {
-               snprintf(input, MAX_LINE_SIZE, "%s %s", daemon, logline);
-               key = filter->scrub(filter, input);
-          }
+          key = filter->scrub(filter, entry);
           hash_increment(this, key, entry);
      }
 }
@@ -121,7 +172,7 @@ static void hash_prepare(output_hash_t *this) {
      }
 
      if (this->options.fingerprint) {
-          this->log(warn, "fingerprint not yet supported\n");
+          this->fingerprint->run(this->fingerprint, this);
      }
 
      hash_fill(this);
@@ -211,6 +262,7 @@ static options_set_t output_hash_options_set(output_hash_t *this) {
 }
 
 static output_t output_hash_fn = {
+     .fingerprint_file = (output_fingerprint_file_fn)output_hash_fingerprint_file,
      .options_set = (output_options_set_fn)output_hash_options_set,
      .display = (output_display_fn)output_hash_display,
 };
@@ -223,5 +275,8 @@ output_t *new_output_hash(logger_t log, input_t *input, output_options_t options
      result->options = options;
      result->dict = cad_new_hash(stdlib_memory, cad_hash_strings);
      result->max_count = 0;
+     if (options.fingerprint) {
+          result->fingerprint = new_fingerprint(log);
+     }
      return &(result->fn);
 }

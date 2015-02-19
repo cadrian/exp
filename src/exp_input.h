@@ -28,11 +28,13 @@ typedef struct input_file_s input_file_t;
 typedef input_file_t *(*input_parse_fn)(input_t *this, const char *filename);
 typedef size_t (*input_files_length_fn)(input_t *this);
 typedef input_file_t *(*input_file_fn)(input_t *this, int index);
+typedef void (*input_sort_files_fn)(input_t *this);
 
 struct input_s {
      input_parse_fn parse;
      input_files_length_fn files_length;
      input_file_fn file;
+     input_sort_files_fn sort_files;
 };
 
 typedef entry_factory_t *(*input_file_get_factory_fn)(input_file_t *this);

@@ -95,33 +95,33 @@ static void usage(const char *cmd) {
  * The long options definition.
  */
 static struct option long_options[] = {
-   {"verbose",     no_argument,       NULL, 'v'},
-   {"help",        no_argument,       NULL, 'h'},
-   {"version",     no_argument,       NULL, 'V'},
+     {"verbose",     no_argument,       NULL, 'v'},
+     {"help",        no_argument,       NULL, 'h'},
+     {"version",     no_argument,       NULL, 'V'},
 
-   {"sample",      no_argument,       NULL,  1 },
-   {"nosample",    no_argument,       NULL,  2 },
-   {"allsample",   no_argument,       NULL,  3 },
+     {"sample",      no_argument,       NULL,  1 },
+     {"nosample",    no_argument,       NULL,  2 },
+     {"allsample",   no_argument,       NULL,  3 },
 
-   {"filter",      no_argument,       NULL,  4 },
-   {"nofilter",    no_argument,       NULL,  5 },
+     {"filter",      no_argument,       NULL,  4 },
+     {"nofilter",    no_argument,       NULL,  5 },
 
-   {"wide",        no_argument,       NULL,  6 },
-   {"fingerprint", no_argument,       NULL,  7 },
-   {"tick",        required_argument, NULL, 't'},
+     {"wide",        no_argument,       NULL,  6 },
+     {"fingerprint", no_argument,       NULL,  7 },
+     {"tick",        required_argument, NULL, 't'},
 
-   {"hash",        no_argument,       NULL, 'x'},
-   {"wordcount",   no_argument,       NULL, 'w'},
-   {"daemon",      no_argument,       NULL, 'D'},
-   {"host",        no_argument,       NULL, 'H'},
-   {"sgraph",      no_argument,       NULL, 's'},
-   {"mgraph",      no_argument,       NULL, 'm'},
-   {"hgraph",      no_argument,       NULL, 'X'},
-   {"dgraph",      no_argument,       NULL, 'd'},
-   {"mograph",     no_argument,       NULL, 'M'},
-   {"ygraph",      no_argument,       NULL, 'y'},
+     {"hash",        no_argument,       NULL, 'x'},
+     {"wordcount",   no_argument,       NULL, 'w'},
+     {"daemon",      no_argument,       NULL, 'D'},
+     {"host",        no_argument,       NULL, 'H'},
+     {"sgraph",      no_argument,       NULL, 's'},
+     {"mgraph",      no_argument,       NULL, 'm'},
+     {"hgraph",      no_argument,       NULL, 'X'},
+     {"dgraph",      no_argument,       NULL, 'd'},
+     {"mograph",     no_argument,       NULL, 'M'},
+     {"ygraph",      no_argument,       NULL, 'y'},
 
-   {0,0,0,0}
+     {0,0,0,0}
 };
 
 static void set_mode(int m) {
@@ -236,69 +236,72 @@ static bool_t check_options_set(options_set_t allowed_options) {
  * @param[in] argv the arguments on the command line
  */
 int main(int argc, char * const argv[]) {
-   logger_t log;
-   input_t *input;
-   output_t *output;
+     logger_t log;
+     input_t *input;
+     output_t *output;
+     int lastoptind;
 
-   parse_options(argc, argv);
-   log = new_logger(verbose);
-   input = new_input(log);
+     parse_options(argc, argv);
+     log = new_logger(verbose);
+     input = new_input(log);
 
-   switch(mode) {
-   case mode_hash:
-      output = new_output_hash(log, input, options);
-      break;
-   case mode_wordcount:
-      output = new_output_wordcount(log, input, options);
-      break;
-   case mode_daemon:
-      output = new_output_daemon(log, input, options);
-      break;
-   case mode_host:
-      output = new_output_host(log, input, options);
-      break;
-   case mode_sgraph:
-      output = new_output_sgraph(log, input, options);
-      break;
-   case mode_mgraph:
-      output = new_output_mgraph(log, input, options);
-      break;
-   case mode_hgraph:
-      output = new_output_hgraph(log, input, options);
-      break;
-   case mode_dgraph:
-      output = new_output_dgraph(log, input, options);
-      break;
-   case mode_mograph:
-      output = new_output_mograph(log, input, options);
-      break;
-   case mode_ygraph:
-      output = new_output_ygraph(log, input, options);
-      break;
-   default:
-      fprintf(stderr, "**** Undefined mode\n");
-      exit(2);
-   }
+     switch(mode) {
+     case mode_hash:
+          output = new_output_hash(log, input, options);
+          break;
+     case mode_wordcount:
+          output = new_output_wordcount(log, input, options);
+          break;
+     case mode_daemon:
+          output = new_output_daemon(log, input, options);
+          break;
+     case mode_host:
+          output = new_output_host(log, input, options);
+          break;
+     case mode_sgraph:
+          output = new_output_sgraph(log, input, options);
+          break;
+     case mode_mgraph:
+          output = new_output_mgraph(log, input, options);
+          break;
+     case mode_hgraph:
+          output = new_output_hgraph(log, input, options);
+          break;
+     case mode_dgraph:
+          output = new_output_dgraph(log, input, options);
+          break;
+     case mode_mograph:
+          output = new_output_mograph(log, input, options);
+          break;
+     case mode_ygraph:
+          output = new_output_ygraph(log, input, options);
+          break;
+     default:
+          fprintf(stderr, "**** Undefined mode\n");
+          exit(2);
+     }
 
-   if (!check_options_set(output->options_set(output))) {
-        fprintf(stderr, "**** Incompatible options\n");
-        exit(2);
-   }
+     if (!check_options_set(output->options_set(output))) {
+          fprintf(stderr, "**** Incompatible options\n");
+          exit(2);
+     }
 
-   register_all_factories(log);
+     register_all_factories(log);
 
-   if (optind == argc) {
-        log(info, "Input: stdin\n");
-        input->parse(input, "-");
-   } else{
-        while (optind < argc) {
-             log(info, "Input %d/%d: %s\n", optind - 2, argc - 3, argv[optind]);
-             input->parse(input, argv[optind++]);
-        }
-   }
-   log(debug, "Input done\n");
+     if (optind == argc) {
+          log(info, "Input: stdin\n");
+          input->parse(input, "-");
+     } else{
+          lastoptind = optind;
+          while (optind < argc) {
+               log(info, "Input %d/%d: %s\n", optind - lastoptind + 1, argc - lastoptind, argv[optind]);
+               input->parse(input, argv[optind++]);
+          }
+     }
+     input->sort_files(input);
+     log(debug, "Input done\n");
 
-   output->display(output);
+     output->display(output);
 
-   return 0;
+     return 0;
 }
