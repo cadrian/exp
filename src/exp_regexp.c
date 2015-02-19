@@ -113,7 +113,6 @@ static void regexp_impl_replace_all(regexp_impl_t *this, const char *replace, ch
      int len_replace = strlen(replace);
      match_impl_t *match;
      int start, end, lost = 0, delta;
-     char *whole = string;
 
      match = regexp_impl_match(this, string, 0, len_string, 0);
      while (match != NULL) {
