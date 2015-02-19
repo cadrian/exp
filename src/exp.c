@@ -36,8 +36,17 @@ static output_options_t options = {
      .sample = sample_none,
 };
 
+static void usage(const char *cmd) {
+     fprintf(stderr,
+             "Usage: %s [--verbose|-v] [--sample|--nosample|--allsample] [--filter|--nofilter]\n"
+             "       [--wide] [--tick=<tick>|-t <tick>] [--fingerprint] [--version|-V]\n"
+             "       {--hash|--wordcount|--daemon|--host|--sgraph|--mgraph|--hgraph|--dgraph|--mograph|--ygraph}\n"
+             "       [filename...]\n", cmd);
+}
+
 static struct option long_options[] = {
    {"verbose", no_argument, NULL, 'v'},
+   {"help", no_argument, NULL, '?'},
 
    {"sample", no_argument, (int*)&options.sample, sample_threshold},
    {"nosample", no_argument, (int*)&options.sample, sample_none},
@@ -70,53 +79,55 @@ static struct option long_options[] = {
  * Returns the first non-option index
  */
 static void parse_options(int argc, char **argv) {
-   int option_index = 0;
-   int c;
-   bool_t done = false;
+     int option_index = 0;
+     int c;
+     bool_t done = false;
 
-   while (!done) {
-      c = getopt_long(argc, argv, "vt:VxwDHsmhdMy", long_options, &option_index);
-      switch(c) {
-      case 0:
-         /* flag was set */
-         break;
+     while (!done) {
+          c = getopt_long(argc, argv, "vt:VxwDHsmhdMy", long_options, &option_index);
+          switch(c) {
+          case 0:
+               /* flag was set */
+               break;
 
-      case -1:
-         done = true;
-         break;
+          case -1:
+               done = true;
+               break;
 
-      case 'v':
-         verbose++;
-         break;
+          case 'v':
+               verbose++;
+               break;
 
-      case 't':
-         options.tick = malloc(strlen(optarg) + 1);
-         strcpy(options.tick, optarg);
-         break;
+          case 't':
+               options.tick = malloc(strlen(optarg) + 1);
+               strcpy(options.tick, optarg);
+               break;
 
-      case 'V':
-         printf("exp version %d.%d\n", EXP_VERSION_MAJOR, EXP_VERSION_MINOR);
-         exit(0);
+          case 'V':
+               printf("exp version %d.%d\n", EXP_VERSION_MAJOR, EXP_VERSION_MINOR);
+               exit(0);
 
-      case '?':
-         /* help handled by getopt */
-         break;
+          case '?':
+               usage(argv[0]);
+               exit(0);
+               break;
 
-      case 'x': mode = mode_hash;      break;
-      case 'w': mode = mode_wordcount; break;
-      case 'D': mode = mode_daemon;    break;
-      case 'H': mode = mode_host;      break;
-      case 's': mode = mode_sgraph;    break;
-      case 'm': mode = mode_mgraph;    break;
-      case 'h': mode = mode_hgraph;    break;
-      case 'd': mode = mode_dgraph;    break;
-      case 'M': mode = mode_mograph;   break;
-      case 'y': mode = mode_ygraph;    break;
+          case 'x': mode = mode_hash;      break;
+          case 'w': mode = mode_wordcount; break;
+          case 'D': mode = mode_daemon;    break;
+          case 'H': mode = mode_host;      break;
+          case 's': mode = mode_sgraph;    break;
+          case 'm': mode = mode_mgraph;    break;
+          case 'h': mode = mode_hgraph;    break;
+          case 'd': mode = mode_dgraph;    break;
+          case 'M': mode = mode_mograph;   break;
+          case 'y': mode = mode_ygraph;    break;
 
-      default:
-         abort();
-      }
-   }
+          default:
+               usage(argv[0]);
+               abort();
+          }
+     }
 }
 
 int main(int argc, char **argv) {
