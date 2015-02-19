@@ -60,3 +60,4 @@ will be ported.
 * Color graphs
 * XDG support for easier development *and* standard deployment of
   configuration files
+* Cumulated data in graphs: what happens *each* second, minute, etc.
