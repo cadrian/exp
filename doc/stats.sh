@@ -25,12 +25,12 @@ echo
 
 echo '### Header files'
 (
-    cd src; count *.h
+    cd src; count exp*.h
 )
 
 echo '### Source files'
 (
-    cd src; count *.c
+    cd src; count exp*.c
 )
 
 #echo '### Test files'
