@@ -1,18 +1,25 @@
 /*
-  This file is part of exp.
+  This file is part of ExP.
 
-  exp is free software: you can redistribute it and/or modify
+  ExP is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation, version 3 of the License.
 
-  exp is distributed in the hope that it will be useful,
+  ExP is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
 
   You should have received a copy of the GNU General Public License
-  along with exp.  If not, see <http://www.gnu.org/licenses/>.
+  along with ExP.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+/**
+ * @ingroup exp
+ * @file
+ *
+ * This file contains the main source (entry point of the application).
+ */
 
 #include <stdlib.h>
 #include <getopt.h>
@@ -36,6 +43,11 @@ static output_options_t options = {
      .sample = sample_none,
 };
 
+/**
+ * The usage.
+ *
+ * @param[in] cmd the command name.
+ */
 static void usage(const char *cmd) {
      fprintf(stderr,
              "Usage: %s [options] [file...]\n\nOptions:\n"
@@ -97,9 +109,6 @@ static struct option long_options[] = {
    {0,0,0,0}
 };
 
-/**
- * Returns the first non-option index
- */
 static void parse_options(int argc, char **argv) {
      int option_index = 0;
      int c;
@@ -126,7 +135,7 @@ static void parse_options(int argc, char **argv) {
                break;
 
           case 'V':
-               printf("exp version %d.%d\n", EXP_VERSION_MAJOR, EXP_VERSION_MINOR);
+               printf("ExP version %d.%d\n", EXP_VERSION_MAJOR, EXP_VERSION_MINOR);
                exit(0);
 
           case 'h':
@@ -153,6 +162,12 @@ static void parse_options(int argc, char **argv) {
      }
 }
 
+/**
+ * the application entry point.
+ *
+ * @param[in] argc the number of arguments on the command line
+ * @param[in] argv the arguments on the command line
+ */
 int main(int argc, char **argv) {
    logger_t log;
    input_t *input;
