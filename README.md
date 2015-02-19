@@ -58,3 +58,5 @@ will be ported.
 * Outsource entries regexps to be able to customize them; maybe allow
   more than one regexp per entry type
 * Color graphs
+* XDG support for easier development *and* standard deployment of
+  configuration files
