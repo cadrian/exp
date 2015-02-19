@@ -19,6 +19,11 @@ design also follows *Petit*'s with the following changes:
 * per-log type filter scrubbing is externalized in configuration files
   instead of being hard-coded
 
+# Dependencies
+
+* [PCRE](http://www.pcre.org)
+* [libCad](https://github.com/cadrian/libcad)
+
 # Work in progress
 
 I am currently in the process of rewriting *Petit*. Almost everything
