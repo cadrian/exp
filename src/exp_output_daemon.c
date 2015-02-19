@@ -17,18 +17,26 @@
 #include "exp_output.h"
 
 typedef struct {
-   output_t fn;
+     output_t fn;
 } output_daemon_t;
 
 static void output_daemon_display(output_daemon_t *this) {
 }
 
+static options_set_t output_daemon_options_set(output_daemon_t *this) {
+     static options_set_t result = {
+          false, false, false, false, false,
+     };
+     return result;
+}
+
 static output_t output_daemon_fn = {
-   .display = (output_display_fn)output_daemon_display,
+     .options_set = (output_options_set_fn)output_daemon_options_set,
+     .display = (output_display_fn)output_daemon_display,
 };
 
 output_t *new_output_daemon(logger_t log, input_t *input, output_options_t options) {
-   output_daemon_t *result = malloc(sizeof(output_daemon_t));
-   result->fn = output_daemon_fn;
-   return &(result->fn);
+     output_daemon_t *result = malloc(sizeof(output_daemon_t));
+     result->fn = output_daemon_fn;
+     return &(result->fn);
 }

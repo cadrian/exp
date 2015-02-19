@@ -32,9 +32,19 @@
 #include "exp_output.h"
 #include "exp_entry_factory.h"
 
-static level_t   verbose     = warn;
-static expmode_t mode        = mode_undefined;
+static level_t   verbose         = warn;
+static expmode_t mode            = mode_undefined;
 
+/**
+ * The options setting mask.
+ */
+static options_set_t options_set = {
+     false, false, false, false, false,
+};
+
+/**
+ * The actual options.
+ */
 static output_options_t options = {
      .filter = true,
      .fingerprint = false,
@@ -51,65 +61,75 @@ static output_options_t options = {
 static void usage(const char *cmd) {
      fprintf(stderr,
              "Usage: %s [options] [file...]\n\nOptions:\n"
-             "  -h, --help     show this help message and exit\n"
-             "  -v, --verbose  Show verbose output (may be specified twice)\n"
-             "  -V, --version  Show verbose output\n"
+             "  -h, --help         Show this help message and exit\n"
+             "  -v, --verbose      Show verbose output (may be specified twice)\n"
+             "  -V, --version      Show verbose output\n"
              "\n"
-             "  --sample       Show sample output for small numbered entries\n"
-             "  --nosample     Do not sample output for low count entries\n"
-             "  --allsample    Show samples instead of munged text for all entries\n"
-             "  --filter       Use filter files during processing\n"
-             "  --nofilter     Do not use filter files during processing\n"
-             "  --wide         Use wider graph characters\n"
-             "  --tick=TICK    Change tick character from default\n"
-             "  --fingerprint  Use fingerprinting to remove certain patterns\n"
+             "  --sample           Show sample output for small numbered entries\n"
+             "  --nosample         Do not sample output for low count entries\n"
+             "  --allsample        Show samples instead of munged text for all entries\n"
+             "  --filter           Use filter files during processing\n"
+             "  --nofilter         Do not use filter files during processing\n"
+             "  --wide             Use wider graph characters\n"
+             "  -t, --tick=TICK    Change tick character from default\n"
+             "  --fingerprint      Use fingerprinting to remove certain patterns\n"
              "\n"
              "  -x, --hash         Show hashes of log files with numbers removed\n"
              "  -w, --wordcount    Show word count for given word\n"
-             "  -D, --daemon       show a report of entries from each daemon\n"
-             "  -H, --host         show a report of entries from each host\n"
-             "  -s, --sgraph       show graph of first 60 seconds\n"
-             "  -m, --mgraph       show graph of first 60 minutes\n"
-             "  -X, --hgraph       show graph of first 24 hours\n"
-             "  -d, --dgraph       show graph of first 31 days\n"
-             "  -M, --mograph      show graph of first 12 months\n"
-             "  -y, --ygraph       show graph of first 10 years\n"
+             "  -D, --daemon       Show a report of entries from each daemon\n"
+             "  -H, --host         Show a report of entries from each host\n"
+             "  -s, --sgraph       Show a graph of the first 60 seconds\n"
+             "  -m, --mgraph       Show a graph of the first 60 minutes\n"
+             "  -X, --hgraph       Show a graph of the first 24 hours\n"
+             "  -d, --dgraph       Show a graph of the first 31 days\n"
+             "  -M, --mograph      Show a graph of the first 12 months\n"
+             "  -y, --ygraph       Show a graph of the first 10 years\n"
              "\n"
              "If no file is specified, data is read from stdin.\n\n", cmd);
 }
 
+/**
+ * The long options definition.
+ */
 static struct option long_options[] = {
-   {"verbose", no_argument, NULL, 'v'},
-   {"help", no_argument, NULL, 'h'},
+   {"verbose",     no_argument,       NULL, 'v'},
+   {"help",        no_argument,       NULL, 'h'},
+   {"version",     no_argument,       NULL, 'V'},
 
-   {"sample", no_argument, (int*)&options.sample, sample_threshold},
-   {"nosample", no_argument, (int*)&options.sample, sample_none},
-   {"allsample", no_argument, (int*)&options.sample, sample_all},
+   {"sample",      no_argument,       NULL,  1 },
+   {"nosample",    no_argument,       NULL,  2 },
+   {"allsample",   no_argument,       NULL,  3 },
 
-   {"filter", no_argument, (int*)&options.filter, true},
-   {"nofilter", no_argument, (int*)&options.filter, false},
+   {"filter",      no_argument,       NULL,  4 },
+   {"nofilter",    no_argument,       NULL,  5 },
 
-   {"wide", no_argument, (int*)&options.wide, true},
-   {"tick", required_argument, NULL, 't'},
-   {"fingerprint", no_argument, (int*)&options.fingerprint, true},
+   {"wide",        no_argument,       NULL,  6 },
+   {"fingerprint", no_argument,       NULL,  7 },
+   {"tick",        required_argument, NULL, 't'},
 
-   {"version", no_argument, NULL, 'V'},
-
-   {"hash",      no_argument, NULL, 'x'},
-   {"wordcount", no_argument, NULL, 'w'},
-   {"daemon",    no_argument, NULL, 'D'},
-   {"host",      no_argument, NULL, 'H'},
-   {"sgraph",    no_argument, NULL, 's'},
-   {"mgraph",    no_argument, NULL, 'm'},
-   {"hgraph",    no_argument, NULL, 'X'},
-   {"dgraph",    no_argument, NULL, 'd'},
-   {"mograph",   no_argument, NULL, 'M'},
-   {"ygraph",    no_argument, NULL, 'y'},
+   {"hash",        no_argument,       NULL, 'x'},
+   {"wordcount",   no_argument,       NULL, 'w'},
+   {"daemon",      no_argument,       NULL, 'D'},
+   {"host",        no_argument,       NULL, 'H'},
+   {"sgraph",      no_argument,       NULL, 's'},
+   {"mgraph",      no_argument,       NULL, 'm'},
+   {"hgraph",      no_argument,       NULL, 'X'},
+   {"dgraph",      no_argument,       NULL, 'd'},
+   {"mograph",     no_argument,       NULL, 'M'},
+   {"ygraph",      no_argument,       NULL, 'y'},
 
    {0,0,0,0}
 };
 
-static void parse_options(int argc, char **argv) {
+static void set_mode(int m) {
+     if (mode != mode_undefined) {
+          fprintf(stderr, "**** Error: cannot set mode twice\n");
+          exit(2);
+     }
+     mode = m;
+}
+
+static void parse_options(int argc, char * const argv[]) {
      int option_index = 0;
      int c;
      bool_t done = false;
@@ -125,17 +145,50 @@ static void parse_options(int argc, char **argv) {
                done = true;
                break;
 
+          case 1: // sample
+               options_set.sample = true;
+               options.sample = sample_threshold;
+               break;
+          case 2: // nosample
+               options_set.sample = true;
+               options.sample = sample_none;
+               break;
+          case 3: // allsample
+               options_set.sample = true;
+               options.sample = sample_all;
+               break;
+
+          case 4: // filter
+               options_set.filter = true;
+               options.filter = true;
+               break;
+          case 5: // nofilter
+               options_set.filter = true;
+               options.filter = false;
+               break;
+
+          case 6: // wide
+               options_set.wide = true;
+               options.wide = true;
+               break;
+
+          case 7: // fingerprint
+               options_set.fingerprint = true;
+               options.fingerprint = true;
+               break;
+
           case 'v':
                verbose++;
                break;
 
           case 't':
+               options_set.tick = true;
                options.tick = malloc(strlen(optarg) + 1);
                strcpy(options.tick, optarg);
                break;
 
           case 'V':
-               printf("ExP version %d.%d\n", EXP_VERSION_MAJOR, EXP_VERSION_MINOR);
+               printf("ExP version %d.%d.%d\nCopyleft (C) 2015, Cyril Adrian <cyril.adrian@gmail.com>\n", EXP_GRAND_VERSION, EXP_MAJOR_VERSION, EXP_MINOR_VERSION);
                exit(0);
 
           case 'h':
@@ -143,23 +196,34 @@ static void parse_options(int argc, char **argv) {
                exit(0);
                break;
 
-          case 'x': mode = mode_hash;      break;
-          case 'w': mode = mode_wordcount; break;
-          case 'D': mode = mode_daemon;    break;
-          case 'H': mode = mode_host;      break;
-          case 's': mode = mode_sgraph;    break;
-          case 'm': mode = mode_mgraph;    break;
-          case 'X': mode = mode_hgraph;    break;
-          case 'd': mode = mode_dgraph;    break;
-          case 'M': mode = mode_mograph;   break;
-          case 'y': mode = mode_ygraph;    break;
+          case 'x': set_mode(mode_hash);      break;
+          case 'w': set_mode(mode_wordcount); break;
+          case 'D': set_mode(mode_daemon);    break;
+          case 'H': set_mode(mode_host);      break;
+          case 's': set_mode(mode_sgraph);    break;
+          case 'm': set_mode(mode_mgraph);    break;
+          case 'X': set_mode(mode_hgraph);    break;
+          case 'd': set_mode(mode_dgraph);    break;
+          case 'M': set_mode(mode_mograph);   break;
+          case 'y': set_mode(mode_ygraph);    break;
 
           case '?':
           default:
                usage(argv[0]);
-               abort();
+               exit(2);
           }
      }
+}
+
+#define check_option(option) do { if (!allowed_options.option && options_set.option) return false; } while(0)
+
+static bool_t check_options_set(options_set_t allowed_options) {
+     check_option(filter);
+     check_option(fingerprint);
+     check_option(tick);
+     check_option(wide);
+     check_option(sample);
+     return true;
 }
 
 /**
@@ -168,7 +232,7 @@ static void parse_options(int argc, char **argv) {
  * @param[in] argc the number of arguments on the command line
  * @param[in] argv the arguments on the command line
  */
-int main(int argc, char **argv) {
+int main(int argc, char * const argv[]) {
    logger_t log;
    input_t *input;
    output_t *output;
@@ -209,8 +273,13 @@ int main(int argc, char **argv) {
       output = new_output_ygraph(log, input, options);
       break;
    default:
-      fprintf(stderr, "Undefined mode!\n");
+      fprintf(stderr, "**** Undefined mode\n");
       exit(2);
+   }
+
+   if (!check_options_set(output->options_set(output))) {
+        fprintf(stderr, "**** Incompatible options\n");
+        exit(2);
    }
 
    register_all_factories(log);

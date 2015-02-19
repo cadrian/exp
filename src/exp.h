@@ -24,8 +24,9 @@
 
 #include "cad_shared.h"
 
-#define EXP_VERSION_MAJOR 0
-#define EXP_VERSION_MINOR 1
+#define EXP_GRAND_VERSION 0
+#define EXP_MAJOR_VERSION 0
+#define EXP_MINOR_VERSION 1
 
 /**
  * @addtogroup exp
@@ -41,35 +42,6 @@ typedef enum {
      /** true */
      true
 } bool_t;
-
-/**
- * The sample type.
- */
-typedef enum {
-     /** don't sample */
-     sample_none=0,
-     /** sample under a threshold */
-     sample_threshold=1,
-     /** sample always */
-     sample_all=2
-} sample_t;
-
-/**
- * The mode type. Defines the output mode.
- */
-typedef enum {
-     mode_undefined=0,
-     mode_hash,
-     mode_wordcount,
-     mode_daemon,
-     mode_host,
-     mode_sgraph,
-     mode_mgraph,
-     mode_hgraph,
-     mode_dgraph,
-     mode_mograph,
-     mode_ygraph
-} expmode_t;
 
 /**
  * Find the numeric value of the short month name Jan...Dec return 1..12.

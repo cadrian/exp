@@ -23,11 +23,34 @@
 
 typedef struct output_s output_t;
 
-typedef void (*output_display_fn)(output_t *this);
+/**
+ * The sample type.
+ */
+typedef enum {
+     /** don't sample */
+     sample_none=0,
+     /** sample under a threshold */
+     sample_threshold=1,
+     /** sample always */
+     sample_all=2
+} sample_t;
 
-struct output_s {
-   output_display_fn display;
-};
+/**
+ * The mode type. Defines the output mode.
+ */
+typedef enum {
+     mode_undefined=0,
+     mode_hash,
+     mode_wordcount,
+     mode_daemon,
+     mode_host,
+     mode_sgraph,
+     mode_mgraph,
+     mode_hgraph,
+     mode_dgraph,
+     mode_mograph,
+     mode_ygraph
+} expmode_t;
 
 typedef struct {
      bool_t   filter;
@@ -36,6 +59,22 @@ typedef struct {
      bool_t   wide;
      sample_t sample;
 } output_options_t;
+
+typedef struct {
+     bool_t filter;
+     bool_t fingerprint;
+     bool_t tick;
+     bool_t wide;
+     bool_t sample;
+} options_set_t;
+
+typedef options_set_t (*output_options_set_fn)(output_t *this);
+typedef void (*output_display_fn)(output_t *this);
+
+struct output_s {
+     output_options_set_fn options_set;
+     output_display_fn display;
+};
 
 output_t *new_output_hash     (logger_t log, input_t *input, output_options_t options);
 output_t *new_output_wordcount(logger_t log, input_t *input, output_options_t options);

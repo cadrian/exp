@@ -17,18 +17,26 @@
 #include "exp_output.h"
 
 typedef struct {
-   output_t fn;
+     output_t fn;
 } output_mgraph_t;
 
 static void output_mgraph_display(output_mgraph_t *this) {
 }
 
+static options_set_t output_mgraph_options_set(output_mgraph_t *this) {
+     static options_set_t result = {
+          false, false, false, false, false,
+     };
+     return result;
+}
+
 static output_t output_mgraph_fn = {
-   .display = (output_display_fn)output_mgraph_display,
+     .options_set = (output_options_set_fn)output_mgraph_options_set,
+     .display = (output_display_fn)output_mgraph_display,
 };
 
 output_t *new_output_mgraph(logger_t log, input_t *input, output_options_t options) {
-   output_mgraph_t *result = malloc(sizeof(output_mgraph_t));
-   result->fn = output_mgraph_fn;
-   return &(result->fn);
+     output_mgraph_t *result = malloc(sizeof(output_mgraph_t));
+     result->fn = output_mgraph_fn;
+     return &(result->fn);
 }

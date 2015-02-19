@@ -17,18 +17,26 @@
 #include "exp_output.h"
 
 typedef struct {
-   output_t fn;
+     output_t fn;
 } output_mograph_t;
 
 static void output_mograph_display(output_mograph_t *this) {
 }
 
+static options_set_t output_mograph_options_set(output_mograph_t *this) {
+     static options_set_t result = {
+          false, false, false, false, false,
+     };
+     return result;
+}
+
 static output_t output_mograph_fn = {
-   .display = (output_display_fn)output_mograph_display,
+     .options_set = (output_options_set_fn)output_mograph_options_set,
+     .display = (output_display_fn)output_mograph_display,
 };
 
 output_t *new_output_mograph(logger_t log, input_t *input, output_options_t options) {
-   output_mograph_t *result = malloc(sizeof(output_mograph_t));
-   result->fn = output_mograph_fn;
-   return &(result->fn);
+     output_mograph_t *result = malloc(sizeof(output_mograph_t));
+     result->fn = output_mograph_fn;
+     return &(result->fn);
 }

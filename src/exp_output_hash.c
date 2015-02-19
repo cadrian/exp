@@ -203,17 +203,25 @@ static void output_hash_display(output_hash_t *this) {
      hash_display(this);
 }
 
+static options_set_t output_hash_options_set(output_hash_t *this) {
+     static options_set_t result = {
+          true, true, false, false, true,
+     };
+     return result;
+}
+
 static output_t output_hash_fn = {
-   .display = (output_display_fn)output_hash_display,
+     .options_set = (output_options_set_fn)output_hash_options_set,
+     .display = (output_display_fn)output_hash_display,
 };
 
 output_t *new_output_hash(logger_t log, input_t *input, output_options_t options) {
-   output_hash_t *result = malloc(sizeof(output_hash_t));
-   result->fn = output_hash_fn;
-   result->log = log;
-   result->input = input;
-   result->options = options;
-   result->dict = cad_new_hash(stdlib_memory, cad_hash_strings);
-   result->max_count = 0;
-   return &(result->fn);
+     output_hash_t *result = malloc(sizeof(output_hash_t));
+     result->fn = output_hash_fn;
+     result->log = log;
+     result->input = input;
+     result->options = options;
+     result->dict = cad_new_hash(stdlib_memory, cad_hash_strings);
+     result->max_count = 0;
+     return &(result->fn);
 }
