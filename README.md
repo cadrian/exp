@@ -1,8 +1,8 @@
 [![Build Status](https://travis-ci.org/cadrian/exp.png?branch=master)](https://travis-ci.org/cadrian/exp)
 
-# General description
+# General description: what is ExP?
 
-`exp` is to *log* what `less` is to `more`. `exp` is "Extra Petit".
+`ExP` is "Extra Petit". As an intended pun, *exp* is to *log* what `less` is to `more`. It is also a lot of regular *exp*ressions.
 
 Ideas come from *petit* (http://crunchtools.com/software/petit/). That
 tool is really cool, but it is way too slow on my small Cubieboard,
@@ -11,7 +11,7 @@ getting old. Is it still maintained?
 
 That's why I wanted to code a clone in C.
 
-`exp` is designed as a drop-in replacement of *petit*. Its internal
+`ExP` is designed as a drop-in replacement of *petit*. Its internal
 design also follows *petit*'s with the following changes:
 
 * allow multiple files
