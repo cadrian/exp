@@ -14,6 +14,13 @@
   along with ExP.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * @ingroup exp
+ * @file
+ *
+ * This file contains the implementation of regexps.
+ */
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>

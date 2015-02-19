@@ -14,6 +14,13 @@
   along with ExP.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * @ingroup exp_output
+ * @file
+ *
+ * This file contains the implementation of fingerprints.
+ */
+
 #include <stdio.h>
 #include <dirent.h>
 #include <string.h>

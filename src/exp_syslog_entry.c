@@ -14,6 +14,13 @@
   along with ExP.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * @ingroup exp_input
+ * @file
+ *
+ * This file contains the implementation of all syslog-like entries and their factories.
+ */
+
 #ifndef __EXP_ENTRY_SYSLOG_C__
 #define __EXP_ENTRY_SYSLOG_C__
 

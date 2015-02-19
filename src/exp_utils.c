@@ -18,6 +18,14 @@
 #include <string.h>
 
 #include "exp.h"
+
+/**
+ * @ingroup exp
+ * @file
+ *
+ * This file defines a few useful tools.
+ */
+
 static char *months[] = {
      "",
      "Jan",

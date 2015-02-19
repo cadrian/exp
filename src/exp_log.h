@@ -17,16 +17,56 @@
 #ifndef __EXP_LOG_H__
 #define __EXP_LOG_H__
 
+/**
+ * @file
+ * The header for inputs.
+ */
+
 #include "exp.h"
 
+/**
+ * @addtogroup exp
+ * @{
+ */
+
+/**
+ * The log levels
+ */
 typedef enum {
-   warn=0,
-   info,
-   debug,
+     /**
+      * Warnings (default level)
+      */
+     warn=0,
+     /**
+      * Informations on how ExP runs
+      */
+     info,
+     /**
+      * Developer details, usually not useful
+      */
+     debug,
 } level_t;
 
+/**
+ * A logger is a `printf`-like function to call
+ *
+ * @param[in] level the logging level
+ * @param[in] format the message format
+ * @param[in] ... the message arguments
+ *
+ * @return the length of the message after expansion
+ */
 typedef int (*logger_t) (level_t level, char *format, ...) __PRINTF__;
 
+/**
+ * Create a new logger
+ *
+ * @param[in] level the max level of logging
+ */
 logger_t new_logger(level_t level);
+
+/**
+ * @}
+ */
 
 #endif /* __EXP_LOG_H__ */

@@ -14,6 +14,13 @@
   along with ExP.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * @ingroup exp
+ * @file
+ *
+ * This file contains the implementation of loggers.
+ */
+
 #include <stdio.h>
 #include <stdarg.h>
 #include <time.h>

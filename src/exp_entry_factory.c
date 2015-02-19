@@ -14,6 +14,13 @@
   along with ExP.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * @ingroup exp_input
+ * @file
+ *
+ * This file contains the implementation of the entry factories.
+ */
+
 #include "exp_entry_factory.h"
 #include "exp_log.h"
 

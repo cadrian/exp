@@ -1,6 +1,4 @@
-# First part
-
-\mainpage ExP
+# Copyright
 
 ExP is free software: you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free
@@ -17,11 +15,6 @@ along with ExP.  If not, see http://www.gnu.org/licenses/
 Copyleft © 2015 Cyril ADRIAN
 
 
-\defgroup exp Miscellaneous
-
-Other files.
-
-
 \defgroup exp_input Input
 
 Getting data from input files (log files).
@@ -30,3 +23,8 @@ Getting data from input files (log files).
 \defgroup exp_output Output
 
 Outputting data in the requested form: hash, graph...
+
+
+\defgroup exp Miscellaneous
+
+All the files that do not belong to either the input or the output.

@@ -17,19 +17,54 @@
 #ifndef __EXP_FINGERPRINT_H__
 #define __EXP_FINGERPRINT_H__
 
+/**
+ * @file
+ * The header for fingerprints.
+ */
+
 #include "exp.h"
 #include "exp_log.h"
 
+/**
+ * @addtogroup exp_output
+ * @{
+ */
+
 #define THRESHOLD_COEFFICIENT 0.31
 
+/**
+ * The fingerprint interface.
+ */
 typedef struct fingerprint_s fingerprint_t;
 
+/**
+ * Run the fingerprinting algorithm.
+ *
+ * Note: *output* is expected to cooperate quite closely. In reality, it must be a [hash output](@ref exp_output_hash.c).
+ *
+ * @param[in] this the fingerprint target
+ * @param[in] output the output to fingerprint
+ */
 typedef void (*fingerprint_run_fn)(fingerprint_t *this, void *output);
 
 struct fingerprint_s {
+     /**
+      * @see fingerprint_run_fn
+      */
      fingerprint_run_fn run;
 };
 
+/**
+ * Create a new fingerprint.
+ *
+ * @param[in] log the logger
+ *
+ * @return the new fingerprint
+ */
 fingerprint_t *new_fingerprint(logger_t log);
+
+/**
+ * @}
+ */
 
 #endif /* __EXP_FINGERPRINT_H__ */
