@@ -4,12 +4,12 @@ Priority: optional
 Maintainer: Cyril Adrian <cyril.adrian@gmail.com>
 Build-Depends: debhelper (>= 9)
 Standards-Version: 3.9.5
-Homepage: <insert the upstream URL, if relevant>
-#Vcs-Git: git://anonscm.debian.org/collab-maint/exp.git
-#Vcs-Browser: http://anonscm.debian.org/?p=collab-maint/exp.git;a=summary
+Homepage: https://github.com/cadrian/exp
+Vcs-Git: https://github.com/cadrian/exp.git
+Vcs-Browser: https://github.com/cadrian/exp
 
 Package: exp
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: <insert up to 60 chars description>
- <insert long description, indented with spaces>
+Description: ExP is Extra Petit
+ A log analyzer.

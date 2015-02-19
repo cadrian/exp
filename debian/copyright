@@ -1,14 +1,13 @@
 Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: exp
-Source: <url://example.com>
+Source: https://github.com/cadrian/exp
 
 Files: *
-Copyright: <years> <put author's name and email here>
-           <years> <likewise for another author>
+Copyright: 2015 Cyril ADRIAN <cyril.adrian@gmail.com>
 License: GPL-3.0+
 
 Files: debian/*
-Copyright: 2015 Cyril <cyril.adrian@gmail.com>
+Copyright: 2015 Cyril ADRIAN <cyril.adrian@gmail.com>
 License: GPL-3.0+
 
 License: GPL-3.0+
