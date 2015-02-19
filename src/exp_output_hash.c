@@ -31,6 +31,7 @@
 
 typedef struct {
      output_t fn;
+     const char *type;
      logger_t log;
      input_t *input;
      output_options_t options;
@@ -122,18 +123,91 @@ static bool_t output_hash_fingerprint_file(output_hash_t *this, int index, outpu
      return result;
 }
 
+static const char *hash_key(entry_t *entry) {
+     const char *result;
+     static char buffer[MAX_LINE_SIZE];
+     const char *daemon, *logline;
+     daemon = entry->daemon(entry);
+     logline = entry->logline(entry);
+     if (logline == NULL) {
+          result = "#";
+     } else if (daemon == NULL) {
+          result = logline;
+     } else {
+          snprintf(buffer, MAX_LINE_SIZE, "%s %s", daemon, logline);
+          result = buffer;
+     }
+     return result;
+}
+
 static void hash_fill_(output_hash_t *this, input_file_t *file, filter_t *filter) {
      int i, n = file->entries_length(file);
      entry_t *entry;
      const char *key;
      for (i = 0; i < n; i++) {
           entry = file->entry(file, i);
-          key = filter->scrub(filter, entry);
+          key = filter->scrub(filter, hash_key(entry));
           hash_increment(this, key, entry);
      }
 }
 
-static void hash_fill(output_hash_t *this) {
+static void wordcount_fill_(output_hash_t *this, input_file_t *file, filter_t *filter) {
+     int i, n = file->entries_length(file);
+     entry_t *entry;
+     char keybuf[MAX_LINE_SIZE];
+     char *key, *next;
+     bool_t full;
+     for (i = 0; i < n; i++) {
+          entry = file->entry(file, i);
+          strcpy(keybuf, filter->scrub(filter, hash_key(entry)));
+          key = next = keybuf;
+          full = false;
+          while (*next) {
+               switch(*next) {
+               case ' ':
+               case '\t':
+                    if (full) {
+                         *next = '\0';
+                         hash_increment(this, key, entry);
+                         full = false;
+                    }
+                    key = next + 1;
+                    break;
+               default:
+                    full = true;
+                    break;
+               }
+               next++;
+          }
+          if (full) {
+               hash_increment(this, key, entry);
+          }
+     }
+}
+
+static void daemon_fill_(output_hash_t *this, input_file_t *file, filter_t *filter) {
+     int i, n = file->entries_length(file);
+     entry_t *entry;
+     const char *key;
+     for (i = 0; i < n; i++) {
+          entry = file->entry(file, i);
+          key = filter->scrub(filter, entry->daemon(entry));
+          hash_increment(this, key, entry);
+     }
+}
+
+static void host_fill_(output_hash_t *this, input_file_t *file, filter_t *filter) {
+     int i, n = file->entries_length(file);
+     entry_t *entry;
+     const char *key;
+     for (i = 0; i < n; i++) {
+          entry = file->entry(file, i);
+          key = filter->scrub(filter, entry->host(entry));
+          hash_increment(this, key, entry);
+     }
+}
+
+static void hash_fill(output_hash_t *this, void (*fill)(output_hash_t*,input_file_t*,filter_t*)) {
      int i, n = this->input->files_length(this->input);
      input_file_t *file;
      filter_t *filter;
@@ -142,7 +216,7 @@ static void hash_fill(output_hash_t *this) {
      for (i = 0; i < n; i++) {
           file = this->input->file(this->input, i);
           filter = this->filters[i];
-          hash_fill_(this, file, filter);
+          fill(this, file, filter);
      }
 
      entry = this->dict->del(this->dict, "#");
@@ -152,7 +226,7 @@ static void hash_fill(output_hash_t *this) {
      }
 }
 
-static void hash_prepare(output_hash_t *this) {
+static void hash_prepare(output_hash_t *this, void (*fill)(output_hash_t*,input_file_t*,filter_t*)) {
      int i, n = this->input->files_length(this->input);
      input_file_t *file;
      entry_factory_t *factory;
@@ -165,8 +239,9 @@ static void hash_prepare(output_hash_t *this) {
           factory = file->get_factory(file);
           this->filters[i] = filter = new_filter(this->log);
           if (this->options.filter) {
-               filter->extend(filter, "hash.stopwords", "#");
-               snprintf(filename, 128, "hash.%s.stopwords", factory->get_name(factory));
+               snprintf(filename, 128, "%s.stopwords", this->type);
+               filter->extend(filter, filename, "#");
+               snprintf(filename, 128, "%s.%s.stopwords", this->type, factory->get_name(factory));
                filter->extend(filter, filename, NULL);
           }
      }
@@ -175,7 +250,7 @@ static void hash_prepare(output_hash_t *this) {
           this->fingerprint->run(this->fingerprint, this);
      }
 
-     hash_fill(this);
+     hash_fill(this, fill);
 }
 
 static int dict_comp(const dict_entry_t **e1, const dict_entry_t **e2) {
@@ -231,16 +306,18 @@ static void hash_display_count(output_hash_t *this, size_t count) {
 static void hash_display(output_hash_t *this) {
      size_t i;
 
-     switch(this->options.sample) {
-     case sample_none:
-          this->log(info, "Sample type: none\n");
-          break;
-     case sample_threshold:
-          this->log(info, "Sample type: threshold\n");
-          break;
-     case sample_all:
-          this->log(info, "Sample type: all\n");
-          break;
+     if (this->fn.options_set(&(this->fn)).sample) {
+          switch(this->options.sample) {
+          case sample_none:
+               this->log(info, "Sample type: none\n");
+               break;
+          case sample_threshold:
+               this->log(info, "Sample type: threshold\n");
+               break;
+          case sample_all:
+               this->log(info, "Sample type: all\n");
+               break;
+          }
      }
 
      srand(time(NULL));
@@ -250,7 +327,22 @@ static void hash_display(output_hash_t *this) {
 }
 
 static void output_hash_display(output_hash_t *this) {
-     hash_prepare(this);
+     hash_prepare(this, hash_fill_);
+     hash_display(this);
+}
+
+static void output_wordcount_display(output_hash_t *this) {
+     hash_prepare(this, wordcount_fill_);
+     hash_display(this);
+}
+
+static void output_daemon_display(output_hash_t *this) {
+     hash_prepare(this, daemon_fill_);
+     hash_display(this);
+}
+
+static void output_host_display(output_hash_t *this) {
+     hash_prepare(this, host_fill_);
      hash_display(this);
 }
 
@@ -261,15 +353,55 @@ static options_set_t output_hash_options_set(output_hash_t *this) {
      return result;
 }
 
+static options_set_t output_wordcount_options_set(output_hash_t *this) {
+     static options_set_t result = {
+          true, false, false, false, false,
+     };
+     return result;
+}
+
+static options_set_t output_daemon_options_set(output_hash_t *this) {
+     static options_set_t result = {
+          true, false, false, false, false,
+     };
+     return result;
+}
+
+static options_set_t output_host_options_set(output_hash_t *this) {
+     static options_set_t result = {
+          true, false, false, false, false,
+     };
+     return result;
+}
+
 static output_t output_hash_fn = {
      .fingerprint_file = (output_fingerprint_file_fn)output_hash_fingerprint_file,
      .options_set = (output_options_set_fn)output_hash_options_set,
      .display = (output_display_fn)output_hash_display,
 };
 
+static output_t output_wordcount_fn = {
+     .fingerprint_file = NULL,
+     .options_set = (output_options_set_fn)output_wordcount_options_set,
+     .display = (output_display_fn)output_wordcount_display,
+};
+
+static output_t output_daemon_fn = {
+     .fingerprint_file = NULL,
+     .options_set = (output_options_set_fn)output_daemon_options_set,
+     .display = (output_display_fn)output_daemon_display,
+};
+
+static output_t output_host_fn = {
+     .fingerprint_file = NULL,
+     .options_set = (output_options_set_fn)output_host_options_set,
+     .display = (output_display_fn)output_host_display,
+};
+
 output_t *new_output_hash(logger_t log, input_t *input, output_options_t options) {
      output_hash_t *result = malloc(sizeof(output_hash_t));
      result->fn = output_hash_fn;
+     result->type = "hash";
      result->log = log;
      result->input = input;
      result->options = options;
@@ -278,5 +410,41 @@ output_t *new_output_hash(logger_t log, input_t *input, output_options_t options
      if (options.fingerprint) {
           result->fingerprint = new_fingerprint(log);
      }
+     return &(result->fn);
+}
+
+output_t *new_output_wordcount(logger_t log, input_t *input, output_options_t options) {
+     output_hash_t *result = malloc(sizeof(output_hash_t));
+     result->fn = output_wordcount_fn;
+     result->type = "words";
+     result->log = log;
+     result->input = input;
+     result->options = options;
+     result->dict = cad_new_hash(stdlib_memory, cad_hash_strings);
+     result->max_count = 0;
+     return &(result->fn);
+}
+
+output_t *new_output_daemon(logger_t log, input_t *input, output_options_t options) {
+     output_hash_t *result = malloc(sizeof(output_hash_t));
+     result->fn = output_daemon_fn;
+     result->type = "daemon";
+     result->log = log;
+     result->input = input;
+     result->options = options;
+     result->dict = cad_new_hash(stdlib_memory, cad_hash_strings);
+     result->max_count = 0;
+     return &(result->fn);
+}
+
+output_t *new_output_host(logger_t log, input_t *input, output_options_t options) {
+     output_hash_t *result = malloc(sizeof(output_hash_t));
+     result->fn = output_host_fn;
+     result->type = "host";
+     result->log = log;
+     result->input = input;
+     result->options = options;
+     result->dict = cad_new_hash(stdlib_memory, cad_hash_strings);
+     result->max_count = 0;
      return &(result->fn);
 }

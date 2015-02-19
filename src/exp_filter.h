@@ -24,8 +24,8 @@
 typedef struct filter_s filter_t;
 
 typedef void (*filter_extend_fn)(filter_t *this, const char *filename, const char *replacement);
-typedef const char *(*filter_scrub_fn)(filter_t *this, const entry_t *entry);
-typedef bool_t (*filter_bleach_fn)(filter_t *this, const entry_t *entry);
+typedef const char *(*filter_scrub_fn)(filter_t *this, const char *line);
+typedef bool_t (*filter_bleach_fn)(filter_t *this, const char *line);
 
 struct filter_s {
      filter_extend_fn extend;

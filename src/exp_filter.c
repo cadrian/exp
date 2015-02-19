@@ -46,32 +46,21 @@ struct filter_impl_s {
      char **replacements;
 };
 
-static const char *impl_scrub(filter_impl_t *this, entry_t *entry) {
+static const char *impl_scrub(filter_impl_t *this, const char *line) {
      static char result[MAX_LINE_SIZE];
      int i, n = this->length;
      regexp_t *stopword;
-     const char *daemon, *logline;
-     daemon = entry->daemon(entry);
-     logline = entry->logline(entry);
-     if (logline == NULL) {
-          strcpy(result, "#");
-     } else {
-          if (daemon == NULL) {
-               strncpy(result, logline, MAX_LINE_SIZE);
-               result[MAX_LINE_SIZE-1] = '\0';
-          } else {
-               snprintf(result, MAX_LINE_SIZE, "%s %s", daemon, logline);
-          }
-          for (i = 0; i < n; i++) {
-               stopword = this->stopwords[i];
-               stopword->replace_all(stopword, this->replacements[i], result);
-          }
+     strncpy(result, line, MAX_LINE_SIZE);
+     result[MAX_LINE_SIZE] = '\0';
+     for (i = 0; i < n; i++) {
+          stopword = this->stopwords[i];
+          stopword->replace_all(stopword, this->replacements[i], result);
      }
      return result;
 }
 
-static bool_t impl_bleach(filter_impl_t *this, entry_t *entry) {
-     const char *scrubbed = impl_scrub(this, entry);
+static bool_t impl_bleach(filter_impl_t *this, const char *line) {
+     const char *scrubbed = impl_scrub(this, line);
      return !strcmp("#", scrubbed);
 }
 

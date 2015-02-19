@@ -37,15 +37,15 @@ will be ported.
   * raw
 * Outputs
   * hash
+  * wordcount
+  * daemon
+  * host
 
 ## Todo
 
 * Entries
   * scriptlog *(not sure about porting this)*
 * Outputs
-  * wordcount
-  * daemon
-  * host
   * sgraph
   * mgraph
   * hgraph
