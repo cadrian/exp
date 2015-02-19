@@ -38,15 +38,37 @@ static output_options_t options = {
 
 static void usage(const char *cmd) {
      fprintf(stderr,
-             "Usage: %s [--verbose|-v] [--sample|--nosample|--allsample] [--filter|--nofilter]\n"
-             "       [--wide] [--tick=<tick>|-t <tick>] [--fingerprint] [--version|-V]\n"
-             "       {--hash|--wordcount|--daemon|--host|--sgraph|--mgraph|--hgraph|--dgraph|--mograph|--ygraph}\n"
-             "       [filename...]\n", cmd);
+             "Usage: %s [options] [file...]\n\nOptions:\n"
+             "  -h, --help     show this help message and exit\n"
+             "  -v, --verbose  Show verbose output (may be specified twice)\n"
+             "  -V, --version  Show verbose output\n"
+             "\n"
+             "  --sample       Show sample output for small numbered entries\n"
+             "  --nosample     Do not sample output for low count entries\n"
+             "  --allsample    Show samples instead of munged text for all entries\n"
+             "  --filter       Use filter files during processing\n"
+             "  --nofilter     Do not use filter files during processing\n"
+             "  --wide         Use wider graph characters\n"
+             "  --tick=TICK    Change tick character from default\n"
+             "  --fingerprint  Use fingerprinting to remove certain patterns\n"
+             "\n"
+             "  -x, --hash         Show hashes of log files with numbers removed\n"
+             "  -w, --wordcount    Show word count for given word\n"
+             "  -D, --daemon       show a report of entries from each daemon\n"
+             "  -H, --host         show a report of entries from each host\n"
+             "  -s, --sgraph       show graph of first 60 seconds\n"
+             "  -m, --mgraph       show graph of first 60 minutes\n"
+             "  -X, --hgraph       show graph of first 24 hours\n"
+             "  -d, --dgraph       show graph of first 31 days\n"
+             "  -M, --mograph      show graph of first 12 months\n"
+             "  -y, --ygraph       show graph of first 10 years\n"
+             "\n"
+             "If no file is specified, data is read from stdin.\n\n", cmd);
 }
 
 static struct option long_options[] = {
    {"verbose", no_argument, NULL, 'v'},
-   {"help", no_argument, NULL, '?'},
+   {"help", no_argument, NULL, 'h'},
 
    {"sample", no_argument, (int*)&options.sample, sample_threshold},
    {"nosample", no_argument, (int*)&options.sample, sample_none},
@@ -67,7 +89,7 @@ static struct option long_options[] = {
    {"host",      no_argument, NULL, 'H'},
    {"sgraph",    no_argument, NULL, 's'},
    {"mgraph",    no_argument, NULL, 'm'},
-   {"hgraph",    no_argument, NULL, 'h'},
+   {"hgraph",    no_argument, NULL, 'X'},
    {"dgraph",    no_argument, NULL, 'd'},
    {"mograph",   no_argument, NULL, 'M'},
    {"ygraph",    no_argument, NULL, 'y'},
@@ -107,7 +129,7 @@ static void parse_options(int argc, char **argv) {
                printf("exp version %d.%d\n", EXP_VERSION_MAJOR, EXP_VERSION_MINOR);
                exit(0);
 
-          case '?':
+          case 'h':
                usage(argv[0]);
                exit(0);
                break;
@@ -118,11 +140,12 @@ static void parse_options(int argc, char **argv) {
           case 'H': mode = mode_host;      break;
           case 's': mode = mode_sgraph;    break;
           case 'm': mode = mode_mgraph;    break;
-          case 'h': mode = mode_hgraph;    break;
+          case 'X': mode = mode_hgraph;    break;
           case 'd': mode = mode_dgraph;    break;
           case 'M': mode = mode_mograph;   break;
           case 'y': mode = mode_ygraph;    break;
 
+          case '?':
           default:
                usage(argv[0]);
                abort();
