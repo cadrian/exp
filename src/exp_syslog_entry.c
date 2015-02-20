@@ -253,7 +253,7 @@ static int string_2_int(match_t *match, const char *field, int (*deflt)(match_t*
 }
 
 static int this_year(match_t *match) {
-     int result;
+     static int result = 0;
      time_t tm;
      static bool_t init = false;
      if (!init) {

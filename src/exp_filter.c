@@ -58,7 +58,7 @@ static const char *impl_scrub(filter_impl_t *this, const char *line) {
      int i, n = this->length;
      regexp_t *stopword;
      strncpy(result, line, MAX_LINE_SIZE);
-     result[MAX_LINE_SIZE] = '\0';
+     result[MAX_LINE_SIZE-1] = '\0';
      for (i = 0; i < n; i++) {
           stopword = this->stopwords[i];
           stopword->replace_all(stopword, this->replacements[i], result);
