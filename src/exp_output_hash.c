@@ -36,7 +36,8 @@
 #define DEFAULT_DICT_CAPACITY 16
 #define SAMPLE_THRESHOLD 3
 
-typedef struct {
+typedef struct output_hash_s output_hash_t;
+struct output_hash_s {
      output_t fn;
      const char *type;
      logger_t log;
@@ -46,7 +47,8 @@ typedef struct {
      cad_hash_t *dict;
      size_t max_count;
      fingerprint_t *fingerprint;
-} output_hash_t;
+     void (*fill)(output_hash_t*,input_file_t*,filter_t*);
+};
 
 typedef struct {
      size_t count;
@@ -214,7 +216,7 @@ static void host_fill_(output_hash_t *this, input_file_t *file, filter_t *filter
      }
 }
 
-static void hash_fill(output_hash_t *this, void (*fill)(output_hash_t*,input_file_t*,filter_t*)) {
+static void hash_fill(output_hash_t *this) {
      int i, n = this->input->files_length(this->input);
      input_file_t *file;
      filter_t *filter;
@@ -223,7 +225,7 @@ static void hash_fill(output_hash_t *this, void (*fill)(output_hash_t*,input_fil
      for (i = 0; i < n; i++) {
           file = this->input->file(this->input, i);
           filter = this->filters[i];
-          fill(this, file, filter);
+          this->fill(this, file, filter);
      }
 
      entry = this->dict->del(this->dict, "#");
@@ -233,7 +235,7 @@ static void hash_fill(output_hash_t *this, void (*fill)(output_hash_t*,input_fil
      }
 }
 
-static void hash_prepare(output_hash_t *this, void (*fill)(output_hash_t*,input_file_t*,filter_t*)) {
+static void hash_prepare(output_hash_t *this) {
      int i, n = this->input->files_length(this->input);
      input_file_t *file;
      entry_factory_t *factory;
@@ -257,7 +259,7 @@ static void hash_prepare(output_hash_t *this, void (*fill)(output_hash_t*,input_
           this->fingerprint->run(this->fingerprint, this);
      }
 
-     hash_fill(this, fill);
+     hash_fill(this);
 }
 
 static int dict_comp(const dict_entry_t **e1, const dict_entry_t **e2) {
@@ -334,22 +336,7 @@ static void hash_display(output_hash_t *this) {
 }
 
 static void output_hash_display(output_hash_t *this) {
-     hash_prepare(this, hash_fill_);
-     hash_display(this);
-}
-
-static void output_wordcount_display(output_hash_t *this) {
-     hash_prepare(this, wordcount_fill_);
-     hash_display(this);
-}
-
-static void output_daemon_display(output_hash_t *this) {
-     hash_prepare(this, daemon_fill_);
-     hash_display(this);
-}
-
-static void output_host_display(output_hash_t *this) {
-     hash_prepare(this, host_fill_);
+     hash_prepare(this);
      hash_display(this);
 }
 
@@ -360,55 +347,16 @@ static options_set_t output_hash_options_set(output_hash_t *this) {
      return result;
 }
 
-static options_set_t output_wordcount_options_set(output_hash_t *this) {
-     static options_set_t result = {
-          true, false, false, false, false,
-     };
-     return result;
-}
-
-static options_set_t output_daemon_options_set(output_hash_t *this) {
-     static options_set_t result = {
-          true, false, false, false, false,
-     };
-     return result;
-}
-
-static options_set_t output_host_options_set(output_hash_t *this) {
-     static options_set_t result = {
-          true, false, false, false, false,
-     };
-     return result;
-}
-
 static output_t output_hash_fn = {
      .fingerprint_file = (output_fingerprint_file_fn)output_hash_fingerprint_file,
      .options_set = (output_options_set_fn)output_hash_options_set,
      .display = (output_display_fn)output_hash_display,
 };
 
-static output_t output_wordcount_fn = {
-     .fingerprint_file = NULL,
-     .options_set = (output_options_set_fn)output_wordcount_options_set,
-     .display = (output_display_fn)output_wordcount_display,
-};
-
-static output_t output_daemon_fn = {
-     .fingerprint_file = NULL,
-     .options_set = (output_options_set_fn)output_daemon_options_set,
-     .display = (output_display_fn)output_daemon_display,
-};
-
-static output_t output_host_fn = {
-     .fingerprint_file = NULL,
-     .options_set = (output_options_set_fn)output_host_options_set,
-     .display = (output_display_fn)output_host_display,
-};
-
-output_t *new_output_hash(logger_t log, input_t *input, output_options_t options) {
+static output_t *new_output_(logger_t log, input_t *input, output_options_t options, const char *type, void (*fill)(output_hash_t*,input_file_t*,filter_t*)) {
      output_hash_t *result = malloc(sizeof(output_hash_t));
      result->fn = output_hash_fn;
-     result->type = "hash";
+     result->type = type;
      result->log = log;
      result->input = input;
      result->options = options;
@@ -417,41 +365,22 @@ output_t *new_output_hash(logger_t log, input_t *input, output_options_t options
      if (options.fingerprint) {
           result->fingerprint = new_fingerprint(log);
      }
+     result->fill = fill;
      return &(result->fn);
+}
+
+output_t *new_output_hash(logger_t log, input_t *input, output_options_t options) {
+     return new_output_(log, input, options, "hash", hash_fill_);
 }
 
 output_t *new_output_wordcount(logger_t log, input_t *input, output_options_t options) {
-     output_hash_t *result = malloc(sizeof(output_hash_t));
-     result->fn = output_wordcount_fn;
-     result->type = "words";
-     result->log = log;
-     result->input = input;
-     result->options = options;
-     result->dict = cad_new_hash(stdlib_memory, cad_hash_strings);
-     result->max_count = 0;
-     return &(result->fn);
+     return new_output_(log, input, options, "words", wordcount_fill_);
 }
 
 output_t *new_output_daemon(logger_t log, input_t *input, output_options_t options) {
-     output_hash_t *result = malloc(sizeof(output_hash_t));
-     result->fn = output_daemon_fn;
-     result->type = "daemon";
-     result->log = log;
-     result->input = input;
-     result->options = options;
-     result->dict = cad_new_hash(stdlib_memory, cad_hash_strings);
-     result->max_count = 0;
-     return &(result->fn);
+     return new_output_(log, input, options, "daemon", daemon_fill_);
 }
 
 output_t *new_output_host(logger_t log, input_t *input, output_options_t options) {
-     output_hash_t *result = malloc(sizeof(output_hash_t));
-     result->fn = output_host_fn;
-     result->type = "host";
-     result->log = log;
-     result->input = input;
-     result->options = options;
-     result->dict = cad_new_hash(stdlib_memory, cad_hash_strings);
-     result->max_count = 0;
-     return &(result->fn);
+     return new_output_(log, input, options, "host", host_fill_);
 }
