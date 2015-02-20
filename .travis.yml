@@ -1,0 +1,18 @@
+language: c
+compiler:
+  - gcc
+# - clang
+env:
+  global:
+    - "BUILD_DIR=$TRAVIS_BUILD_DIR"
+    - "LD_LIBRARY_PATH=\"$BUILD_DIR/target:$LD_LIBRARY_PATH\""
+before_install:
+  - "sudo apt-get update -qq"
+  - "sudo apt-get install -qq rsync graphviz doxygen doxygen-latex texlive-latex-base texlive-latex-extra texlive-fonts-recommended texlive-fonts-extra fonts-linuxlibertine fonts-inconsolata devscripts ntp"
+  - "sudo service ntp restart"
+install:
+  - "make exe"
+script:
+# - "make run-test"
+  - "make release"
+  - "sudo dpkg -i target/dpkg/*.deb"

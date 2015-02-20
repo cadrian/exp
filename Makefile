@@ -67,6 +67,29 @@ target/libcad.dll.a:
 	cp ../libcad/target/libcad.dll.a target/
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# release
+
+install: exe doc target/version
+	mkdir -p $(DESTDIR)/usr/bin
+	mkdir -p $(DESTDIR)/usr/share/$(PROJECT)
+	mkdir -p $(DESTDIR)/usr/share/doc/$(PROJECT)-doc
+	cp target/$(PROJECT) $(DESTDIR)/usr/bin/
+	cp -a target/*.pdf target/doc/html $(DESTDIR)/usr/share/doc/$(PROJECT)-doc/
+
+release: debuild target/version
+	@echo "Releasing version $(shell cat target/version)"
+	mkdir target/dpkg
+	mv ../$(PROJECT)*_$(shell cat target/version)_*.deb    target/dpkg/
+	mv ../$(PROJECT)_$(shell cat target/version).dsc       target/dpkg/
+	mv ../$(PROJECT)_$(shell cat target/version).tar.[gx]z target/dpkg/
+	mv ../$(PROJECT)_$(shell cat target/version)_*.build   target/dpkg/
+	mv ../$(PROJECT)_$(shell cat target/version)_*.changes target/dpkg/
+	(cd target && tar cfz $(PROJECT)_$(shell cat target/version)_$(shell gcc -v 2>&1 | grep '^Target:' | sed 's/^Target: //').tgz $(PROJECT) $(PROJECT).pdf $(PROJECT)-htmldoc.tgz dpkg)
+
+debuild: exe doc
+	debuild -us -uc
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # doc (copied from libcad with a few changes)
 
 target/$(PROJECT).pdf: target/doc/latex/refman.pdf
@@ -107,7 +130,7 @@ target/doc/.doc: Doxyfile target/gendoc.sh $(shell ls -1 src/*.[ch] doc/*) Makef
 	doxygen $< && touch $@
 
 target/gendoc.sh:
-	mkdir -p target/{doc,gendoc}
+	mkdir -p target/doc target/gendoc
 	ln -sf $(GENDOC) $@
 
-.PHONY: all clean libcadclean doc
+.PHONY: all clean libcadclean doc install release debuild
