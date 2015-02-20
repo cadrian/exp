@@ -295,7 +295,7 @@ static void hash_display_count(output_hash_t *this, size_t count) {
                case sample_threshold:
                     if (count <= SAMPLE_THRESHOLD) {
                          entry = entries[i]->entries[0];
-                         printf("%lu:\t%s\n", (unsigned long)count, entry->logline(entry));
+                         printf("%lu:\t%s\n", (unsigned long)count, hash_key(entry));
                     } else {
                          printf("%lu:\t%s\n", (unsigned long)count, entries[i]->key);
                     }
@@ -303,7 +303,7 @@ static void hash_display_count(output_hash_t *this, size_t count) {
                case sample_all:
                     r = rand() % count;
                     entry = entries[i]->entries[r];
-                    printf("%lu:\t%s\n", (unsigned long)count, entry->logline(entry));
+                    printf("%lu:\t%s\n", (unsigned long)count, hash_key(entry));
                     break;
                }
           }
