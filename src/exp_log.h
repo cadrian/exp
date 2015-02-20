@@ -19,7 +19,7 @@
 
 /**
  * @file
- * The header for inputs.
+ * The header for logs.
  */
 
 #include "exp.h"
