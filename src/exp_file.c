@@ -68,17 +68,18 @@ line_t *new_line(line_t *previous, size_t length, const char *content) {
      if (previous != NULL) {
           previous->next = result;
      }
+     result->next = NULL;
      result->length = length;
      memcpy(line, content, length + 1);
      line[length] = '\0';
      return result;
 }
 
-static line_t *read_all_lines(file_impl_t *this, FILE *in) {
+static void read_all_lines(file_impl_t *this, FILE *in) {
      static char buffer[MAX_LINE_SIZE];
      static char line[MAX_LINE_SIZE];
 
-     line_t *result = NULL;
+     line_t *first = NULL;
      line_t *last = NULL;
 
      size_t buffer_length;
@@ -93,8 +94,8 @@ static line_t *read_all_lines(file_impl_t *this, FILE *in) {
           for (buffer_index = 0; buffer_index < buffer_length; buffer_index++) {
                if (buffer[buffer_index] == '\n') {
                     last = new_line(last, line_length, line);
-                    if (result == NULL) {
-                         result = last;
+                    if (first == NULL) {
+                         first = last;
                     }
                     line_length = 0;
                     line_too_long_flag = false;
@@ -116,8 +117,8 @@ static line_t *read_all_lines(file_impl_t *this, FILE *in) {
           this->log(warn, "Error during read: %s\n", strerror(errno));
      } else if (line_length > 0) {
           last = new_line(last, line_length, line);
-          if (result == NULL) {
-               result = last;
+          if (first == NULL) {
+               first = last;
           }
           this->length++;
      }
@@ -127,7 +128,7 @@ static line_t *read_all_lines(file_impl_t *this, FILE *in) {
      }
      this->log(debug, "Read %lu line%s\n", (unsigned long)this->length, this->length > 1 ? "s" : "");
 
-     return result;
+     this->lines = first;
 }
 
 file_t *new_file(logger_t log, level_t error_level, const char *path) {
@@ -149,7 +150,7 @@ file_t *new_file(logger_t log, level_t error_level, const char *path) {
 
      result->fn = file_impl_fn;
      result->log = log;
-     result->lines = read_all_lines(result, in);
+     read_all_lines(result, in);
 
      if (in != stdin) {
           fclose(in);

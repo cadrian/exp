@@ -135,7 +135,7 @@ static input_file_impl_t *do_parse(input_impl_t *this, file_t *in, const char *f
           this->log(warn, "Input factory not found for file %s\n", filename);
      } else {
           this->log(info, "Using factory \"%s\" for file %s\n", factory->get_name(factory), filename);
-          result = malloc(sizeof(input_file_impl_t) + strlen(filename + 1));
+          result = malloc(sizeof(input_file_impl_t) + strlen(filename) + 1);
           result->fn = input_file_impl_fn;
           result->log = this->log;
           result->file = in;
