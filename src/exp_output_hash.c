@@ -315,18 +315,16 @@ static void hash_display_count(output_hash_t *this, size_t count) {
 static void hash_display(output_hash_t *this) {
      size_t i;
 
-     if (this->fn.options_set(&(this->fn)).sample) {
-          switch(this->options.sample) {
-          case sample_none:
-               this->log(info, "Sample type: none\n");
-               break;
-          case sample_threshold:
-               this->log(info, "Sample type: threshold\n");
-               break;
-          case sample_all:
-               this->log(info, "Sample type: all\n");
-               break;
-          }
+     switch(this->options.sample) {
+     case sample_none:
+          this->log(info, "Sample type: none\n");
+          break;
+     case sample_threshold:
+          this->log(info, "Sample type: threshold\n");
+          break;
+     case sample_all:
+          this->log(info, "Sample type: all\n");
+          break;
      }
 
      srand(time(NULL));
