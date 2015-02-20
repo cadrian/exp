@@ -10,6 +10,16 @@ Vcs-Browser: https://github.com/cadrian/exp
 
 Package: exp
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}
+Depends: ${shlibs:Depends}, ${misc:Depends}, libcad0, libpcre3-dev
 Description: ExP is Extra Petit
  A log analyzer.
+
+Package: exp-doc
+Section: doc
+Architecture: all
+Depends: ${misc:Depends}
+Recommends: exp (= ${binary:Version})
+Description: Exp is Extra Petit -- doc
+ A log analyzer.
+ .
+ The documentation.
