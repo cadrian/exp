@@ -14,6 +14,7 @@ before_install:
 install:
   - "make exe"
 script:
-# - "make run-test"
-  - "make release"
+  - "make clean"
+  - "build/build.sh main"
+  - "build/build.sh doc"
   - "sudo dpkg -i target/dpkg/*.deb"

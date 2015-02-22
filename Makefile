@@ -22,16 +22,18 @@ endif
 CFLAGS ?= -g
 LDFLAGS ?=
 
+ifeq "$(wildcard /usr/bin/doxygen)" ""
+all: exe
+else
 all: exe doc
+endif
 	@echo
 
 clean: $(LIBCADCLEAN)
-	rm -rf target
+	rm -rf target debian
 	rm -f src/_exp_entry_registry.c
 
 exe: target/$(PROJECT)
-
-doc: target/$(PROJECT).pdf target/$(PROJECT)-htmldoc.tgz
 
 target/$(PROJECT): $(OBJ) $(LIBCAD)
 	@echo "Compiling executable: $@"
@@ -76,21 +78,35 @@ install: exe doc target/version
 	cp target/$(PROJECT) $(DESTDIR)/usr/bin/
 	cp -a target/*.pdf target/doc/html $(DESTDIR)/usr/share/doc/$(PROJECT)-doc/
 
-release: debuild target/version
-	@echo "Releasing version $(shell cat target/version)"
+release.main: target/dpkg/release.main
+
+target/dpkg/release.main: exe target/version
+	@echo "Releasing main version $(shell cat target/version)"
+	debuild -us -uc -nc -F
 	mkdir target/dpkg
 	mv ../$(PROJECT)*_$(shell cat target/version)_*.deb    target/dpkg/
 	mv ../$(PROJECT)_$(shell cat target/version).dsc       target/dpkg/
 	mv ../$(PROJECT)_$(shell cat target/version).tar.[gx]z target/dpkg/
 	mv ../$(PROJECT)_$(shell cat target/version)_*.build   target/dpkg/
 	mv ../$(PROJECT)_$(shell cat target/version)_*.changes target/dpkg/
-	(cd target && tar cfz $(PROJECT)_$(shell cat target/version)_$(shell gcc -v 2>&1 | grep '^Target:' | sed 's/^Target: //').tgz $(PROJECT) $(PROJECT).pdf $(PROJECT)-htmldoc.tgz dpkg)
-
-debuild: exe doc
-	debuild -us -uc
+	(cd target && tar cfz $(PROJECT)_$(shell cat target/version)_$(shell gcc -v 2>&1 | grep '^Target:' | sed 's/^Target: //').tgz $(PROJECT) dpkg)
+	touch target/dpkg/release.main
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # doc (copied from libcad with a few changes)
+
+ifneq "$(wildcard /usr/bin/doxygen)" ""
+release.doc: target/dpkg/release.doc
+
+target/dpkg/release.doc: doc
+	@echo "Releasing doc version $(shell cat target/version)"
+	debuild -us -uc -nc -F
+	mkdir -p target/dpkg
+	mv ../$(PROJECT)*_$(shell cat target/version)_*.deb    target/dpkg/
+	(cd target && tar cfz $(PROJECT)_$(shell cat target/version)_$(shell gcc -v 2>&1 | grep '^Target:' | sed 's/^Target: //').tgz $(PROJECT).pdf $(PROJECT)-htmldoc.tgz dpkg)
+	touch target/dpkg/release.doc
+
+doc: target/$(PROJECT).pdf target/$(PROJECT)-htmldoc.tgz
 
 target/$(PROJECT).pdf: target/doc/latex/refman.pdf
 	@echo "	   Saving PDF"
@@ -111,12 +127,6 @@ target/$(PROJECT)-htmldoc.tgz: target/doc/html/index.html
 target/doc/latex/version.tex: target/version
 	cp $< $@
 
-target/version: debian/changelog
-	head -n 1 debian/changelog | awk -F'[()]' '{print $$2}' > $@
-
-debian/changelog: debian/changelog.raw
-	sed "s/#DATE#/$(shell date -R)/;s/#SNAPSHOT#/$(shell date -u +'~%Y%m%d%H%M%S')/" < $< > $@
-
 target/doc/latex/Makefile: target/doc/.doc
 	sleep 1; touch $@
 
@@ -132,5 +142,15 @@ target/doc/.doc: Doxyfile target/gendoc.sh $(shell ls -1 src/*.[ch] doc/*) Makef
 target/gendoc.sh:
 	mkdir -p target/doc target/gendoc
 	ln -sf $(GENDOC) $@
+endif
 
-.PHONY: all clean libcadclean doc install release debuild
+target/version: debian/changelog
+	head -n 1 debian/changelog | awk -F'[()]' '{print $$2}' > $@
+
+debian/changelog: debian/changelog.raw
+	sed "s/#DATE#/$(shell date -R)/;s/#SNAPSHOT#/$(shell date -u +'~%Y%m%d%H%M%S')/" < $< > $@
+
+debian/changelog.raw:
+	./build/build.sh
+
+.PHONY: all clean libcadclean doc install release.main release.doc
