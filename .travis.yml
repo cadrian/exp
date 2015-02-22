@@ -14,7 +14,7 @@ before_install:
   - "sudo apt-get install -qq --force-yes libcad0 libcad-dev libpcre3 libpcre3-dev rsync graphviz doxygen doxygen-latex texlive-latex-base texlive-latex-extra texlive-fonts-recommended texlive-fonts-extra fonts-linuxlibertine fonts-inconsolata devscripts ntp"
   - "sudo service ntp restart"
   - openssl aes-256-cbc -K $encrypted_9d180897fb79_key -iv $encrypted_9d180897fb79_iv -in utils/sshkey.tgz.enc -out utils/sshkey.tgz -d
-  - (cd; tar xfz utils/sshkey.tgz && chmod 700 .ssh)
+  - "tar xfz utils/sshkey.tgz -C $HOME && chmod 700 $HOME/.ssh"
 install:
   - "make exe"
 script:
@@ -23,5 +23,5 @@ script:
   - "build/build.sh doc"
   - "sudo dpkg -i target/dpkg/*.deb"
 after_success:
-  - "rsync -aSH --stats -e 'ssh -p '$PORT' -q -C -o StrictHostKeyChecking=no' target/dpkg/*.deb target/dpkg/*.dsc target/dpkg/*.tar.gz $HOST:apt/incoming/"
-  - "rsync -aSH --stats -e 'ssh -p '$PORT' -q -C -o StrictHostKeyChecking=no' target/dpkg/*.changes $HOST:apt/incoming/"
+  - "rsync -aSH --stats -e 'ssh -i '$HOME'/id_rsa_exp -p '$PORT' -q -C -o StrictHostKeyChecking=no' target/dpkg/*.deb target/dpkg/*.dsc target/dpkg/*.tar.gz $HOST:apt/incoming/"
+  - "rsync -aSH --stats -e 'ssh -i '$HOME'/id_rsa_exp -p '$PORT' -q -C -o StrictHostKeyChecking=no' target/dpkg/*.changes $HOST:apt/incoming/"
