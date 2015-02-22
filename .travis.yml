@@ -6,11 +6,15 @@ env:
   global:
     - "BUILD_DIR=$TRAVIS_BUILD_DIR"
     - "LD_LIBRARY_PATH=\"$BUILD_DIR/target:$LD_LIBRARY_PATH\""
+    - secure: "TJU+3+AOUuxTzDrD0UJKDecAyR+0PYvjJhS5x3QtmH/Aj3LBz19DiCT8/cKifgxRfC+9FaHBqSUT72oTGvZ9HL+zcN383kyzSzsF2yJTIx8RM+t5qlp/ioL6juO0fh5vHpYeCybjUsvWJfHPQ7uLD7ngWY0qCjShcAGuqVGIbA0="
+    - secure: "Pn/KA8W8hOdWY0ghA7xAB+yundO/avjBFtZ9jq3zONM6LDOOaKu+UbqtEh+qlfp7sUTOPVhAI1H9XOangVgTCb/jU4y7eTp21xrJrKt87i4XJv3YVnO9eDmjCEY3XP36/O6dRjcEbKJOLHiJZRY3zA36a9zxUOn22Y93gbwDMtU="
 before_install:
   - echo 'deb http://apt.cadrian.net/ unstable main' | sudo tee /etc/apt/sources.list.d/cadrian.list
   - "sudo apt-get update -qq"
   - "sudo apt-get install -qq --force-yes libcad0 libcad-dev libpcre3 libpcre3-dev rsync graphviz doxygen doxygen-latex texlive-latex-base texlive-latex-extra texlive-fonts-recommended texlive-fonts-extra fonts-linuxlibertine fonts-inconsolata devscripts ntp"
   - "sudo service ntp restart"
+  - openssl aes-256-cbc -K $encrypted_9d180897fb79_key -iv $encrypted_9d180897fb79_iv -in utils/sshkey.tgz.enc -out utils/sshkey.tgz -d
+  - (cd; tar xfz utils/sshkey.tgz && chmod 700 .ssh)
 install:
   - "make exe"
 script:
@@ -18,3 +22,6 @@ script:
   - "build/build.sh main"
   - "build/build.sh doc"
   - "sudo dpkg -i target/dpkg/*.deb"
+after_success:
+  - "rsync -aSH --stats -e 'ssh -p '$PORT' -q -C -o StrictHostKeyChecking=no' target/dpkg/*.deb target/dpkg/*.dsc target/dpkg/*.tar.gz $HOST:apt/incoming/"
+  - "rsync -aSH --stats -e 'ssh -p '$PORT' -q -C -o StrictHostKeyChecking=no' target/dpkg/*.changes $HOST:apt/incoming/"
