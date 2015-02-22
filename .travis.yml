@@ -9,7 +9,7 @@ env:
 before_install:
   - echo 'deb http://apt.cadrian.net/ unstable main' | sudo tee /etc/apt/sources.list.d/cadrian.list
   - "sudo apt-get update -qq"
-  - "sudo apt-get install -qq --force-yes libcad0 libpcre3-dev rsync graphviz doxygen doxygen-latex texlive-latex-base texlive-latex-extra texlive-fonts-recommended texlive-fonts-extra fonts-linuxlibertine fonts-inconsolata devscripts ntp"
+  - "sudo apt-get install -qq --force-yes libcad0 libcad-dev libpcre3 libpcre3-dev rsync graphviz doxygen doxygen-latex texlive-latex-base texlive-latex-extra texlive-fonts-recommended texlive-fonts-extra fonts-linuxlibertine fonts-inconsolata devscripts ntp"
   - "sudo service ntp restart"
 install:
   - "make exe"
