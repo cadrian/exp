@@ -155,7 +155,11 @@ static void regexp_impl_replace_all(regexp_impl_t *this, const char *replace, ch
 static void regexp_impl_free(regexp_impl_t *this) {
      pcre_free(this->re);
      if (this->extra != NULL) {
+#if PCRE_MINOR < 20
+          pcre_free(this->extra);
+#else
           pcre_free_study(this->extra);
+#endif
      }
      free(this->regex);
      free(this);
@@ -181,7 +185,11 @@ regexp_t *new_regexp(logger_t log, const char *regex, int pcre_flags) {
           return NULL;
      }
 
+#if PCRE_MINOR < 20
+     result->extra = pcre_study(result->re, 0, &pcre_error_string);
+#else
      result->extra = pcre_study(result->re, PCRE_STUDY_JIT_COMPILE, &pcre_error_string);
+#endif
      if (pcre_error_string != NULL) {
           pcre_free(result->re);
           free(result);

@@ -27,6 +27,9 @@
  */
 
 #include <pcre.h>
+#if PCRE_MAJOR < 8
+#error PCRE is too old!!!
+#endif
 
 /**
  * @addtogroup exp
