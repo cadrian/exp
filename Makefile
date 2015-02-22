@@ -75,8 +75,8 @@ install: exe doc target/version
 	mkdir -p debian/tmp/usr/bin
 	mkdir -p debian/tmp/usr/share/$(PROJECT)
 	mkdir -p debian/tmp/usr/share/doc/$(PROJECT)-doc
-	cp target/$(PROJECT) debian/tmp/usr/bin/
-	cp -a target/*.pdf target/doc/html debian/tmp/usr/share/doc/$(PROJECT)-doc/
+	-cp target/$(PROJECT) debian/tmp/usr/bin/
+	-cp -a target/*.pdf target/doc/html debian/tmp/usr/share/doc/$(PROJECT)-doc/
 
 release.main: target/dpkg/release.main
 
