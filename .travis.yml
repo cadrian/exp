@@ -23,5 +23,5 @@ script:
   - "build/build.sh doc"
   - "sudo dpkg -i target/dpkg/*.deb"
 after_success:
-  - "rsync -aSH --stats -e 'ssh -i '$HOME'/id_rsa_exp -p '$PORT' -q -C -o StrictHostKeyChecking=no' target/dpkg/*.deb target/dpkg/*.dsc target/dpkg/*.tar.gz $HOST:apt/incoming/"
-  - "rsync -aSH --stats -e 'ssh -i '$HOME'/id_rsa_exp -p '$PORT' -q -C -o StrictHostKeyChecking=no' target/dpkg/*.changes $HOST:apt/incoming/"
+  - "rsync -aSH --stats -e 'ssh -i '$HOME'/.ssh/id_rsa_exp -p '$PORT' -q -C -o StrictHostKeyChecking=no' target/dpkg/*.deb target/dpkg/*.dsc target/dpkg/*.tar.gz $HOST:apt/incoming/"
+  - "rsync -aSH --stats -e 'ssh -i '$HOME'/.ssh/id_rsa_exp -p '$PORT' -q -C -o StrictHostKeyChecking=no' target/dpkg/*.changes $HOST:apt/incoming/"
