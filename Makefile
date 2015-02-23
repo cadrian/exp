@@ -37,7 +37,7 @@ exe: target/$(PROJECT)
 
 target/$(PROJECT): $(OBJ) $(LIBCAD)
 	@echo "Compiling executable: $@"
-	$(CC) $(CFLAGS) -o $@ $(OBJ) -L target -lpcre -lcad
+	$(CC) $(CFLAGS) -o $@ $(OBJ) -L target -lpcre -lcad -lm
 
 target/out/%.o: src/%.c src/*.h Makefile
 	mkdir -p target/out
