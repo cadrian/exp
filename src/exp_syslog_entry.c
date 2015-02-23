@@ -295,9 +295,9 @@ static entry_t *syslog_new_entry(syslog_entry_factory_t *this, line_t *line) {
      regexp_t *regexp = this->regexp(this->log);
      match_t *match = regexp->match(regexp, line->buffer, 0, line->length, 0);
 
-     if (match != NULL) {
-          result->fn = syslog_entry_fn;
+     result->fn = syslog_entry_fn;
 
+     if (match != NULL) {
           result->year    = string_2_int(match, "year",   this_year);
           result->month   = string_2_int(match, "month",  str_month);
           result->day     = string_2_int(match, "day",    one);
