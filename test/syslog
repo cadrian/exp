@@ -1,0 +1,1111 @@
+Feb 17 07:15:29 ankh-morpork x-session-manager[7942]: WARNING: Error getting login monitor: -2
+Feb 17 07:15:30 ankh-morpork rtkit-daemon[5291]: Successfully made thread 8081 of process 8081 (/usr/bin/pulseaudio) owned by '1001' high priority at nice level -11.
+Feb 17 07:15:30 ankh-morpork rtkit-daemon[5291]: Supervising 4 threads of 2 processes of 2 users.
+Feb 17 07:15:30 ankh-morpork rtkit-daemon[5291]: Supervising 4 threads of 2 processes of 2 users.
+Feb 17 07:15:30 ankh-morpork rtkit-daemon[5291]: Successfully made thread 8089 of process 8081 (/usr/bin/pulseaudio) owned by '1001' RT at priority 5.
+Feb 17 07:15:30 ankh-morpork rtkit-daemon[5291]: Supervising 5 threads of 2 processes of 2 users.
+Feb 17 07:15:30 ankh-morpork rtkit-daemon[5291]: Supervising 5 threads of 2 processes of 2 users.
+Feb 17 07:15:30 ankh-morpork rtkit-daemon[5291]: Successfully made thread 8090 of process 8081 (/usr/bin/pulseaudio) owned by '1001' RT at priority 5.
+Feb 17 07:15:30 ankh-morpork rtkit-daemon[5291]: Supervising 6 threads of 2 processes of 2 users.
+Feb 17 07:15:30 ankh-morpork dbus[3073]: [system] Activating service name='org.freedesktop.UDisks2' (using servicehelper)
+Feb 17 07:15:31 ankh-morpork udisksd[8113]: udisks daemon version 2.1.3 starting
+Feb 17 07:15:31 ankh-morpork dbus[3073]: [system] Successfully activated service 'org.freedesktop.UDisks2'
+Feb 17 07:15:31 ankh-morpork udisksd[8113]: Acquired the name org.freedesktop.UDisks2 on the system message bus
+Feb 17 07:15:32 ankh-morpork dbus[3073]: [system] Activating service name='org.freedesktop.hostname1' (using servicehelper)
+Feb 17 07:15:32 ankh-morpork dbus[3073]: [system] Successfully activated service 'org.freedesktop.hostname1'
+Feb 17 07:15:32 ankh-morpork dbus[3073]: [system] Activating service name='org.freedesktop.locale1' (using servicehelper)
+Feb 17 07:15:32 ankh-morpork dbus[3073]: [system] Successfully activated service 'org.freedesktop.locale1'
+Feb 17 07:15:32 ankh-morpork colord: Profile added: icc-cfaa111e95a691fa76c426d5c8f7bd9a
+Feb 17 07:15:34 ankh-morpork dbus[3073]: [system] Activating service name='org.freedesktop.GeoClue2' (using servicehelper)
+Feb 17 07:15:34 ankh-morpork dbus[3073]: [system] Successfully activated service 'org.freedesktop.GeoClue2'
+Feb 17 07:15:39 ankh-morpork dbus[3073]: [system] Activating service name='org.freedesktop.systemd1' (using servicehelper)
+Feb 17 07:15:39 ankh-morpork dbus[3073]: [system] Successfully activated service 'org.freedesktop.systemd1'
+Feb 17 07:15:39 ankh-morpork colord: Automatic metadata add icc-cfaa111e95a691fa76c426d5c8f7bd9a to xrandr-Goldstar Company Ltd-L204WT-324494
+Feb 17 07:15:39 ankh-morpork colord: Device added: xrandr-Goldstar Company Ltd-L204WT-324494
+Feb 17 07:16:01 ankh-morpork rsyslogd0: action 'action 17' resumed (module 'builtin:ompipe') [try http://www.rsyslog.com/e/0 ]
+Feb 17 07:16:01 ankh-morpork rsyslogd-2359: action 'action 17' resumed (module 'builtin:ompipe') [try http://www.rsyslog.com/e/2359 ]
+Feb 17 07:16:01 ankh-morpork CRON[8353]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 07:16:55 ankh-morpork PackageKit: refresh-cache transaction /6256_ecabbdcd from uid 1001 finished with success after 18751ms
+Feb 17 07:16:59 ankh-morpork PackageKit: get-updates transaction /6257_dbbcddce from uid 1001 finished with success after 3949ms
+Feb 17 07:17:01 ankh-morpork CRON[8600]: (root) CMD (   cd / && run-parts --report /etc/cron.hourly)
+Feb 17 07:17:01 ankh-morpork CRON[8601]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 07:18:01 ankh-morpork CRON[8770]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 07:18:05 ankh-morpork anacron[2899]: Job `cron.daily' terminated (exit status: 1) (mailing output)
+Feb 17 07:18:05 ankh-morpork anacron[2899]: Job `cron.monthly' started
+Feb 17 07:18:05 ankh-morpork anacron[2899]: Job `cron.monthly' terminated
+Feb 17 07:18:05 ankh-morpork anacron[8966]: Updated timestamp for job `cron.monthly' to 2015-02-17
+Feb 17 07:18:08 ankh-morpork anacron[2899]: Normal exit (2 jobs run)
+Feb 17 07:19:01 ankh-morpork CRON[8975]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 07:20:01 ankh-morpork CRON[9136]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 07:21:01 ankh-morpork CRON[9286]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 07:22:01 ankh-morpork CRON[9445]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 07:23:01 ankh-morpork CRON[9601]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 07:24:01 ankh-morpork CRON[9749]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 07:25:01 ankh-morpork CRON[9897]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 07:26:01 ankh-morpork CRON[10047]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 07:27:01 ankh-morpork CRON[10197]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 07:28:01 ankh-morpork CRON[10353]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 07:29:01 ankh-morpork CRON[10501]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 07:30:01 ankh-morpork CRON[10650]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 07:30:01 ankh-morpork CRON[10652]: (root) CMD (test -x /etc/init.d/anacron && /usr/sbin/invoke-rc.d anacron start >/dev/null)
+Feb 17 07:30:01 ankh-morpork anacron[10742]: Anacron 2.3 started on 2015-02-17
+Feb 17 07:30:01 ankh-morpork anacron[10742]: Normal exit (0 jobs run)
+Feb 17 07:31:01 ankh-morpork CRON[10825]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 07:32:01 ankh-morpork CRON[10975]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 07:33:01 ankh-morpork CRON[11123]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 07:34:01 ankh-morpork CRON[11271]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 07:35:01 ankh-morpork CRON[11428]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 07:36:01 ankh-morpork CRON[11616]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 07:37:01 ankh-morpork CRON[11778]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 07:38:01 ankh-morpork CRON[11934]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 07:39:01 ankh-morpork CRON[12085]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 07:39:01 ankh-morpork CRON[12086]: (root) CMD (  [ -x /usr/lib/php5/sessionclean ] && /usr/lib/php5/sessionclean)
+Feb 17 07:40:01 ankh-morpork CRON[12243]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 07:41:01 ankh-morpork CRON[12392]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 07:42:01 ankh-morpork CRON[12566]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 07:43:01 ankh-morpork CRON[12715]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 07:44:01 ankh-morpork CRON[12882]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 07:45:01 ankh-morpork CRON[13034]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 07:46:01 ankh-morpork CRON[13185]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 07:47:01 ankh-morpork CRON[13334]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 07:48:01 ankh-morpork CRON[13482]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 07:49:01 ankh-morpork CRON[13630]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 07:50:01 ankh-morpork CRON[13778]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 07:51:01 ankh-morpork CRON[13927]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 07:52:01 ankh-morpork CRON[14076]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 07:53:01 ankh-morpork CRON[14226]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 07:54:01 ankh-morpork CRON[14386]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 07:55:01 ankh-morpork CRON[14536]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 07:56:01 ankh-morpork CRON[14686]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 07:57:01 ankh-morpork CRON[14834]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 07:58:01 ankh-morpork CRON[15000]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 07:59:01 ankh-morpork CRON[15148]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 08:00:01 ankh-morpork CRON[15296]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 08:01:01 ankh-morpork CRON[15454]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 08:02:01 ankh-morpork CRON[15607]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 08:02:07 ankh-morpork dbus[3073]: [system] Activating service name='org.freedesktop.hostname1' (using servicehelper)
+Feb 17 08:02:07 ankh-morpork dbus[3073]: [system] Successfully activated service 'org.freedesktop.hostname1'
+Feb 17 08:03:01 ankh-morpork CRON[15805]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 08:04:01 ankh-morpork CRON[15957]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 08:04:15 ankh-morpork dbus[3073]: [system] Activating service name='org.opensuse.CupsPkHelper.Mechanism' (using servicehelper)
+Feb 17 08:04:15 ankh-morpork dbus[3073]: [system] Successfully activated service 'org.opensuse.CupsPkHelper.Mechanism'
+Feb 17 08:04:18 ankh-morpork kernel: [ 3823.639834] usblp0: removed
+Feb 17 08:04:18 ankh-morpork kernel: [ 3823.640033] Did not find alt setting 1 for intf 0, config 1
+Feb 17 08:04:49 ankh-morpork kernel: [ 3854.891033] Did not find alt setting 1 for intf 0, config 1
+Feb 17 08:04:51 ankh-morpork kernel: [ 3856.889266] Did not find alt setting 1 for intf 0, config 1
+Feb 17 08:04:53 ankh-morpork kernel: [ 3858.887498] Did not find alt setting 1 for intf 0, config 1
+Feb 17 08:04:55 ankh-morpork kernel: [ 3860.885721] Did not find alt setting 1 for intf 0, config 1
+Feb 17 08:05:01 ankh-morpork CRON[16282]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 08:05:12 ankh-morpork dbus[3073]: [system] Activating service name='org.freedesktop.hostname1' (using servicehelper)
+Feb 17 08:05:12 ankh-morpork dbus[3073]: [system] Successfully activated service 'org.freedesktop.hostname1'
+Feb 17 08:05:21 ankh-morpork kernel: [ 3887.460108] Did not find alt setting 1 for intf 0, config 1
+Feb 17 08:05:34 ankh-morpork kernel: [ 3900.196796] Did not find alt setting 1 for intf 0, config 1
+Feb 17 08:05:36 ankh-morpork kernel: [ 3902.195037] Did not find alt setting 1 for intf 0, config 1
+Feb 17 08:05:38 ankh-morpork kernel: [ 3904.193261] Did not find alt setting 1 for intf 0, config 1
+Feb 17 08:05:40 ankh-morpork kernel: [ 3906.191487] Did not find alt setting 1 for intf 0, config 1
+Feb 17 08:06:01 ankh-morpork CRON[16527]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 08:06:13 ankh-morpork dbus[3073]: [system] Activating service name='org.freedesktop.hostname1' (using servicehelper)
+Feb 17 08:06:13 ankh-morpork dbus[3073]: [system] Successfully activated service 'org.freedesktop.hostname1'
+Feb 17 08:07:01 ankh-morpork CRON[16700]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 08:08:01 ankh-morpork CRON[16857]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 08:09:01 ankh-morpork CRON[17008]: (root) CMD (  [ -x /usr/lib/php5/sessionclean ] && /usr/lib/php5/sessionclean)
+Feb 17 08:09:01 ankh-morpork CRON[17007]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 08:10:01 ankh-morpork CRON[17169]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 08:11:01 ankh-morpork CRON[17321]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 08:12:01 ankh-morpork CRON[17469]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 08:13:01 ankh-morpork CRON[17617]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 08:14:01 ankh-morpork CRON[17765]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 08:15:01 ankh-morpork CRON[17914]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 08:16:01 ankh-morpork CRON[18075]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 08:17:01 ankh-morpork CRON[18233]: (root) CMD (   cd / && run-parts --report /etc/cron.hourly)
+Feb 17 08:17:01 ankh-morpork CRON[18234]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 08:18:01 ankh-morpork CRON[18383]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 08:19:01 ankh-morpork CRON[18533]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 08:20:01 ankh-morpork CRON[18681]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 08:21:01 ankh-morpork CRON[18838]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 08:22:01 ankh-morpork CRON[18986]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 08:23:01 ankh-morpork CRON[19134]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 08:24:01 ankh-morpork CRON[19282]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 08:25:01 ankh-morpork CRON[19430]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 08:26:01 ankh-morpork CRON[19580]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 08:27:01 ankh-morpork CRON[19729]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 08:28:01 ankh-morpork CRON[19879]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 08:29:01 ankh-morpork CRON[20037]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 08:30:01 ankh-morpork CRON[20193]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 08:31:01 ankh-morpork CRON[20342]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 08:32:01 ankh-morpork CRON[20493]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 08:33:01 ankh-morpork CRON[20642]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 08:34:01 ankh-morpork CRON[20790]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 08:35:01 ankh-morpork CRON[20938]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 08:36:01 ankh-morpork CRON[21088]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 08:37:01 ankh-morpork CRON[21236]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 08:38:01 ankh-morpork CRON[21392]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 08:39:01 ankh-morpork CRON[21542]: (root) CMD (  [ -x /usr/lib/php5/sessionclean ] && /usr/lib/php5/sessionclean)
+Feb 17 08:39:01 ankh-morpork CRON[21544]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 08:40:01 ankh-morpork CRON[21699]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 08:41:01 ankh-morpork CRON[21848]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 08:42:01 ankh-morpork CRON[22004]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 08:43:01 ankh-morpork CRON[22152]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 08:44:01 ankh-morpork CRON[22302]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 08:45:01 ankh-morpork CRON[22451]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 08:46:01 ankh-morpork CRON[22601]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 08:47:01 ankh-morpork CRON[22749]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 08:47:01 ankh-morpork rsyslogd-2007: action 'action 17' suspended, next retry is Tue Feb 17 08:47:31 2015 [try http://www.rsyslog.com/e/2007 ]
+Feb 17 08:48:01 ankh-morpork CRON[22897]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 08:49:01 ankh-morpork CRON[23053]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 08:50:01 ankh-morpork CRON[23201]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 08:51:01 ankh-morpork CRON[23351]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 08:52:01 ankh-morpork CRON[23499]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 08:53:01 ankh-morpork CRON[23647]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 08:54:01 ankh-morpork CRON[23795]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 08:55:01 ankh-morpork CRON[23951]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 08:56:01 ankh-morpork CRON[24102]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 08:57:01 ankh-morpork CRON[24250]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 08:58:01 ankh-morpork CRON[24399]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 08:59:01 ankh-morpork CRON[24547]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 09:00:01 ankh-morpork CRON[24695]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 09:01:01 ankh-morpork CRON[24853]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 09:02:01 ankh-morpork CRON[25003]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 09:03:01 ankh-morpork CRON[25151]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 09:04:01 ankh-morpork CRON[25299]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 09:05:01 ankh-morpork CRON[25447]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 09:06:01 ankh-morpork CRON[25605]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 09:07:01 ankh-morpork CRON[25753]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 09:08:01 ankh-morpork CRON[25901]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 09:09:01 ankh-morpork CRON[26051]: (root) CMD (  [ -x /usr/lib/php5/sessionclean ] && /usr/lib/php5/sessionclean)
+Feb 17 09:09:01 ankh-morpork CRON[26052]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 09:10:01 ankh-morpork CRON[26209]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 09:11:01 ankh-morpork CRON[26359]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 09:12:01 ankh-morpork CRON[26507]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 09:13:01 ankh-morpork CRON[26655]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 09:14:01 ankh-morpork CRON[26803]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 09:15:01 ankh-morpork CRON[26960]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 09:16:01 ankh-morpork CRON[27114]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 09:17:01 ankh-morpork CRON[27263]: (root) CMD (   cd / && run-parts --report /etc/cron.hourly)
+Feb 17 09:17:01 ankh-morpork CRON[27266]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 09:18:01 ankh-morpork CRON[27414]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 09:19:01 ankh-morpork CRON[27562]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 09:20:01 ankh-morpork CRON[27710]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 09:21:01 ankh-morpork CRON[27859]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 09:22:01 ankh-morpork CRON[28007]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 09:23:01 ankh-morpork CRON[28156]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 09:24:01 ankh-morpork CRON[28305]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 09:25:01 ankh-morpork CRON[28461]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 09:26:01 ankh-morpork CRON[28611]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 09:27:01 ankh-morpork CRON[28759]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 09:28:01 ankh-morpork CRON[28907]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 09:29:02 ankh-morpork CRON[29063]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 09:30:01 ankh-morpork CRON[29211]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 09:31:01 ankh-morpork CRON[29360]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 09:32:01 ankh-morpork CRON[29510]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 09:33:01 ankh-morpork CRON[29666]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 09:34:01 ankh-morpork CRON[29814]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 09:35:01 ankh-morpork CRON[29963]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 09:36:01 ankh-morpork CRON[30113]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 09:37:01 ankh-morpork CRON[30262]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 09:38:01 ankh-morpork CRON[30410]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 09:39:01 ankh-morpork CRON[30582]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 09:39:01 ankh-morpork CRON[30583]: (root) CMD (  [ -x /usr/lib/php5/sessionclean ] && /usr/lib/php5/sessionclean)
+Feb 17 09:40:01 ankh-morpork CRON[30739]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 09:41:01 ankh-morpork CRON[30887]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 09:42:01 ankh-morpork CRON[31036]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 09:43:01 ankh-morpork CRON[31185]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 09:44:01 ankh-morpork CRON[31334]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 09:45:01 ankh-morpork CRON[31482]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 09:46:01 ankh-morpork CRON[31631]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 09:47:01 ankh-morpork CRON[31788]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 09:48:01 ankh-morpork CRON[31937]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 09:49:01 ankh-morpork CRON[32085]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 09:50:01 ankh-morpork CRON[32234]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 09:51:01 ankh-morpork CRON[32382]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 09:52:01 ankh-morpork CRON[32531]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 09:53:01 ankh-morpork CRON[32679]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 09:54:01 ankh-morpork CRON[360]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 09:55:01 ankh-morpork CRON[509]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 09:56:01 ankh-morpork CRON[666]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 09:57:01 ankh-morpork CRON[817]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 09:58:01 ankh-morpork CRON[976]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 09:59:01 ankh-morpork CRON[1129]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 10:00:01 ankh-morpork CRON[1281]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 10:01:01 ankh-morpork CRON[1429]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 10:02:01 ankh-morpork CRON[1580]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 10:03:01 ankh-morpork CRON[1737]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 10:04:01 ankh-morpork CRON[1887]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 10:05:01 ankh-morpork CRON[2036]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 10:06:01 ankh-morpork CRON[2186]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 10:07:01 ankh-morpork CRON[2347]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 10:08:01 ankh-morpork CRON[2496]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 10:09:01 ankh-morpork CRON[2650]: (root) CMD (  [ -x /usr/lib/php5/sessionclean ] && /usr/lib/php5/sessionclean)
+Feb 17 10:09:01 ankh-morpork CRON[2651]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 10:10:01 ankh-morpork CRON[2813]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 10:11:01 ankh-morpork CRON[2964]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 10:12:01 ankh-morpork CRON[3119]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 10:13:01 ankh-morpork CRON[3285]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 10:14:01 ankh-morpork CRON[3470]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 10:15:01 ankh-morpork CRON[3619]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 10:16:01 ankh-morpork CRON[3774]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 10:17:01 ankh-morpork CRON[3925]: (root) CMD (   cd / && run-parts --report /etc/cron.hourly)
+Feb 17 10:17:01 ankh-morpork CRON[3926]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 10:18:01 ankh-morpork CRON[4088]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 10:19:01 ankh-morpork CRON[4239]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 10:20:01 ankh-morpork CRON[4393]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 10:21:01 ankh-morpork CRON[4546]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 10:22:01 ankh-morpork CRON[4696]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 10:23:01 ankh-morpork CRON[4844]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 10:24:01 ankh-morpork CRON[5000]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 10:25:01 ankh-morpork CRON[5154]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 10:26:01 ankh-morpork CRON[5311]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 10:27:01 ankh-morpork CRON[5535]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 10:28:01 ankh-morpork CRON[5683]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 10:29:01 ankh-morpork CRON[5832]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 10:30:01 ankh-morpork CRON[5980]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 10:31:01 ankh-morpork CRON[6129]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 10:32:01 ankh-morpork CRON[6288]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 10:33:01 ankh-morpork CRON[6436]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 10:34:01 ankh-morpork CRON[6584]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 10:35:01 ankh-morpork CRON[6732]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 10:36:01 ankh-morpork CRON[6890]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 10:37:01 ankh-morpork CRON[7039]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 10:38:01 ankh-morpork CRON[7187]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 10:39:01 ankh-morpork CRON[7337]: (root) CMD (  [ -x /usr/lib/php5/sessionclean ] && /usr/lib/php5/sessionclean)
+Feb 17 10:39:01 ankh-morpork CRON[7339]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 10:40:01 ankh-morpork CRON[7494]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 10:41:01 ankh-morpork CRON[7644]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 10:42:01 ankh-morpork CRON[7797]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 10:43:01 ankh-morpork CRON[7959]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 10:44:01 ankh-morpork CRON[8181]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 10:45:01 ankh-morpork CRON[8401]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 10:46:01 ankh-morpork CRON[8557]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 10:47:01 ankh-morpork CRON[8709]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 10:48:01 ankh-morpork CRON[8859]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 10:49:01 ankh-morpork CRON[9007]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 10:50:01 ankh-morpork CRON[9155]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 10:51:01 ankh-morpork CRON[9304]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 10:52:01 ankh-morpork CRON[9462]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 10:53:01 ankh-morpork CRON[9610]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 10:54:01 ankh-morpork CRON[9758]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 10:55:01 ankh-morpork CRON[9907]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 10:56:01 ankh-morpork CRON[10056]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 10:57:01 ankh-morpork CRON[10206]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 10:58:01 ankh-morpork CRON[10354]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 10:59:01 ankh-morpork CRON[10502]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 11:00:01 ankh-morpork CRON[10650]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 11:01:01 ankh-morpork CRON[10806]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 11:02:01 ankh-morpork CRON[10958]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 11:03:01 ankh-morpork CRON[11106]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 11:04:01 ankh-morpork CRON[11254]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 11:05:01 ankh-morpork CRON[11402]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 11:06:01 ankh-morpork CRON[11553]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 11:07:01 ankh-morpork CRON[11705]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 11:08:01 ankh-morpork CRON[11854]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 11:09:01 ankh-morpork CRON[12005]: (root) CMD (  [ -x /usr/lib/php5/sessionclean ] && /usr/lib/php5/sessionclean)
+Feb 17 11:09:01 ankh-morpork CRON[12006]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 11:10:01 ankh-morpork CRON[12162]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 11:11:01 ankh-morpork CRON[12318]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 11:12:01 ankh-morpork CRON[12469]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 11:13:01 ankh-morpork CRON[12618]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 11:14:01 ankh-morpork CRON[12766]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 11:15:01 ankh-morpork CRON[12914]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 11:16:01 ankh-morpork CRON[13073]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 11:17:01 ankh-morpork CRON[13224]: (root) CMD (   cd / && run-parts --report /etc/cron.hourly)
+Feb 17 11:17:01 ankh-morpork CRON[13225]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 11:18:01 ankh-morpork CRON[13374]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 11:19:01 ankh-morpork CRON[13522]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 11:20:01 ankh-morpork CRON[13670]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 11:21:01 ankh-morpork CRON[13819]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 11:22:01 ankh-morpork CRON[13969]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 11:23:01 ankh-morpork CRON[14117]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 11:24:01 ankh-morpork CRON[14273]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 11:25:01 ankh-morpork CRON[14421]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 11:26:01 ankh-morpork CRON[14570]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 11:27:01 ankh-morpork CRON[14719]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 11:28:01 ankh-morpork CRON[14867]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 11:29:01 ankh-morpork CRON[15027]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 11:30:01 ankh-morpork CRON[15175]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 11:31:01 ankh-morpork CRON[15323]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 11:32:01 ankh-morpork CRON[15474]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 11:33:01 ankh-morpork CRON[15631]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 11:34:01 ankh-morpork CRON[15783]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 11:35:01 ankh-morpork CRON[15932]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 11:36:01 ankh-morpork CRON[16081]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 11:37:01 ankh-morpork CRON[16236]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 11:38:01 ankh-morpork CRON[16392]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 11:39:01 ankh-morpork CRON[16545]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 11:39:01 ankh-morpork CRON[16546]: (root) CMD (  [ -x /usr/lib/php5/sessionclean ] && /usr/lib/php5/sessionclean)
+Feb 17 11:40:01 ankh-morpork CRON[16702]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 11:41:01 ankh-morpork CRON[16850]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 11:42:01 ankh-morpork CRON[17001]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 11:43:01 ankh-morpork CRON[17150]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 11:44:01 ankh-morpork CRON[17298]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 11:45:01 ankh-morpork CRON[17446]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 11:46:01 ankh-morpork CRON[17595]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 11:47:01 ankh-morpork CRON[17753]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 11:48:01 ankh-morpork CRON[17901]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 11:49:01 ankh-morpork CRON[18049]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 11:50:01 ankh-morpork CRON[18198]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 11:51:01 ankh-morpork CRON[18346]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 11:52:01 ankh-morpork CRON[18495]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 11:53:01 ankh-morpork CRON[18651]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 11:54:01 ankh-morpork CRON[18799]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 11:55:01 ankh-morpork CRON[18947]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 11:56:01 ankh-morpork CRON[19097]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 11:57:01 ankh-morpork CRON[19246]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 11:58:01 ankh-morpork CRON[19402]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 11:59:01 ankh-morpork CRON[19550]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 12:00:01 ankh-morpork CRON[19699]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 12:01:01 ankh-morpork CRON[19847]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 12:02:01 ankh-morpork CRON[19998]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 12:03:01 ankh-morpork CRON[20146]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 12:04:01 ankh-morpork CRON[20294]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 12:05:01 ankh-morpork CRON[20450]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 12:06:01 ankh-morpork CRON[20599]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 12:07:01 ankh-morpork CRON[20748]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 12:08:01 ankh-morpork CRON[20896]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 12:09:01 ankh-morpork CRON[21047]: (root) CMD (  [ -x /usr/lib/php5/sessionclean ] && /usr/lib/php5/sessionclean)
+Feb 17 12:09:01 ankh-morpork CRON[21049]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 12:10:01 ankh-morpork CRON[21204]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 12:11:01 ankh-morpork CRON[21352]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 12:12:01 ankh-morpork CRON[21501]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 12:13:01 ankh-morpork CRON[21654]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 12:13:21 ankh-morpork dhclient: DHCPREQUEST on eth0 to 192.168.0.254 port 67
+Feb 17 12:13:21 ankh-morpork dhclient: DHCPACK from 192.168.0.254
+Feb 17 12:13:21 ankh-morpork NetworkManager[3180]: <info> (eth0): DHCPv4 state changed bound -> renew
+Feb 17 12:13:21 ankh-morpork NetworkManager[3180]: <info>   address 192.168.0.101
+Feb 17 12:13:21 ankh-morpork NetworkManager[3180]: <info>   plen 24 (255.255.255.0)
+Feb 17 12:13:21 ankh-morpork NetworkManager[3180]: <info>   gateway 192.168.0.254
+Feb 17 12:13:21 ankh-morpork NetworkManager[3180]: <info>   server identifier 192.168.0.254
+Feb 17 12:13:21 ankh-morpork NetworkManager[3180]: <info>   lease time 43200
+Feb 17 12:13:21 ankh-morpork NetworkManager[3180]: <info>   nameserver '192.168.0.124'
+Feb 17 12:13:21 ankh-morpork NetworkManager[3180]: <info>   nameserver '192.168.0.254'
+Feb 17 12:13:21 ankh-morpork dbus[3073]: [system] Activating service name='org.freedesktop.nm_dispatcher' (using servicehelper)
+Feb 17 12:13:21 ankh-morpork dbus[3073]: [system] Successfully activated service 'org.freedesktop.nm_dispatcher'
+Feb 17 12:13:21 ankh-morpork nm-dispatcher: Dispatching action 'dhcp4-change' for eth0
+Feb 17 12:13:21 ankh-morpork dhclient: bound to 192.168.0.101 -- renewal in 21555 seconds.
+Feb 17 12:14:01 ankh-morpork CRON[21828]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 12:15:01 ankh-morpork CRON[21976]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 12:16:01 ankh-morpork CRON[22127]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 12:17:01 ankh-morpork CRON[22278]: (root) CMD (   cd / && run-parts --report /etc/cron.hourly)
+Feb 17 12:17:01 ankh-morpork CRON[22281]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 12:18:01 ankh-morpork CRON[22430]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 12:19:01 ankh-morpork CRON[22578]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 12:20:01 ankh-morpork CRON[22726]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 12:21:01 ankh-morpork CRON[22884]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 12:22:01 ankh-morpork CRON[23033]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 12:23:01 ankh-morpork CRON[23192]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 12:24:01 ankh-morpork CRON[23352]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 12:25:01 ankh-morpork CRON[23509]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 12:26:01 ankh-morpork CRON[23672]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 12:27:01 ankh-morpork CRON[23823]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 12:28:01 ankh-morpork CRON[23973]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 12:29:01 ankh-morpork CRON[24132]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 12:30:01 ankh-morpork CRON[24301]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 12:31:01 ankh-morpork CRON[24457]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 12:32:01 ankh-morpork CRON[24608]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 12:33:01 ankh-morpork CRON[24756]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 12:34:01 ankh-morpork CRON[24905]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 12:35:01 ankh-morpork CRON[25062]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 12:36:01 ankh-morpork CRON[25211]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 12:37:01 ankh-morpork CRON[25360]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 12:38:01 ankh-morpork CRON[25508]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 12:39:01 ankh-morpork CRON[25660]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 12:39:01 ankh-morpork CRON[25661]: (root) CMD (  [ -x /usr/lib/php5/sessionclean ] && /usr/lib/php5/sessionclean)
+Feb 17 12:40:01 ankh-morpork CRON[25820]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 12:41:01 ankh-morpork CRON[25968]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 12:42:01 ankh-morpork CRON[26117]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 12:43:01 ankh-morpork CRON[26274]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 12:44:01 ankh-morpork CRON[26422]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 12:45:01 ankh-morpork CRON[26570]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 12:46:01 ankh-morpork CRON[26719]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 12:47:01 ankh-morpork CRON[26868]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 12:48:01 ankh-morpork CRON[27016]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 12:49:01 ankh-morpork CRON[27172]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 12:50:01 ankh-morpork CRON[27321]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 12:51:01 ankh-morpork CRON[27469]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 12:52:01 ankh-morpork CRON[27619]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 12:53:01 ankh-morpork CRON[27767]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 12:54:01 ankh-morpork CRON[27921]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 12:55:01 ankh-morpork CRON[28112]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 12:56:01 ankh-morpork CRON[28269]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 12:57:01 ankh-morpork CRON[28422]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 12:58:01 ankh-morpork CRON[28572]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 12:59:01 ankh-morpork CRON[28732]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 13:00:01 ankh-morpork CRON[28881]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 13:01:01 ankh-morpork CRON[29032]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 13:02:01 ankh-morpork CRON[29215]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 13:03:01 ankh-morpork CRON[29373]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 13:04:01 ankh-morpork CRON[29530]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 13:05:01 ankh-morpork CRON[29697]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 13:06:01 ankh-morpork CRON[29874]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 13:06:31 ankh-morpork dbus[3073]: [system] Activating service name='org.freedesktop.hostname1' (using servicehelper)
+Feb 17 13:06:31 ankh-morpork dbus[3073]: [system] Successfully activated service 'org.freedesktop.hostname1'
+Feb 17 13:07:01 ankh-morpork CRON[30084]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 13:08:01 ankh-morpork CRON[30236]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 13:09:01 ankh-morpork CRON[30385]: (root) CMD (  [ -x /usr/lib/php5/sessionclean ] && /usr/lib/php5/sessionclean)
+Feb 17 13:09:01 ankh-morpork CRON[30388]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 13:10:01 ankh-morpork CRON[30543]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 13:11:01 ankh-morpork CRON[30695]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 13:12:01 ankh-morpork CRON[30858]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 13:13:01 ankh-morpork CRON[31008]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 13:14:01 ankh-morpork CRON[31157]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 13:15:01 ankh-morpork CRON[31306]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 13:16:01 ankh-morpork CRON[31457]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 13:17:01 ankh-morpork CRON[31609]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 13:17:01 ankh-morpork CRON[31608]: (root) CMD (   cd / && run-parts --report /etc/cron.hourly)
+Feb 17 13:18:01 ankh-morpork CRON[31767]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 13:19:01 ankh-morpork CRON[31915]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 13:20:01 ankh-morpork CRON[32063]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 13:21:01 ankh-morpork CRON[32211]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 13:22:01 ankh-morpork CRON[32369]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 13:23:02 ankh-morpork CRON[32517]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 13:24:01 ankh-morpork CRON[32665]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 13:25:01 ankh-morpork CRON[346]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 13:26:01 ankh-morpork CRON[496]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 13:27:01 ankh-morpork CRON[653]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 13:28:01 ankh-morpork CRON[803]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 13:29:01 ankh-morpork CRON[951]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 13:30:01 ankh-morpork CRON[1101]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 13:31:01 ankh-morpork CRON[1253]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 13:32:01 ankh-morpork CRON[1404]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 13:33:01 ankh-morpork CRON[1552]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 13:34:01 ankh-morpork CRON[1700]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 13:35:01 ankh-morpork CRON[1850]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 13:36:01 ankh-morpork CRON[2007]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 13:37:01 ankh-morpork CRON[2156]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 13:38:01 ankh-morpork CRON[2309]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 13:39:01 ankh-morpork CRON[2460]: (root) CMD (  [ -x /usr/lib/php5/sessionclean ] && /usr/lib/php5/sessionclean)
+Feb 17 13:39:01 ankh-morpork CRON[2469]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 13:40:01 ankh-morpork CRON[2622]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 13:41:01 ankh-morpork CRON[2776]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 13:42:01 ankh-morpork CRON[2926]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 13:43:01 ankh-morpork CRON[3081]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 13:44:01 ankh-morpork CRON[3254]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 13:45:01 ankh-morpork CRON[3430]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 13:46:01 ankh-morpork CRON[3582]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 13:47:01 ankh-morpork CRON[3736]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 13:48:01 ankh-morpork CRON[3884]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 13:49:01 ankh-morpork CRON[4043]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 13:50:01 ankh-morpork CRON[4195]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 13:51:01 ankh-morpork CRON[4354]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 13:52:01 ankh-morpork CRON[4512]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 13:53:01 ankh-morpork CRON[4660]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 13:54:01 ankh-morpork CRON[4809]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 13:55:01 ankh-morpork CRON[4957]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 13:56:01 ankh-morpork CRON[5111]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 13:57:01 ankh-morpork CRON[5268]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 13:58:01 ankh-morpork CRON[5420]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 13:59:01 ankh-morpork CRON[5651]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 14:00:01 ankh-morpork CRON[5800]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 14:01:01 ankh-morpork CRON[5948]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 14:02:01 ankh-morpork CRON[6099]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 14:03:01 ankh-morpork CRON[6247]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 14:04:01 ankh-morpork CRON[6395]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 14:05:01 ankh-morpork CRON[6551]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 14:06:01 ankh-morpork CRON[6700]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 14:07:01 ankh-morpork CRON[6849]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 14:08:01 ankh-morpork CRON[6998]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 14:09:01 ankh-morpork CRON[7149]: (root) CMD (  [ -x /usr/lib/php5/sessionclean ] && /usr/lib/php5/sessionclean)
+Feb 17 14:09:01 ankh-morpork CRON[7150]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 14:10:01 ankh-morpork CRON[7307]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 14:11:01 ankh-morpork CRON[7455]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 14:12:01 ankh-morpork CRON[7604]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 14:13:01 ankh-morpork CRON[7763]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 14:14:01 ankh-morpork CRON[7914]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 14:15:01 ankh-morpork CRON[8099]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 14:16:01 ankh-morpork CRON[8363]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 14:17:01 ankh-morpork CRON[8517]: (root) CMD (   cd / && run-parts --report /etc/cron.hourly)
+Feb 17 14:17:01 ankh-morpork CRON[8522]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 14:18:01 ankh-morpork CRON[8675]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 14:19:01 ankh-morpork CRON[8825]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 14:20:01 ankh-morpork CRON[8973]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 14:21:01 ankh-morpork CRON[9121]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 14:22:01 ankh-morpork CRON[9277]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 14:23:01 ankh-morpork CRON[9427]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 14:24:01 ankh-morpork CRON[9576]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 14:25:01 ankh-morpork CRON[9724]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 14:26:01 ankh-morpork CRON[9874]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 14:27:01 ankh-morpork CRON[10022]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 14:28:01 ankh-morpork CRON[10171]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 14:29:01 ankh-morpork CRON[10319]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 14:30:01 ankh-morpork CRON[10467]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 14:31:01 ankh-morpork CRON[10615]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 14:32:01 ankh-morpork CRON[10773]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 14:33:01 ankh-morpork CRON[10922]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 14:34:01 ankh-morpork CRON[11071]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 14:35:01 ankh-morpork CRON[11227]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 14:36:01 ankh-morpork CRON[11377]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 14:37:01 ankh-morpork CRON[11525]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 14:38:01 ankh-morpork CRON[11674]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 14:39:01 ankh-morpork CRON[11823]: (root) CMD (  [ -x /usr/lib/php5/sessionclean ] && /usr/lib/php5/sessionclean)
+Feb 17 14:39:01 ankh-morpork CRON[11833]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 14:40:01 ankh-morpork CRON[11981]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 14:41:01 ankh-morpork CRON[12130]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 14:42:01 ankh-morpork CRON[12286]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 14:43:01 ankh-morpork CRON[12435]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 14:44:01 ankh-morpork CRON[12584]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 14:45:01 ankh-morpork CRON[12732]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 14:46:01 ankh-morpork CRON[12883]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 14:47:01 ankh-morpork CRON[13032]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 14:48:01 ankh-morpork CRON[13181]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 14:49:01 ankh-morpork CRON[13330]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 14:50:01 ankh-morpork CRON[13478]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 14:51:01 ankh-morpork CRON[13634]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 14:52:01 ankh-morpork CRON[13782]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 14:53:01 ankh-morpork CRON[13931]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 14:54:01 ankh-morpork CRON[14079]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 14:55:01 ankh-morpork CRON[14228]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 14:56:01 ankh-morpork CRON[14377]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 14:57:01 ankh-morpork CRON[14525]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 14:58:01 ankh-morpork CRON[14682]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 14:59:01 ankh-morpork CRON[14830]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 15:00:01 ankh-morpork CRON[14978]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 15:01:01 ankh-morpork CRON[15130]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 15:02:01 ankh-morpork CRON[15284]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 15:03:01 ankh-morpork CRON[15436]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 15:04:01 ankh-morpork CRON[15587]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 15:05:01 ankh-morpork CRON[15738]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 15:06:01 ankh-morpork CRON[15902]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 15:07:01 ankh-morpork CRON[16053]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 15:08:01 ankh-morpork CRON[16211]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 15:09:01 ankh-morpork CRON[16364]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 15:09:01 ankh-morpork CRON[16365]: (root) CMD (  [ -x /usr/lib/php5/sessionclean ] && /usr/lib/php5/sessionclean)
+Feb 17 15:10:01 ankh-morpork CRON[16527]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 15:11:01 ankh-morpork CRON[16686]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 15:12:01 ankh-morpork CRON[16837]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 15:13:01 ankh-morpork CRON[17004]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 15:13:03 ankh-morpork gdm3[3364]: Failed to give slave programs access to the display. Trying to proceed.
+Feb 17 15:13:03 ankh-morpork dbus[3073]: [system] Activating service name='org.freedesktop.systemd1' (using servicehelper)
+Feb 17 15:13:03 ankh-morpork dbus[3073]: [system] Successfully activated service 'org.freedesktop.systemd1'
+Feb 17 15:13:03 ankh-morpork gnome-session[17182]: WARNING: Error getting login monitor: -2
+Feb 17 15:13:03 ankh-morpork gnome-session[17182]: WARNING: Could not parse desktop file caribou-autostart.desktop or it references a not found TryExec binary
+Feb 17 15:13:03 ankh-morpork pulseaudio[17213]: [pulseaudio] authkey.c: Failed to open cookie file '/var/lib/gdm3/.config/pulse/cookie': Aucun fichier ou dossier de ce type
+Feb 17 15:13:03 ankh-morpork pulseaudio[17213]: [pulseaudio] authkey.c: Failed to load authorization key '/var/lib/gdm3/.config/pulse/cookie': Aucun fichier ou dossier de ce type
+Feb 17 15:13:03 ankh-morpork rtkit-daemon[5291]: Successfully made thread 17216 of process 17216 (/usr/bin/pulseaudio) owned by '113' high priority at nice level -11.
+Feb 17 15:13:03 ankh-morpork rtkit-daemon[5291]: Supervising 4 threads of 2 processes of 2 users.
+Feb 17 15:13:03 ankh-morpork rtkit-daemon[5291]: Supervising 4 threads of 2 processes of 2 users.
+Feb 17 15:13:03 ankh-morpork rtkit-daemon[5291]: Successfully made thread 17218 of process 17216 (/usr/bin/pulseaudio) owned by '113' RT at priority 5.
+Feb 17 15:13:03 ankh-morpork rtkit-daemon[5291]: Supervising 5 threads of 2 processes of 2 users.
+Feb 17 15:13:03 ankh-morpork rtkit-daemon[5291]: Supervising 5 threads of 2 processes of 2 users.
+Feb 17 15:13:03 ankh-morpork rtkit-daemon[5291]: Successfully made thread 17219 of process 17216 (/usr/bin/pulseaudio) owned by '113' RT at priority 5.
+Feb 17 15:13:03 ankh-morpork rtkit-daemon[5291]: Supervising 6 threads of 2 processes of 2 users.
+Feb 17 15:13:03 ankh-morpork pulseaudio[17216]: [pulseaudio] authkey.c: Failed to open cookie file '/var/lib/gdm3/.config/pulse/cookie': Aucun fichier ou dossier de ce type
+Feb 17 15:13:03 ankh-morpork pulseaudio[17216]: [pulseaudio] authkey.c: Failed to load authorization key '/var/lib/gdm3/.config/pulse/cookie': Aucun fichier ou dossier de ce type
+Feb 17 15:13:03 ankh-morpork dbus[3073]: [system] Activating service name='org.freedesktop.locale1' (using servicehelper)
+Feb 17 15:13:03 ankh-morpork colord: Automatic metadata add icc-9fd19abc5c04dfb747b231d3d974b0a4 to xrandr-Goldstar Company Ltd-L204WT-324494
+Feb 17 15:13:03 ankh-morpork colord: Profile added: icc-9fd19abc5c04dfb747b231d3d974b0a4
+Feb 17 15:13:03 ankh-morpork dbus[3073]: [system] Successfully activated service 'org.freedesktop.locale1'
+Feb 17 15:13:04 ankh-morpork dbus[3073]: [system] Activating service name='org.freedesktop.GeoClue2' (using servicehelper)
+Feb 17 15:13:04 ankh-morpork dbus[3073]: [system] Successfully activated service 'org.freedesktop.GeoClue2'
+Feb 17 15:14:01 ankh-morpork CRON[17257]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 15:15:01 ankh-morpork CRON[17409]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 15:16:01 ankh-morpork CRON[17571]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 15:17:01 ankh-morpork CRON[17726]: (root) CMD (   cd / && run-parts --report /etc/cron.hourly)
+Feb 17 15:17:01 ankh-morpork CRON[17727]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 15:18:01 ankh-morpork CRON[17881]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 15:19:02 ankh-morpork CRON[18037]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 15:20:01 ankh-morpork CRON[18188]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 15:21:01 ankh-morpork CRON[18339]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 15:22:01 ankh-morpork CRON[18490]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 15:23:01 ankh-morpork CRON[18650]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 15:24:01 ankh-morpork CRON[18801]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 15:25:01 ankh-morpork CRON[18953]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 15:26:01 ankh-morpork CRON[19105]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 15:27:01 ankh-morpork CRON[19256]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 15:28:01 ankh-morpork CRON[19409]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 15:29:01 ankh-morpork CRON[19560]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 15:30:01 ankh-morpork CRON[19711]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 15:31:01 ankh-morpork CRON[19862]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 15:32:01 ankh-morpork CRON[20025]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 15:33:01 ankh-morpork CRON[20177]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 15:34:01 ankh-morpork CRON[20329]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 15:35:01 ankh-morpork CRON[20480]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 15:36:01 ankh-morpork CRON[20632]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 15:37:01 ankh-morpork CRON[20783]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 15:38:01 ankh-morpork CRON[20935]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 15:39:01 ankh-morpork CRON[21088]: (root) CMD (  [ -x /usr/lib/php5/sessionclean ] && /usr/lib/php5/sessionclean)
+Feb 17 15:39:01 ankh-morpork CRON[21089]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 15:40:01 ankh-morpork CRON[21257]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 15:41:01 ankh-morpork CRON[21409]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 15:42:01 ankh-morpork CRON[21560]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 15:43:01 ankh-morpork CRON[21715]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 15:44:01 ankh-morpork CRON[21874]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 15:45:01 ankh-morpork CRON[22025]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 15:46:01 ankh-morpork CRON[22177]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 15:47:01 ankh-morpork CRON[22329]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 15:48:01 ankh-morpork CRON[22481]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 15:49:01 ankh-morpork CRON[22632]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 15:50:01 ankh-morpork CRON[22791]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 15:51:01 ankh-morpork CRON[22942]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 15:52:01 ankh-morpork CRON[23093]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 15:53:01 ankh-morpork CRON[23245]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 15:54:01 ankh-morpork CRON[23405]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 15:55:01 ankh-morpork CRON[23556]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 15:56:01 ankh-morpork CRON[23708]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 15:57:01 ankh-morpork CRON[23859]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 15:58:01 ankh-morpork CRON[24011]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 15:59:01 ankh-morpork CRON[24170]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 16:00:01 ankh-morpork CRON[24322]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 16:01:01 ankh-morpork CRON[24473]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 16:02:01 ankh-morpork CRON[24626]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 16:03:01 ankh-morpork CRON[24786]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 16:04:01 ankh-morpork CRON[24937]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 16:05:01 ankh-morpork CRON[25088]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 16:06:01 ankh-morpork CRON[25245]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 16:06:14 ankh-morpork dbus[3073]: [system] Activating service name='org.freedesktop.systemd1' (using servicehelper)
+Feb 17 16:06:14 ankh-morpork dbus[3073]: [system] Successfully activated service 'org.freedesktop.systemd1'
+Feb 17 16:06:14 ankh-morpork colord: Automatic remove of icc-9fd19abc5c04dfb747b231d3d974b0a4 from xrandr-Goldstar Company Ltd-L204WT-324494
+Feb 17 16:06:14 ankh-morpork colord: Profile removed: icc-9fd19abc5c04dfb747b231d3d974b0a4
+Feb 17 16:06:14 ankh-morpork x-session-manager[25409]: WARNING: Error getting login monitor: -2
+Feb 17 16:06:15 ankh-morpork rtkit-daemon[5291]: Successfully made thread 25516 of process 25516 (/usr/bin/pulseaudio) owned by '1003' high priority at nice level -11.
+Feb 17 16:06:15 ankh-morpork rtkit-daemon[5291]: Supervising 7 threads of 3 processes of 3 users.
+Feb 17 16:06:15 ankh-morpork rtkit-daemon[5291]: Supervising 7 threads of 3 processes of 3 users.
+Feb 17 16:06:15 ankh-morpork rtkit-daemon[5291]: Successfully made thread 25528 of process 25516 (/usr/bin/pulseaudio) owned by '1003' RT at priority 5.
+Feb 17 16:06:15 ankh-morpork rtkit-daemon[5291]: Supervising 8 threads of 3 processes of 3 users.
+Feb 17 16:06:15 ankh-morpork rtkit-daemon[5291]: Supervising 8 threads of 3 processes of 3 users.
+Feb 17 16:06:15 ankh-morpork rtkit-daemon[5291]: Successfully made thread 25529 of process 25516 (/usr/bin/pulseaudio) owned by '1003' RT at priority 5.
+Feb 17 16:06:15 ankh-morpork rtkit-daemon[5291]: Supervising 9 threads of 3 processes of 3 users.
+Feb 17 16:06:15 ankh-morpork dbus[3073]: [system] Activating service name='org.freedesktop.hostname1' (using servicehelper)
+Feb 17 16:06:15 ankh-morpork dbus[3073]: [system] Successfully activated service 'org.freedesktop.hostname1'
+Feb 17 16:06:15 ankh-morpork dbus[3073]: [system] Activating service name='org.freedesktop.locale1' (using servicehelper)
+Feb 17 16:06:15 ankh-morpork dbus[3073]: [system] Successfully activated service 'org.freedesktop.locale1'
+Feb 17 16:06:15 ankh-morpork colord: Automatic metadata add icc-f87aa17926b794f0f45729e350f24bbb to xrandr-Goldstar Company Ltd-L204WT-324494
+Feb 17 16:06:15 ankh-morpork colord: Profile added: icc-f87aa17926b794f0f45729e350f24bbb
+Feb 17 16:06:15 ankh-morpork dbus[3073]: [system] Activating service name='org.freedesktop.GeoClue2' (using servicehelper)
+Feb 17 16:06:15 ankh-morpork dbus[3073]: [system] Successfully activated service 'org.freedesktop.GeoClue2'
+Feb 17 16:06:34 ankh-morpork dbus[3073]: [system] Activating service name='org.freedesktop.systemd1' (using servicehelper)
+Feb 17 16:06:34 ankh-morpork dbus[3073]: [system] Successfully activated service 'org.freedesktop.systemd1'
+Feb 17 16:07:01 ankh-morpork CRON[25812]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 16:07:27 ankh-morpork PackageKit: refresh-cache transaction /6268_ddbbdede from uid 1003 finished with success after 10618ms
+Feb 17 16:07:32 ankh-morpork PackageKit: get-updates transaction /6269_bbcddecd from uid 1003 finished with success after 4527ms
+Feb 17 16:08:01 ankh-morpork CRON[26061]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 16:09:01 ankh-morpork CRON[26263]: (root) CMD (  [ -x /usr/lib/php5/sessionclean ] && /usr/lib/php5/sessionclean)
+Feb 17 16:09:01 ankh-morpork CRON[26270]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 16:10:01 ankh-morpork CRON[26464]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 16:11:01 ankh-morpork CRON[26653]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 16:12:01 ankh-morpork CRON[26843]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 16:13:01 ankh-morpork CRON[27034]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 16:14:01 ankh-morpork CRON[27223]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 16:15:01 ankh-morpork CRON[27412]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 16:16:01 ankh-morpork CRON[27604]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 16:17:01 ankh-morpork CRON[27805]: (root) CMD (   cd / && run-parts --report /etc/cron.hourly)
+Feb 17 16:17:01 ankh-morpork CRON[27808]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 16:18:01 ankh-morpork CRON[27997]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 16:19:01 ankh-morpork CRON[28206]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 16:20:01 ankh-morpork CRON[28396]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 16:21:01 ankh-morpork CRON[28585]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 16:22:01 ankh-morpork CRON[28775]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 16:23:01 ankh-morpork CRON[28964]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 16:24:01 ankh-morpork CRON[29162]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 16:25:01 ankh-morpork CRON[29352]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 16:26:01 ankh-morpork CRON[29542]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 16:27:01 ankh-morpork CRON[29732]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 16:28:01 ankh-morpork CRON[29921]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 16:29:01 ankh-morpork CRON[30110]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 16:30:01 ankh-morpork CRON[30299]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 16:31:01 ankh-morpork CRON[30490]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 16:32:01 ankh-morpork CRON[30682]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 16:33:01 ankh-morpork CRON[30872]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 16:34:01 ankh-morpork CRON[31070]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 16:35:01 ankh-morpork CRON[31259]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 16:36:01 ankh-morpork CRON[31449]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 16:37:01 ankh-morpork CRON[31641]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 16:38:01 ankh-morpork CRON[31832]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 16:39:01 ankh-morpork CRON[32023]: (root) CMD (  [ -x /usr/lib/php5/sessionclean ] && /usr/lib/php5/sessionclean)
+Feb 17 16:39:01 ankh-morpork CRON[32030]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 16:40:01 ankh-morpork CRON[32295]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 16:41:01 ankh-morpork CRON[32496]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 16:42:01 ankh-morpork CRON[32686]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 16:43:01 ankh-morpork CRON[409]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 16:44:01 ankh-morpork CRON[599]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 16:45:01 ankh-morpork CRON[790]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 16:46:01 ankh-morpork CRON[982]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 16:47:01 ankh-morpork CRON[1177]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 16:48:01 ankh-morpork CRON[1367]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 16:49:01 ankh-morpork CRON[1564]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 16:50:01 ankh-morpork CRON[1756]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 16:51:01 ankh-morpork CRON[1948]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 16:52:01 ankh-morpork CRON[2139]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 16:53:01 ankh-morpork CRON[2344]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 16:54:01 ankh-morpork CRON[2536]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 16:55:01 ankh-morpork CRON[2735]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 16:56:01 ankh-morpork CRON[2927]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 16:57:01 ankh-morpork CRON[3125]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 16:58:01 ankh-morpork CRON[3339]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 16:59:01 ankh-morpork CRON[3558]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 17:00:01 ankh-morpork CRON[3751]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 17:01:01 ankh-morpork CRON[3941]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 17:02:01 ankh-morpork CRON[4146]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 17:03:01 ankh-morpork CRON[4341]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 17:04:01 ankh-morpork CRON[4539]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 17:05:01 ankh-morpork CRON[4728]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 17:06:01 ankh-morpork CRON[4926]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 17:07:01 ankh-morpork CRON[5135]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 17:08:01 ankh-morpork CRON[5333]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 17:09:01 ankh-morpork CRON[5600]: (root) CMD (  [ -x /usr/lib/php5/sessionclean ] && /usr/lib/php5/sessionclean)
+Feb 17 17:09:01 ankh-morpork CRON[5599]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 17:10:01 ankh-morpork CRON[5799]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 17:11:01 ankh-morpork CRON[5993]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 17:12:01 ankh-morpork CRON[6195]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 17:13:01 ankh-morpork CRON[6387]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 17:14:01 ankh-morpork CRON[6576]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 17:15:01 ankh-morpork CRON[6784]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 17:16:01 ankh-morpork CRON[6988]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 17:17:01 ankh-morpork CRON[7179]: (root) CMD (   cd / && run-parts --report /etc/cron.hourly)
+Feb 17 17:17:01 ankh-morpork CRON[7182]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 17:18:01 ankh-morpork CRON[7371]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 17:19:01 ankh-morpork CRON[7560]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 17:20:01 ankh-morpork CRON[7750]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 17:21:01 ankh-morpork CRON[7956]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 17:22:01 ankh-morpork CRON[8244]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 17:23:01 ankh-morpork CRON[8480]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 17:24:01 ankh-morpork CRON[8679]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 17:25:01 ankh-morpork CRON[8891]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 17:26:01 ankh-morpork CRON[9102]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 17:27:01 ankh-morpork CRON[9294]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 17:28:01 ankh-morpork CRON[9483]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 17:29:01 ankh-morpork CRON[9672]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 17:30:01 ankh-morpork CRON[9869]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 17:31:01 ankh-morpork CRON[10058]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 17:32:01 ankh-morpork CRON[10250]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 17:33:01 ankh-morpork CRON[10442]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 17:34:01 ankh-morpork CRON[10631]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 17:35:01 ankh-morpork CRON[10829]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 17:36:01 ankh-morpork CRON[11019]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 17:37:01 ankh-morpork CRON[11209]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 17:38:01 ankh-morpork CRON[11399]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 17:39:01 ankh-morpork CRON[11591]: (root) CMD (  [ -x /usr/lib/php5/sessionclean ] && /usr/lib/php5/sessionclean)
+Feb 17 17:39:01 ankh-morpork CRON[11600]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 17:40:01 ankh-morpork CRON[11791]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 17:41:01 ankh-morpork CRON[11980]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 17:42:01 ankh-morpork CRON[12171]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 17:43:01 ankh-morpork CRON[12360]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 17:44:01 ankh-morpork CRON[12549]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 17:45:01 ankh-morpork CRON[12759]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 17:46:01 ankh-morpork CRON[12974]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 17:47:01 ankh-morpork CRON[13165]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 17:48:01 ankh-morpork CRON[13355]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 17:49:01 ankh-morpork CRON[13545]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 17:50:01 ankh-morpork CRON[13734]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 17:51:01 ankh-morpork CRON[13925]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 17:52:01 ankh-morpork CRON[14116]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 17:53:01 ankh-morpork CRON[14307]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 17:54:01 ankh-morpork CRON[14504]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 17:55:01 ankh-morpork CRON[14699]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 17:56:01 ankh-morpork CRON[14889]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 17:57:02 ankh-morpork CRON[15079]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 17:58:01 ankh-morpork CRON[15268]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 17:59:01 ankh-morpork CRON[15457]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 18:00:01 ankh-morpork CRON[15649]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 18:01:01 ankh-morpork CRON[15851]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 18:01:06 ankh-morpork dbus[3073]: [system] Activating service name='org.freedesktop.systemd1' (using servicehelper)
+Feb 17 18:01:06 ankh-morpork dbus[3073]: [system] Successfully activated service 'org.freedesktop.systemd1'
+Feb 17 18:02:01 ankh-morpork CRON[16059]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 18:03:01 ankh-morpork CRON[16250]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 18:04:01 ankh-morpork CRON[16437]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 18:05:01 ankh-morpork CRON[16631]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 18:05:22 ankh-morpork dbus[3073]: [system] Activating service name='org.freedesktop.systemd1' (using servicehelper)
+Feb 17 18:05:22 ankh-morpork console-kit-daemon[5463]: GLib-CRITICAL: Source ID 28 was not found when attempting to remove it
+Feb 17 18:05:22 ankh-morpork console-kit-daemon[5463]: GLib-CRITICAL: Source ID 28 was not found when attempting to remove it
+Feb 17 18:05:22 ankh-morpork dbus[3073]: [system] Successfully activated service 'org.freedesktop.systemd1'
+Feb 17 18:05:35 ankh-morpork gdm3[3364]: Failed to give slave programs access to the display. Trying to proceed.
+Feb 17 18:05:35 ankh-morpork dbus[3073]: [system] Activating service name='org.freedesktop.systemd1' (using servicehelper)
+Feb 17 18:05:35 ankh-morpork dbus[3073]: [system] Successfully activated service 'org.freedesktop.systemd1'
+Feb 17 18:05:35 ankh-morpork gnome-session[16857]: WARNING: Error getting login monitor: -2
+Feb 17 18:05:35 ankh-morpork gnome-session[16857]: WARNING: Could not parse desktop file caribou-autostart.desktop or it references a not found TryExec binary
+Feb 17 18:05:35 ankh-morpork pulseaudio[16888]: [pulseaudio] authkey.c: Failed to open cookie file '/var/lib/gdm3/.config/pulse/cookie': Aucun fichier ou dossier de ce type
+Feb 17 18:05:35 ankh-morpork pulseaudio[16888]: [pulseaudio] authkey.c: Failed to load authorization key '/var/lib/gdm3/.config/pulse/cookie': Aucun fichier ou dossier de ce type
+Feb 17 18:05:35 ankh-morpork rtkit-daemon[5291]: Successfully made thread 16891 of process 16891 (/usr/bin/pulseaudio) owned by '113' high priority at nice level -11.
+Feb 17 18:05:35 ankh-morpork rtkit-daemon[5291]: Supervising 7 threads of 3 processes of 3 users.
+Feb 17 18:05:35 ankh-morpork rtkit-daemon[5291]: Supervising 7 threads of 3 processes of 3 users.
+Feb 17 18:05:35 ankh-morpork rtkit-daemon[5291]: Successfully made thread 16893 of process 16891 (/usr/bin/pulseaudio) owned by '113' RT at priority 5.
+Feb 17 18:05:35 ankh-morpork rtkit-daemon[5291]: Supervising 8 threads of 3 processes of 3 users.
+Feb 17 18:05:35 ankh-morpork rtkit-daemon[5291]: Supervising 8 threads of 3 processes of 3 users.
+Feb 17 18:05:35 ankh-morpork rtkit-daemon[5291]: Successfully made thread 16894 of process 16891 (/usr/bin/pulseaudio) owned by '113' RT at priority 5.
+Feb 17 18:05:35 ankh-morpork rtkit-daemon[5291]: Supervising 9 threads of 3 processes of 3 users.
+Feb 17 18:05:35 ankh-morpork pulseaudio[16891]: [pulseaudio] authkey.c: Failed to open cookie file '/var/lib/gdm3/.config/pulse/cookie': Aucun fichier ou dossier de ce type
+Feb 17 18:05:35 ankh-morpork pulseaudio[16891]: [pulseaudio] authkey.c: Failed to load authorization key '/var/lib/gdm3/.config/pulse/cookie': Aucun fichier ou dossier de ce type
+Feb 17 18:05:35 ankh-morpork dbus[3073]: [system] Activating service name='org.freedesktop.locale1' (using servicehelper)
+Feb 17 18:05:35 ankh-morpork dbus[3073]: [system] Successfully activated service 'org.freedesktop.locale1'
+Feb 17 18:05:35 ankh-morpork colord: Automatic metadata add icc-9fd19abc5c04dfb747b231d3d974b0a4 to xrandr-Goldstar Company Ltd-L204WT-324494
+Feb 17 18:05:35 ankh-morpork colord: Profile added: icc-9fd19abc5c04dfb747b231d3d974b0a4
+Feb 17 18:05:36 ankh-morpork dbus[3073]: [system] Activating service name='org.freedesktop.GeoClue2' (using servicehelper)
+Feb 17 18:05:36 ankh-morpork dbus[3073]: [system] Successfully activated service 'org.freedesktop.GeoClue2'
+Feb 17 18:05:46 ankh-morpork colord: Automatic remove of icc-9fd19abc5c04dfb747b231d3d974b0a4 from xrandr-Goldstar Company Ltd-L204WT-324494
+Feb 17 18:05:46 ankh-morpork colord: Profile removed: icc-9fd19abc5c04dfb747b231d3d974b0a4
+Feb 17 18:05:46 ankh-morpork x-session-manager[16939]: WARNING: Error getting login monitor: -2
+Feb 17 18:05:46 ankh-morpork rtkit-daemon[5291]: Successfully made thread 17051 of process 17051 (/usr/bin/pulseaudio) owned by '1002' high priority at nice level -11.
+Feb 17 18:05:46 ankh-morpork rtkit-daemon[5291]: Supervising 10 threads of 4 processes of 4 users.
+Feb 17 18:05:46 ankh-morpork rtkit-daemon[5291]: Supervising 10 threads of 4 processes of 4 users.
+Feb 17 18:05:46 ankh-morpork rtkit-daemon[5291]: Successfully made thread 17063 of process 17051 (/usr/bin/pulseaudio) owned by '1002' RT at priority 5.
+Feb 17 18:05:46 ankh-morpork rtkit-daemon[5291]: Supervising 11 threads of 4 processes of 4 users.
+Feb 17 18:05:46 ankh-morpork rtkit-daemon[5291]: Supervising 11 threads of 4 processes of 4 users.
+Feb 17 18:05:46 ankh-morpork rtkit-daemon[5291]: Successfully made thread 17064 of process 17051 (/usr/bin/pulseaudio) owned by '1002' RT at priority 5.
+Feb 17 18:05:46 ankh-morpork rtkit-daemon[5291]: Supervising 12 threads of 4 processes of 4 users.
+Feb 17 18:05:52 ankh-morpork dbus[3073]: [system] Activating service name='org.freedesktop.hostname1' (using servicehelper)
+Feb 17 18:05:52 ankh-morpork dbus[3073]: [system] Successfully activated service 'org.freedesktop.hostname1'
+Feb 17 18:05:52 ankh-morpork colord: Automatic metadata add icc-e73a6fad14bee08342d3306226bb280d to xrandr-Goldstar Company Ltd-L204WT-324494
+Feb 17 18:05:52 ankh-morpork colord: Profile added: icc-e73a6fad14bee08342d3306226bb280d
+Feb 17 18:05:52 ankh-morpork dbus[3073]: [system] Activating service name='org.freedesktop.GeoClue2' (using servicehelper)
+Feb 17 18:05:52 ankh-morpork dbus[3073]: [system] Successfully activated service 'org.freedesktop.GeoClue2'
+Feb 17 18:06:01 ankh-morpork CRON[17310]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 18:06:06 ankh-morpork dbus[3073]: [system] Activating service name='org.freedesktop.systemd1' (using servicehelper)
+Feb 17 18:06:06 ankh-morpork dbus[3073]: [system] Successfully activated service 'org.freedesktop.systemd1'
+Feb 17 18:07:01 ankh-morpork CRON[17689]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 18:07:17 ankh-morpork PackageKit: refresh-cache transaction /6276_eabcedea from uid 1002 finished with success after 24605ms
+Feb 17 18:07:22 ankh-morpork PackageKit: get-updates transaction /6277_ebabcbae from uid 1002 finished with success after 4087ms
+Feb 17 18:08:01 ankh-morpork CRON[17944]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 18:09:01 ankh-morpork CRON[18169]: (root) CMD (  [ -x /usr/lib/php5/sessionclean ] && /usr/lib/php5/sessionclean)
+Feb 17 18:09:01 ankh-morpork CRON[18178]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 18:10:01 ankh-morpork CRON[18393]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 18:11:01 ankh-morpork CRON[18620]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 18:12:01 ankh-morpork CRON[18844]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 18:12:36 ankh-morpork dhclient: DHCPREQUEST on eth0 to 192.168.0.254 port 67
+Feb 17 18:12:36 ankh-morpork dhclient: DHCPACK from 192.168.0.254
+Feb 17 18:12:36 ankh-morpork NetworkManager[3180]: <info> (eth0): DHCPv4 state changed renew -> renew
+Feb 17 18:12:36 ankh-morpork NetworkManager[3180]: <info>   address 192.168.0.101
+Feb 17 18:12:36 ankh-morpork NetworkManager[3180]: <info>   plen 24 (255.255.255.0)
+Feb 17 18:12:36 ankh-morpork NetworkManager[3180]: <info>   gateway 192.168.0.254
+Feb 17 18:12:36 ankh-morpork NetworkManager[3180]: <info>   server identifier 192.168.0.254
+Feb 17 18:12:36 ankh-morpork NetworkManager[3180]: <info>   lease time 43200
+Feb 17 18:12:36 ankh-morpork NetworkManager[3180]: <info>   nameserver '192.168.0.124'
+Feb 17 18:12:36 ankh-morpork NetworkManager[3180]: <info>   nameserver '192.168.0.254'
+Feb 17 18:12:36 ankh-morpork dbus[3073]: [system] Activating service name='org.freedesktop.nm_dispatcher' (using servicehelper)
+Feb 17 18:12:36 ankh-morpork dbus[3073]: [system] Successfully activated service 'org.freedesktop.nm_dispatcher'
+Feb 17 18:12:36 ankh-morpork nm-dispatcher: Dispatching action 'dhcp4-change' for eth0
+Feb 17 18:12:36 ankh-morpork dhclient: bound to 192.168.0.101 -- renewal in 18083 seconds.
+Feb 17 18:13:01 ankh-morpork CRON[19095]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 18:14:01 ankh-morpork CRON[19309]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 18:14:42 ankh-morpork dbus[3073]: [system] Activating service name='org.freedesktop.systemd1' (using servicehelper)
+Feb 17 18:14:42 ankh-morpork dbus[3073]: [system] Successfully activated service 'org.freedesktop.systemd1'
+Feb 17 18:14:42 ankh-morpork console-kit-daemon[5463]: GLib-CRITICAL: Source ID 41 was not found when attempting to remove it
+Feb 17 18:14:42 ankh-morpork colord: Automatic remove of icc-f87aa17926b794f0f45729e350f24bbb from xrandr-Goldstar Company Ltd-L204WT-324494
+Feb 17 18:14:42 ankh-morpork colord: Profile removed: icc-f87aa17926b794f0f45729e350f24bbb
+Feb 17 18:14:42 ankh-morpork pulseaudio[19573]: [pulseaudio] client-conf-x11.c: xcb_connection_has_error() returned true
+Feb 17 18:14:42 ankh-morpork rtkit-daemon[5291]: Successfully made thread 19576 of process 19576 (/usr/bin/pulseaudio) owned by '1003' high priority at nice level -11.
+Feb 17 18:14:42 ankh-morpork rtkit-daemon[5291]: Supervising 7 threads of 3 processes of 3 users.
+Feb 17 18:14:42 ankh-morpork pulseaudio[19576]: [pulseaudio] module-jackdbus-detect.c: Unable to contact D-Bus session bus: org.freedesktop.DBus.Error.NoServer: Failed to connect to socket /tmp/dbus-IDoxTYoC8s: Connexion refusée
+Feb 17 18:14:42 ankh-morpork pulseaudio[19576]: [pulseaudio] module.c: Failed to load module "module-jackdbus-detect" (argument: "channels=2"): initialization failed.
+Feb 17 18:14:42 ankh-morpork gdm-password][25393]: GLib: Source ID 74 was not found when attempting to remove it
+Feb 17 18:14:42 ankh-morpork pulseaudio[19576]: [pulseaudio] main.c: Module load failed.
+Feb 17 18:14:42 ankh-morpork pulseaudio[19576]: [pulseaudio] server-lookup.c: Unable to contact D-Bus: org.freedesktop.DBus.Error.NoServer: Failed to connect to socket /tmp/dbus-IDoxTYoC8s: Connexion refusée
+Feb 17 18:14:42 ankh-morpork pulseaudio[19576]: [pulseaudio] main.c: Unable to contact D-Bus: org.freedesktop.DBus.Error.NoServer: Failed to connect to socket /tmp/dbus-IDoxTYoC8s: Connexion refusée
+Feb 17 18:14:42 ankh-morpork rtkit-daemon[5291]: Supervising 7 threads of 3 processes of 3 users.
+Feb 17 18:14:42 ankh-morpork rtkit-daemon[5291]: Successfully made thread 19584 of process 19576 (/usr/bin/pulseaudio) owned by '1003' RT at priority 5.
+Feb 17 18:14:42 ankh-morpork rtkit-daemon[5291]: Supervising 8 threads of 3 processes of 3 users.
+Feb 17 18:14:42 ankh-morpork rtkit-daemon[5291]: Supervising 8 threads of 3 processes of 3 users.
+Feb 17 18:14:42 ankh-morpork rtkit-daemon[5291]: Successfully made thread 19585 of process 19576 (/usr/bin/pulseaudio) owned by '1003' RT at priority 5.
+Feb 17 18:14:42 ankh-morpork rtkit-daemon[5291]: Supervising 9 threads of 3 processes of 3 users.
+Feb 17 18:14:42 ankh-morpork gdm3[3364]: Failed to give slave programs access to the display. Trying to proceed.
+Feb 17 18:14:42 ankh-morpork gnome-session[19600]: WARNING: Error getting login monitor: -2
+Feb 17 18:14:42 ankh-morpork gnome-session[19600]: WARNING: Could not parse desktop file caribou-autostart.desktop or it references a not found TryExec binary
+Feb 17 18:14:42 ankh-morpork pulseaudio[19631]: [pulseaudio] authkey.c: Failed to open cookie file '/var/lib/gdm3/.config/pulse/cookie': Aucun fichier ou dossier de ce type
+Feb 17 18:14:42 ankh-morpork pulseaudio[19631]: [pulseaudio] authkey.c: Failed to load authorization key '/var/lib/gdm3/.config/pulse/cookie': Aucun fichier ou dossier de ce type
+Feb 17 18:14:42 ankh-morpork rtkit-daemon[5291]: Successfully made thread 19634 of process 19634 (/usr/bin/pulseaudio) owned by '113' high priority at nice level -11.
+Feb 17 18:14:42 ankh-morpork rtkit-daemon[5291]: Supervising 10 threads of 4 processes of 4 users.
+Feb 17 18:14:42 ankh-morpork rtkit-daemon[5291]: Supervising 10 threads of 4 processes of 4 users.
+Feb 17 18:14:42 ankh-morpork rtkit-daemon[5291]: Successfully made thread 19636 of process 19634 (/usr/bin/pulseaudio) owned by '113' RT at priority 5.
+Feb 17 18:14:42 ankh-morpork rtkit-daemon[5291]: Supervising 11 threads of 4 processes of 4 users.
+Feb 17 18:14:42 ankh-morpork rtkit-daemon[5291]: Supervising 11 threads of 4 processes of 4 users.
+Feb 17 18:14:42 ankh-morpork rtkit-daemon[5291]: Successfully made thread 19637 of process 19634 (/usr/bin/pulseaudio) owned by '113' RT at priority 5.
+Feb 17 18:14:42 ankh-morpork rtkit-daemon[5291]: Supervising 12 threads of 4 processes of 4 users.
+Feb 17 18:14:42 ankh-morpork pulseaudio[19634]: [pulseaudio] authkey.c: Failed to open cookie file '/var/lib/gdm3/.config/pulse/cookie': Aucun fichier ou dossier de ce type
+Feb 17 18:14:42 ankh-morpork pulseaudio[19634]: [pulseaudio] authkey.c: Failed to load authorization key '/var/lib/gdm3/.config/pulse/cookie': Aucun fichier ou dossier de ce type
+Feb 17 18:14:42 ankh-morpork dbus[3073]: [system] Activating service name='org.freedesktop.locale1' (using servicehelper)
+Feb 17 18:14:42 ankh-morpork dbus[3073]: [system] Successfully activated service 'org.freedesktop.locale1'
+Feb 17 18:14:42 ankh-morpork colord: Automatic metadata add icc-9fd19abc5c04dfb747b231d3d974b0a4 to xrandr-Goldstar Company Ltd-L204WT-324494
+Feb 17 18:14:42 ankh-morpork colord: Profile added: icc-9fd19abc5c04dfb747b231d3d974b0a4
+Feb 17 18:14:43 ankh-morpork dbus[3073]: [system] Activating service name='org.freedesktop.GeoClue2' (using servicehelper)
+Feb 17 18:14:43 ankh-morpork dbus[3073]: [system] Successfully activated service 'org.freedesktop.GeoClue2'
+Feb 17 18:14:52 ankh-morpork console-kit-daemon[5463]: GLib-CRITICAL: Source ID 53 was not found when attempting to remove it
+Feb 17 18:14:52 ankh-morpork kernel: [40422.648028] Watchdog[17269]: segfault at 0 ip 00007f11baa42386 sp 00007f11a9028620 error 6 in chromium[7f11b6c19000+5dc6000]
+Feb 17 18:15:01 ankh-morpork CRON[19732]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 18:15:02 ankh-morpork kernel: [40432.677752] Watchdog[19725]: segfault at 0 ip 00007fea1eb5a386 sp 00007fea0d140620 error 6 in chromium[7fea1ad31000+5dc6000]
+Feb 17 18:15:03 ankh-morpork dbus[3073]: [system] Activating service name='org.freedesktop.systemd1' (using servicehelper)
+Feb 17 18:15:03 ankh-morpork dbus[3073]: [system] Successfully activated service 'org.freedesktop.systemd1'
+Feb 17 18:15:03 ankh-morpork colord: Automatic remove of icc-9fd19abc5c04dfb747b231d3d974b0a4 from xrandr-Goldstar Company Ltd-L204WT-324494
+Feb 17 18:15:03 ankh-morpork colord: Profile removed: icc-9fd19abc5c04dfb747b231d3d974b0a4
+Feb 17 18:15:04 ankh-morpork gdm3[3364]: GLib-GObject: invalid unclassed pointer in cast to 'GObject'
+Feb 17 18:15:04 ankh-morpork gdm3[3364]: GLib-GObject: g_object_get: assertion 'G_IS_OBJECT (object)' failed
+Feb 17 18:15:04 ankh-morpork dbus[3073]: [system] Activating service name='org.freedesktop.GeoClue2' (using servicehelper)
+Feb 17 18:15:04 ankh-morpork dbus[3073]: [system] Successfully activated service 'org.freedesktop.GeoClue2'
+Feb 17 18:15:24 ankh-morpork dbus[3073]: [system] Activating service name='org.freedesktop.systemd1' (using servicehelper)
+Feb 17 18:15:24 ankh-morpork dbus[3073]: [system] Successfully activated service 'org.freedesktop.systemd1'
+Feb 17 18:16:01 ankh-morpork CRON[19965]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 18:17:01 ankh-morpork CRON[20151]: (root) CMD (   cd / && run-parts --report /etc/cron.hourly)
+Feb 17 18:17:01 ankh-morpork CRON[20152]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 18:17:03 ankh-morpork dbus[3073]: [system] Activating service name='org.freedesktop.systemd1' (using servicehelper)
+Feb 17 18:17:03 ankh-morpork dbus[3073]: [system] Successfully activated service 'org.freedesktop.systemd1'
+Feb 17 18:18:01 ankh-morpork CRON[20356]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 18:18:40 ankh-morpork gdm3[3364]: Failed to give slave programs access to the display. Trying to proceed.
+Feb 17 18:18:40 ankh-morpork dbus[3073]: [system] Activating service name='org.freedesktop.systemd1' (using servicehelper)
+Feb 17 18:18:40 ankh-morpork dbus[3073]: [system] Successfully activated service 'org.freedesktop.systemd1'
+Feb 17 18:18:41 ankh-morpork gnome-session[20562]: WARNING: Error getting login monitor: -2
+Feb 17 18:18:41 ankh-morpork gnome-session[20562]: WARNING: Could not parse desktop file caribou-autostart.desktop or it references a not found TryExec binary
+Feb 17 18:18:41 ankh-morpork pulseaudio[20594]: [pulseaudio] authkey.c: Failed to open cookie file '/var/lib/gdm3/.config/pulse/cookie': Aucun fichier ou dossier de ce type
+Feb 17 18:18:41 ankh-morpork pulseaudio[20594]: [pulseaudio] authkey.c: Failed to load authorization key '/var/lib/gdm3/.config/pulse/cookie': Aucun fichier ou dossier de ce type
+Feb 17 18:18:41 ankh-morpork rtkit-daemon[5291]: Successfully made thread 20598 of process 20598 (/usr/bin/pulseaudio) owned by '113' high priority at nice level -11.
+Feb 17 18:18:41 ankh-morpork rtkit-daemon[5291]: Supervising 7 threads of 3 processes of 3 users.
+Feb 17 18:18:41 ankh-morpork rtkit-daemon[5291]: Supervising 7 threads of 3 processes of 3 users.
+Feb 17 18:18:41 ankh-morpork rtkit-daemon[5291]: Successfully made thread 20599 of process 20598 (/usr/bin/pulseaudio) owned by '113' RT at priority 5.
+Feb 17 18:18:41 ankh-morpork rtkit-daemon[5291]: Supervising 8 threads of 3 processes of 3 users.
+Feb 17 18:18:41 ankh-morpork rtkit-daemon[5291]: Supervising 8 threads of 3 processes of 3 users.
+Feb 17 18:18:41 ankh-morpork rtkit-daemon[5291]: Successfully made thread 20600 of process 20598 (/usr/bin/pulseaudio) owned by '113' RT at priority 5.
+Feb 17 18:18:41 ankh-morpork rtkit-daemon[5291]: Supervising 9 threads of 3 processes of 3 users.
+Feb 17 18:18:41 ankh-morpork pulseaudio[20598]: [pulseaudio] authkey.c: Failed to open cookie file '/var/lib/gdm3/.config/pulse/cookie': Aucun fichier ou dossier de ce type
+Feb 17 18:18:41 ankh-morpork pulseaudio[20598]: [pulseaudio] authkey.c: Failed to load authorization key '/var/lib/gdm3/.config/pulse/cookie': Aucun fichier ou dossier de ce type
+Feb 17 18:18:41 ankh-morpork dbus[3073]: [system] Activating service name='org.freedesktop.locale1' (using servicehelper)
+Feb 17 18:18:41 ankh-morpork dbus[3073]: [system] Successfully activated service 'org.freedesktop.locale1'
+Feb 17 18:18:41 ankh-morpork colord: Automatic metadata add icc-9fd19abc5c04dfb747b231d3d974b0a4 to xrandr-Goldstar Company Ltd-L204WT-324494
+Feb 17 18:18:41 ankh-morpork colord: Profile added: icc-9fd19abc5c04dfb747b231d3d974b0a4
+Feb 17 18:18:41 ankh-morpork dbus[3073]: [system] Activating service name='org.freedesktop.GeoClue2' (using servicehelper)
+Feb 17 18:18:41 ankh-morpork dbus[3073]: [system] Successfully activated service 'org.freedesktop.GeoClue2'
+Feb 17 18:19:01 ankh-morpork CRON[20641]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 18:20:01 ankh-morpork CRON[20814]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 18:21:01 ankh-morpork CRON[20993]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 18:22:01 ankh-morpork CRON[21181]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 18:23:01 ankh-morpork CRON[21362]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 18:23:15 ankh-morpork dbus[3073]: [system] Activating service name='org.freedesktop.systemd1' (using servicehelper)
+Feb 17 18:23:15 ankh-morpork dbus[3073]: [system] Successfully activated service 'org.freedesktop.systemd1'
+Feb 17 18:23:16 ankh-morpork colord: Automatic remove of icc-9fd19abc5c04dfb747b231d3d974b0a4 from xrandr-Goldstar Company Ltd-L204WT-324494
+Feb 17 18:23:16 ankh-morpork colord: Profile removed: icc-9fd19abc5c04dfb747b231d3d974b0a4
+Feb 17 18:23:16 ankh-morpork gdm3[3364]: GLib-GObject: invalid unclassed pointer in cast to 'GObject'
+Feb 17 18:23:16 ankh-morpork gdm3[3364]: GLib-GObject: g_object_get: assertion 'G_IS_OBJECT (object)' failed
+Feb 17 18:23:16 ankh-morpork dbus[3073]: [system] Activating service name='org.freedesktop.GeoClue2' (using servicehelper)
+Feb 17 18:23:16 ankh-morpork dbus[3073]: [system] Successfully activated service 'org.freedesktop.GeoClue2'
+Feb 17 18:23:36 ankh-morpork dbus[3073]: [system] Activating service name='org.freedesktop.systemd1' (using servicehelper)
+Feb 17 18:23:36 ankh-morpork dbus[3073]: [system] Successfully activated service 'org.freedesktop.systemd1'
+Feb 17 18:24:01 ankh-morpork CRON[21606]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 18:25:01 ankh-morpork CRON[21812]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 18:25:15 ankh-morpork dbus[3073]: [system] Activating service name='org.freedesktop.systemd1' (using servicehelper)
+Feb 17 18:25:15 ankh-morpork dbus[3073]: [system] Successfully activated service 'org.freedesktop.systemd1'
+Feb 17 18:26:01 ankh-morpork CRON[22011]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 18:26:57 ankh-morpork gdm3[3364]: Failed to give slave programs access to the display. Trying to proceed.
+Feb 17 18:26:57 ankh-morpork dbus[3073]: [system] Activating service name='org.freedesktop.systemd1' (using servicehelper)
+Feb 17 18:26:57 ankh-morpork dbus[3073]: [system] Successfully activated service 'org.freedesktop.systemd1'
+Feb 17 18:26:57 ankh-morpork gnome-session[22224]: WARNING: Error getting login monitor: -2
+Feb 17 18:26:57 ankh-morpork gnome-session[22224]: WARNING: Could not parse desktop file caribou-autostart.desktop or it references a not found TryExec binary
+Feb 17 18:26:57 ankh-morpork colord: Automatic metadata add icc-9fd19abc5c04dfb747b231d3d974b0a4 to xrandr-Goldstar Company Ltd-L204WT-324494
+Feb 17 18:26:57 ankh-morpork colord: Profile added: icc-9fd19abc5c04dfb747b231d3d974b0a4
+Feb 17 18:26:57 ankh-morpork pulseaudio[22259]: [pulseaudio] authkey.c: Failed to open cookie file '/var/lib/gdm3/.config/pulse/cookie': Aucun fichier ou dossier de ce type
+Feb 17 18:26:57 ankh-morpork pulseaudio[22259]: [pulseaudio] authkey.c: Failed to load authorization key '/var/lib/gdm3/.config/pulse/cookie': Aucun fichier ou dossier de ce type
+Feb 17 18:26:57 ankh-morpork rtkit-daemon[5291]: Successfully made thread 22263 of process 22263 (/usr/bin/pulseaudio) owned by '113' high priority at nice level -11.
+Feb 17 18:26:57 ankh-morpork rtkit-daemon[5291]: Supervising 7 threads of 3 processes of 3 users.
+Feb 17 18:26:57 ankh-morpork rtkit-daemon[5291]: Supervising 7 threads of 3 processes of 3 users.
+Feb 17 18:26:57 ankh-morpork rtkit-daemon[5291]: Successfully made thread 22264 of process 22263 (/usr/bin/pulseaudio) owned by '113' RT at priority 5.
+Feb 17 18:26:57 ankh-morpork rtkit-daemon[5291]: Supervising 8 threads of 3 processes of 3 users.
+Feb 17 18:26:57 ankh-morpork rtkit-daemon[5291]: Supervising 8 threads of 3 processes of 3 users.
+Feb 17 18:26:57 ankh-morpork rtkit-daemon[5291]: Successfully made thread 22265 of process 22263 (/usr/bin/pulseaudio) owned by '113' RT at priority 5.
+Feb 17 18:26:57 ankh-morpork rtkit-daemon[5291]: Supervising 9 threads of 3 processes of 3 users.
+Feb 17 18:26:57 ankh-morpork pulseaudio[22263]: [pulseaudio] authkey.c: Failed to open cookie file '/var/lib/gdm3/.config/pulse/cookie': Aucun fichier ou dossier de ce type
+Feb 17 18:26:57 ankh-morpork pulseaudio[22263]: [pulseaudio] authkey.c: Failed to load authorization key '/var/lib/gdm3/.config/pulse/cookie': Aucun fichier ou dossier de ce type
+Feb 17 18:26:57 ankh-morpork dbus[3073]: [system] Activating service name='org.freedesktop.locale1' (using servicehelper)
+Feb 17 18:26:57 ankh-morpork dbus[3073]: [system] Successfully activated service 'org.freedesktop.locale1'
+Feb 17 18:26:58 ankh-morpork dbus[3073]: [system] Activating service name='org.freedesktop.GeoClue2' (using servicehelper)
+Feb 17 18:26:58 ankh-morpork dbus[3073]: [system] Successfully activated service 'org.freedesktop.GeoClue2'
+Feb 17 18:27:01 ankh-morpork CRON[22303]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 18:28:01 ankh-morpork CRON[22483]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 18:29:01 ankh-morpork CRON[22663]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 18:30:01 ankh-morpork CRON[22844]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 18:31:01 ankh-morpork CRON[23027]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 18:32:01 ankh-morpork CRON[23209]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 18:33:01 ankh-morpork CRON[23398]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 18:34:01 ankh-morpork CRON[23578]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 18:35:01 ankh-morpork CRON[23758]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 18:36:01 ankh-morpork CRON[23940]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 18:37:01 ankh-morpork CRON[24120]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 18:38:01 ankh-morpork CRON[24300]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 18:39:01 ankh-morpork CRON[24482]: (root) CMD (  [ -x /usr/lib/php5/sessionclean ] && /usr/lib/php5/sessionclean)
+Feb 17 18:39:01 ankh-morpork CRON[24483]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 18:40:01 ankh-morpork CRON[24671]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 18:41:01 ankh-morpork CRON[24852]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 18:42:01 ankh-morpork CRON[25042]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 18:43:01 ankh-morpork CRON[25225]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 18:44:01 ankh-morpork CRON[25405]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 18:45:01 ankh-morpork CRON[25585]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 18:46:01 ankh-morpork CRON[25768]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 18:47:02 ankh-morpork CRON[25948]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 18:48:01 ankh-morpork CRON[26137]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 18:49:01 ankh-morpork CRON[26317]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 18:50:01 ankh-morpork CRON[26498]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 18:51:01 ankh-morpork CRON[26679]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 18:52:01 ankh-morpork CRON[26867]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 18:53:01 ankh-morpork CRON[27040]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 18:54:01 ankh-morpork CRON[27222]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 18:55:01 ankh-morpork CRON[27402]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 18:56:01 ankh-morpork CRON[27585]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 18:57:01 ankh-morpork CRON[27765]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 18:58:01 ankh-morpork CRON[27953]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 18:59:01 ankh-morpork CRON[28148]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 19:00:01 ankh-morpork CRON[28328]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 19:01:01 ankh-morpork CRON[28509]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 19:02:01 ankh-morpork CRON[28699]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 19:03:01 ankh-morpork CRON[28879]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 19:04:01 ankh-morpork CRON[29059]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 19:05:01 ankh-morpork CRON[29239]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 19:06:01 ankh-morpork CRON[29433]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 19:06:03 ankh-morpork dbus[3073]: [system] Activating service name='org.freedesktop.systemd1' (using servicehelper)
+Feb 17 19:06:03 ankh-morpork dbus[3073]: [system] Successfully activated service 'org.freedesktop.systemd1'
+Feb 17 19:06:03 ankh-morpork colord: Automatic remove of icc-9fd19abc5c04dfb747b231d3d974b0a4 from xrandr-Goldstar Company Ltd-L204WT-324494
+Feb 17 19:06:03 ankh-morpork colord: Profile removed: icc-9fd19abc5c04dfb747b231d3d974b0a4
+Feb 17 19:06:03 ankh-morpork x-session-manager[29609]: WARNING: Error getting login monitor: -2
+Feb 17 19:06:03 ankh-morpork x-session-manager[29609]: WARNING: Could not parse desktop file gnome-user-share-obexpush.desktop or it references a not found TryExec binary
+Feb 17 19:06:04 ankh-morpork rtkit-daemon[5291]: Successfully made thread 29730 of process 29730 (/usr/bin/pulseaudio) owned by '1000' high priority at nice level -11.
+Feb 17 19:06:04 ankh-morpork rtkit-daemon[5291]: Supervising 10 threads of 4 processes of 4 users.
+Feb 17 19:06:04 ankh-morpork rtkit-daemon[5291]: Supervising 10 threads of 4 processes of 4 users.
+Feb 17 19:06:04 ankh-morpork rtkit-daemon[5291]: Successfully made thread 29733 of process 29730 (/usr/bin/pulseaudio) owned by '1000' RT at priority 5.
+Feb 17 19:06:04 ankh-morpork rtkit-daemon[5291]: Supervising 11 threads of 4 processes of 4 users.
+Feb 17 19:06:04 ankh-morpork rtkit-daemon[5291]: Supervising 11 threads of 4 processes of 4 users.
+Feb 17 19:06:04 ankh-morpork rtkit-daemon[5291]: Successfully made thread 29734 of process 29730 (/usr/bin/pulseaudio) owned by '1000' RT at priority 5.
+Feb 17 19:06:04 ankh-morpork rtkit-daemon[5291]: Supervising 12 threads of 4 processes of 4 users.
+Feb 17 19:06:04 ankh-morpork dbus[3073]: [system] Activating service name='org.freedesktop.hostname1' (using servicehelper)
+Feb 17 19:06:04 ankh-morpork dbus[3073]: [system] Successfully activated service 'org.freedesktop.hostname1'
+Feb 17 19:06:04 ankh-morpork dbus[3073]: [system] Activating service name='org.freedesktop.locale1' (using servicehelper)
+Feb 17 19:06:04 ankh-morpork dbus[3073]: [system] Successfully activated service 'org.freedesktop.locale1'
+Feb 17 19:06:04 ankh-morpork colord: Automatic metadata add icc-df50315b4ff14f8c7965cb3e0104fc8e to xrandr-Goldstar Company Ltd-L204WT-324494
+Feb 17 19:06:04 ankh-morpork colord: Profile added: icc-df50315b4ff14f8c7965cb3e0104fc8e
+Feb 17 19:06:05 ankh-morpork dbus[3073]: [system] Activating service name='org.freedesktop.GeoClue2' (using servicehelper)
+Feb 17 19:06:05 ankh-morpork dbus[3073]: [system] Successfully activated service 'org.freedesktop.GeoClue2'
+Feb 17 19:06:11 ankh-morpork dbus[3073]: [system] Activating service name='org.freedesktop.GeoClue2' (using servicehelper)
+Feb 17 19:06:11 ankh-morpork dbus[3073]: [system] Successfully activated service 'org.freedesktop.GeoClue2'
+Feb 17 19:07:01 ankh-morpork CRON[30390]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 19:07:14 ankh-morpork PackageKit: refresh-cache transaction /6282_eeccceda from uid 1000 finished with success after 7498ms
+Feb 17 19:07:20 ankh-morpork PackageKit: get-updates transaction /6283_caecccee from uid 1000 finished with success after 5928ms
+Feb 17 19:08:01 ankh-morpork CRON[31748]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 19:09:01 ankh-morpork CRON[31953]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 19:09:01 ankh-morpork CRON[31955]: (root) CMD (  [ -x /usr/lib/php5/sessionclean ] && /usr/lib/php5/sessionclean)
+Feb 17 19:10:01 ankh-morpork CRON[32166]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 19:11:01 ankh-morpork CRON[32386]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 19:12:01 ankh-morpork CRON[32581]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 19:13:01 ankh-morpork CRON[311]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 19:14:01 ankh-morpork CRON[632]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 19:15:01 ankh-morpork CRON[1074]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 19:16:01 ankh-morpork CRON[1601]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 19:16:54 ankh-morpork kernel: [44140.532853] exp[2054]: segfault at 10 ip 0000000000402030 sp 00007fff7973d5d0 error 4 in exp[400000+4000]
+Feb 17 19:17:01 ankh-morpork CRON[2061]: (root) CMD (   cd / && run-parts --report /etc/cron.hourly)
+Feb 17 19:17:01 ankh-morpork CRON[2063]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 19:17:18 ankh-morpork kernel: [44164.422912] exp[2540]: segfault at 10 ip 0000000000402030 sp 00007fff8b240d60 error 4 in exp[400000+4000]
+Feb 17 19:18:01 ankh-morpork CRON[2562]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 19:19:00 ankh-morpork kernel: [44266.381758] exp[3027]: segfault at 10 ip 0000000000402056 sp 00007fffdb2d4520 error 4 in exp[400000+4000]
+Feb 17 19:19:01 ankh-morpork CRON[3030]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 19:19:02 ankh-morpork kernel: [44268.785182] exp[3201]: segfault at 10 ip 0000000000402056 sp 00007fff25db43d0 error 4 in exp[400000+4000]
+Feb 17 19:19:07 ankh-morpork kernel: [44273.902094] exp[3207]: segfault at 10 ip 0000000000402056 sp 00007fff654671f0 error 4 in exp[400000+4000]
+Feb 17 19:19:20 ankh-morpork kernel: [44286.685363] exp[3522]: segfault at 10 ip 000000000040205e sp 00007fffb9697bd0 error 4 in exp[400000+4000]
+Feb 17 19:20:01 ankh-morpork CRON[3578]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 19:20:08 ankh-morpork kernel: [44334.488784] exp[4006]: segfault at 10 ip 00000000004020a3 sp 00007fff7ace55a0 error 4 in exp[400000+4000]
+Feb 17 19:20:40 ankh-morpork kernel: [44366.739579] exp[4313]: segfault at 10 ip 00000000004020b7 sp 00007fffb048fc00 error 4 in exp[400000+4000]
+Feb 17 19:21:02 ankh-morpork CRON[4323]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 19:21:20 ankh-morpork kernel: [44406.146855] exp[4517]: segfault at 10 ip 00000000004020b7 sp 00007fff7e2d5be0 error 4 in exp[400000+4000]
+Feb 17 19:21:23 ankh-morpork kernel: [44409.428213] exp[4524]: segfault at 10 ip 00000000004020b7 sp 00007fff89e39060 error 4 in exp[400000+4000]
+Feb 17 19:21:28 ankh-morpork kernel: [44414.654715] exp[4528]: segfault at 10 ip 00000000004020b7 sp 00007fff1c9fca10 error 4 in exp[400000+4000]
+Feb 17 19:22:01 ankh-morpork CRON[4796]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 19:22:03 ankh-morpork kernel: [44449.481622] exp[4960]: segfault at 10 ip 00000000004020f7 sp 00007fff717bf290 error 4 in exp[400000+4000]
+Feb 17 19:22:36 ankh-morpork kernel: [44482.697855] exp[5253]: segfault at 10 ip 00000000004020f7 sp 00007fffd3654470 error 4 in exp[400000+4000]
+Feb 17 19:23:01 ankh-morpork CRON[5264]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 19:23:55 ankh-morpork kernel: [44561.582741] exp[5864]: segfault at 10 ip 00000000004020b7 sp 00007fffc7e512d0 error 4 in exp[400000+4000]
+Feb 17 19:24:01 ankh-morpork CRON[5868]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 19:25:01 ankh-morpork CRON[6326]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 19:25:01 ankh-morpork kernel: [44627.484049] exp[6489]: segfault at 10 ip 00000000004020ce sp 00007ffffe9438d0 error 4 in exp[400000+4000]
+Feb 17 19:25:19 ankh-morpork kernel: [44644.835880] exp[6769]: segfault at 10 ip 00000000004020e5 sp 00007fffed9c42e0 error 4 in exp[400000+4000]
+Feb 17 19:25:44 ankh-morpork kernel: [44670.353605] exp[7037]: segfault at 10 ip 00000000004020f6 sp 00007fff9a04dbe0 error 4 in exp[400000+4000]
+Feb 17 19:26:01 ankh-morpork CRON[7299]: (root) CMD ($TOOLSDIR/check.sh)
+Feb 17 19:26:02 ankh-morpork kernel: [44687.736948] exp[7462]: segfault at 10 ip 000000000040211d sp 00007fff7a2b37a0 error 4 in exp[400000+4000]
+Feb 17 19:26:12 ankh-morpork kernel: [44697.915329] exp[7724]: segfault at 10 ip 000000000040211d sp 00007fff908c29a0 error 4 in exp[400000+4000]
