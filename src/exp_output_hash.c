@@ -25,13 +25,12 @@
 #include <string.h>
 #include <stdio.h>
 #include <time.h>
+#include <cad_hash.h>
 
 #include "exp_output.h"
 #include "exp_filter.h"
 #include "exp_fingerprint.h"
 #include "exp_file.h"
-
-#include <cad_hash.h>
 
 #define DEFAULT_DICT_CAPACITY 16
 #define SAMPLE_THRESHOLD 3

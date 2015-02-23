@@ -44,18 +44,17 @@ will be ported.
   * wordcount
   * daemon
   * host
-
-## Todo
-
-* Entries
-  * scriptlog
-* Outputs
   * sgraph
   * mgraph
   * hgraph
   * dgraph
   * mograph
   * ygraph
+
+## Todo
+
+* Entries
+  * scriptlog
 
 # Future work
 
