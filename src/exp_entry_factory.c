@@ -21,6 +21,8 @@
  * This file contains the implementation of the entry factories.
  */
 
+#include <string.h>
+
 #include "exp_entry_factory.h"
 #include "exp_log.h"
 
@@ -42,6 +44,25 @@ static void resize_list() {
      }
      list_capacity = new_capacity;
      list = new_list;
+}
+
+static int compare_factories(entry_factory_t **f1, entry_factory_t **f2) {
+     int result = (*f2)->priority(*f2) - (*f1)->priority(*f1);
+     if (result == 0) {
+          result = strcmp((*f1)->get_name(*f1), (*f2)->get_name(*f2));
+     }
+     return result;
+}
+
+void sort_factories(logger_t log) {
+     int i;
+     entry_factory_t *f;
+     qsort(list, list_size, sizeof(entry_factory_t*), (int(*)(const void*,const void*))compare_factories);
+     log(debug, "Sorted entry factories:\n");
+     for (i = 0; i < list_size; i++) {
+          f = list[i];
+          log(debug, "%2d: %s (%d)\n", i+1, f->get_name(f), f->priority(f));
+     }
 }
 
 void register_factory(entry_factory_t *factory) {

@@ -88,7 +88,7 @@ do
 
         # Run Test
         echo -n "Testing: petit --$function --${option} $test.log: "
-        petit --${function} --${option} data/${test}.log > ${test}-${function}-${option}.tmp
+        petit --${function} --${option} data/${test}.log > ${test}-${function}-${option}.tmp 2> ${test}-${function}-${option}.log
 
         if ! diff output/${test}-${function}-${option}.output ${test}-${function}-${option}.tmp
         then
@@ -96,7 +96,7 @@ do
             # Leave data in place to inspect on failure #
             exit 1
         else
-            rm ${test}-${function}-${option}.tmp
+            rm ${test}-${function}-${option}.{tmp,log}
             echo " Passed"
         fi
     done

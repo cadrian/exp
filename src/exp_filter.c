@@ -137,7 +137,8 @@ static char *split(char **regexp) {
      return result;
 }
 
-static void impl_extend_(filter_impl_t *this, const char *dir, const char *filename, const char *replacement) {
+static bool_t impl_extend_(filter_impl_t *this, const char *dir, const char *filename, const char *replacement) {
+     bool_t result = false;
      char *path = malloc(strlen(dir) + strlen(filename) + 1);
      file_t *file;
      line_t *line;
@@ -149,6 +150,7 @@ static void impl_extend_(filter_impl_t *this, const char *dir, const char *filen
      sprintf(path, "%s%s", dir, filename);
      file = new_file(this->log, debug, path);
      if (file != NULL) {
+          result = true;
           line = file->lines(file);
           while (line != NULL) {
                if (has_replacement) {
@@ -171,18 +173,26 @@ static void impl_extend_(filter_impl_t *this, const char *dir, const char *filen
           file->free(file);
      }
      free(path);
+
+     return result;
 }
 
 static void impl_extend(filter_impl_t *this, const char *filename, const char *replacement) {
      const char *dir;
      int i;
+     bool_t found = false, f;
      if (this->extradirs != NULL) {
           for (i = 0; (dir = this->extradirs[i]) != NULL; i++) {
-               impl_extend_(this, dir, filename, replacement);
+               f = impl_extend_(this, dir, filename, replacement);
+               found |= f;
           }
      }
      for (i = 0; (dir = dirs[i]) != NULL; i++) {
-          impl_extend_(this, dir, filename, replacement);
+          f = impl_extend_(this, dir, filename, replacement);
+          found |= f;
+     }
+     if (!found) {
+          this->log(debug, "%s not found\n", filename);
      }
 }
 

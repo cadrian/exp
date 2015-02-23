@@ -45,6 +45,15 @@ typedef struct entry_factory_s entry_factory_t;
 typedef const char *(*entry_factory_get_name_fn)(entry_factory_t *this);
 
 /**
+ * Get the priority of the factory
+ *
+ * @param[in] this the target entry factory
+ *
+ * @return the priority of the factory
+ */
+typedef int (*entry_factory_priority_fn)(entry_factory_t *this);
+
+/**
  * The "tally logic" that allows to select the most appropriate factory.
  *
  * @param[in] this the target entry factory
@@ -82,6 +91,10 @@ struct entry_factory_s {
       */
      entry_factory_get_name_fn get_name;
      /**
+      * @see entry_factory_priority_fn
+      */
+     entry_factory_priority_fn priority;
+     /**
       * @see entry_factory_tally_logic_fn
       */
      entry_factory_tally_logic_fn tally_logic;
@@ -103,6 +116,13 @@ struct entry_factory_s {
  * @param[in] log the logger
  */
 void register_all_factories(logger_t log);
+
+/**
+ * Sort all the known priorities by descending priority and ascending name.
+ *
+ * @param[in] log the logger
+ */
+void sort_factories(logger_t log);
 
 /**
  * Register a factory.

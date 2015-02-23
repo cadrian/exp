@@ -326,7 +326,6 @@ static void hash_display(output_hash_t *this) {
           break;
      }
 
-     srand(time(NULL));
      for (i = this->max_count; i > 0; i--) {
           hash_display_count(this, i);
      }

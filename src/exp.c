@@ -25,6 +25,7 @@
 #include <getopt.h>
 #include <string.h>
 #include <stdio.h>
+#include <time.h>
 
 #include "exp.h"
 #include "exp_log.h"
@@ -301,6 +302,8 @@ int main(int argc, char * const argv[]) {
      output_t *output;
      int lastoptind;
 
+     srand(time(NULL));
+
      parse_options(argc, argv);
      log = new_logger(verbose);
      input = new_input(log);
@@ -354,14 +357,15 @@ int main(int argc, char * const argv[]) {
      }
 
      register_all_factories(log);
+     sort_factories(log);
 
      if (optind == argc) {
-          log(info, "Input: stdin\n");
+          log(debug, "Input: stdin\n");
           input->parse(input, "-");
      } else{
           lastoptind = optind;
           while (optind < argc) {
-               log(info, "Input %d/%d: %s\n", optind - lastoptind + 1, argc - lastoptind, argv[optind]);
+               log(debug, "Input %d/%d: %s\n", optind - lastoptind + 1, argc - lastoptind, argv[optind]);
                input->parse(input, argv[optind++]);
           }
      }

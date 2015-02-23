@@ -45,6 +45,7 @@ struct syslog_entry_factory_s {
      regexp_fn regexp;
      const char *name;
      extra_is_type_fn extra_is_type;
+     int priority;
 };
 
 static regexp_t *syslog_regexp(logger_t log) {
@@ -131,12 +132,20 @@ static const char *syslog_factory_get_name(syslog_entry_factory_t *this) {
      return this->name;
 }
 
+static int syslog_factory_priority(syslog_entry_factory_t *this) {
+     return this->priority;
+}
+
 static bool_t syslog_tally_logic(syslog_entry_factory_t *this, size_t tally, size_t tally_threshold, size_t max_sample_lines) {
-     return tally > tally_threshold;
+     bool_t result = tally > tally_threshold;
+     this->log(debug, "%s tally_logic: %lu > %lu = %s\n", this->name, (unsigned long)tally, (unsigned long)tally_threshold, result?"true":"false");
+     return result;
 }
 
 static bool_t securelog_tally_logic(syslog_entry_factory_t *this, size_t tally, size_t tally_threshold, size_t max_sample_lines) {
-     return tally > max_sample_lines;
+     bool_t result = tally > max_sample_lines;
+     this->log(debug, "%s tally_logic: %lu > %lu = %s\n", this->name, (unsigned long)tally, (unsigned long)max_sample_lines, result?"true":"false");
+     return result;
 }
 
 static bool_t securelog_extra_is_type(syslog_entry_factory_t *this, match_t *match) {
@@ -328,6 +337,7 @@ static entry_t *syslog_new_entry(syslog_entry_factory_t *this, line_t *line) {
 
 static entry_factory_t syslog_entry_factory_fn = {
      .get_name = (entry_factory_get_name_fn)syslog_factory_get_name,
+     .priority = (entry_factory_priority_fn)syslog_factory_priority,
      .tally_logic = (entry_factory_tally_logic_fn)syslog_tally_logic,
      .is_type = (entry_factory_is_type_fn)syslog_is_type,
      .new_entry = (entry_factory_new_entry_fn)syslog_new_entry
@@ -340,6 +350,7 @@ entry_factory_t *new_syslog_entry_factory(logger_t log) {
      result->regexp = syslog_regexp;
      result->name = "syslog";
      result->extra_is_type = syslog_extra_is_type;
+     result->priority = 1;
      return &(result->fn);
 }
 
@@ -350,6 +361,7 @@ entry_factory_t *new_rsyslog_entry_factory(logger_t log) {
      result->regexp = rsyslog_regexp;
      result->name = "rsyslog";
      result->extra_is_type = NULL;
+     result->priority = 1;
      return &(result->fn);
 }
 
@@ -360,6 +372,7 @@ entry_factory_t *new_apache_access_entry_factory(logger_t log) {
      result->regexp = apache_access_regexp;
      result->name = "apache_access";
      result->extra_is_type = NULL;
+     result->priority = 0;
      return &(result->fn);
 }
 
@@ -370,6 +383,7 @@ entry_factory_t *new_apache_error_entry_factory(logger_t log) {
      result->regexp = apache_error_regexp;
      result->name = "apache_error";
      result->extra_is_type = NULL;
+     result->priority = 0;
      return &(result->fn);
 }
 
@@ -381,6 +395,7 @@ entry_factory_t *new_securelog_entry_factory(logger_t log) {
      result->regexp = syslog_regexp;
      result->name = "securelog";
      result->extra_is_type = securelog_extra_is_type;
+     result->priority = 2;
      return &(result->fn);
 }
 
@@ -391,16 +406,18 @@ entry_factory_t *new_snort_entry_factory(logger_t log) {
      result->regexp = snort_regexp;
      result->name = "snort";
      result->extra_is_type = NULL;
+     result->priority = 0;
      return &(result->fn);
 }
 
-entry_factory_t *new_raw_entry_factory(logger_t log) {
+entry_factory_t *new_raw_entry_factory(logger_t log) { /* is it used? */
      syslog_entry_factory_t *result = malloc(sizeof(syslog_entry_factory_t));
      result->fn = syslog_entry_factory_fn;
      result->log = log;
      result->regexp = raw_regexp;
      result->name = "raw";
      result->extra_is_type = NULL;
+     result->priority = -1;
      return &(result->fn);
 }
 
