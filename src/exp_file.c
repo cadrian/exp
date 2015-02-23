@@ -137,7 +137,7 @@ file_t *new_file(logger_t log, level_t error_level, const char *path) {
 
      if (!strcmp("-", path)) {
           in = stdin;
-          log(debug, "Using stdin\n");
+          log(info, "Reading stdin\n");
      } else {
           in = fopen(path, "r");
           if (!in) {
@@ -145,7 +145,7 @@ file_t *new_file(logger_t log, level_t error_level, const char *path) {
                free(result);
                return NULL;
           }
-          log(debug, "Opening file: %s\n", path);
+          log(info, "Reading file: %s\n", path);
      }
 
      result->fn = file_impl_fn;
