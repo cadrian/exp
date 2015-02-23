@@ -30,7 +30,6 @@
 typedef struct output_graph_s output_graph_t;
 typedef void (*time_fn)(struct tm *time, entry_t *entry);
 typedef void (*increment_time_fn)(struct tm *time);
-typedef const char *(*key_fn)(struct tm *time);
 typedef int (*value_fn)(struct tm *time);
 
 struct output_graph_s {
@@ -42,7 +41,6 @@ struct output_graph_s {
      int duration;
      time_fn time;
      increment_time_fn increment_time;
-     key_fn key;
      value_fn value;
      cad_hash_t *dict;
      int min;
@@ -103,7 +101,7 @@ static void graph_prepare(output_graph_t *this) {
           if (i == this->duration / 2) {
                this->middle = current;
           }
-          key = this->key(&current);
+          key = strdate(&current);
           value = malloc(sizeof(int));
           *value = 0;
           this->dict->set(this->dict, key, value);
@@ -118,7 +116,7 @@ static void graph_prepare(output_graph_t *this) {
           for (j = 0; j < m;j++) {
                entry = file->entry(file, j);
                this->time(&current, entry);
-               key = this->key(&current);
+               key = strdate(&current);
                value = this->dict->get(this->dict, key);
                if (value != NULL) {
                     *value = (*value) + 1;
@@ -251,7 +249,7 @@ static output_t output_graph_fn = {
      .display = (output_display_fn)output_graph_display,
 };
 
-static output_t *new_output_graph(logger_t log, input_t *input, output_options_t options, const char *unit, int duration, time_fn time, increment_time_fn increment_time, key_fn key, value_fn value) {
+static output_t *new_output_graph(logger_t log, input_t *input, output_options_t options, const char *unit, int duration, time_fn time, increment_time_fn increment_time, value_fn value) {
      output_graph_t *result = malloc(sizeof(output_graph_t));
      result->fn = output_graph_fn;
      result->log = log;
@@ -261,7 +259,6 @@ static output_t *new_output_graph(logger_t log, input_t *input, output_options_t
      result->duration = duration;
      result->time = time;
      result->increment_time = increment_time;
-     result->key = key;
      result->value = value;
      result->dict = cad_new_hash(stdlib_memory, cad_hash_strings);
      result->min = INT_MAX;
@@ -371,25 +368,25 @@ static int year_value(struct tm*time) {
 }
 
 output_t *new_output_sgraph(logger_t log, input_t *input, output_options_t options) {
-     return new_output_graph(log, input, options, "second", 60, second_time, second_increment_time, strdate, second_value);
+     return new_output_graph(log, input, options, "second", 60, second_time, second_increment_time, second_value);
 }
 
 output_t *new_output_mgraph(logger_t log, input_t *input, output_options_t options) {
-     return new_output_graph(log, input, options, "minute", 60, minute_time, minute_increment_time, strdate, minute_value);
+     return new_output_graph(log, input, options, "minute", 60, minute_time, minute_increment_time, minute_value);
 }
 
 output_t *new_output_hgraph(logger_t log, input_t *input, output_options_t options) {
-     return new_output_graph(log, input, options, "hour", 24, hour_time, hour_increment_time, strdate, hour_value);
+     return new_output_graph(log, input, options, "hour", 24, hour_time, hour_increment_time, hour_value);
 }
 
 output_t *new_output_dgraph(logger_t log, input_t *input, output_options_t options) {
-     return new_output_graph(log, input, options, "day", 31, day_time, day_increment_time, strdate, day_value);
+     return new_output_graph(log, input, options, "day", 31, day_time, day_increment_time, day_value);
 }
 
 output_t *new_output_mograph(logger_t log, input_t *input, output_options_t options) {
-     return new_output_graph(log, input, options, "month", 12, month_time, month_increment_time, strdate, month_value);
+     return new_output_graph(log, input, options, "month", 12, month_time, month_increment_time, month_value);
 }
 
 output_t *new_output_ygraph(logger_t log, input_t *input, output_options_t options) {
-     return new_output_graph(log, input, options, "year", 10, year_time, year_increment_time, strdate, year_value);
+     return new_output_graph(log, input, options, "year", 10, year_time, year_increment_time, year_value);
 }
