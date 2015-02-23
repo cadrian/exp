@@ -14,6 +14,13 @@
   along with ExP.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+/**
+ * @ingroup exp_output
+ * @file
+ *
+ * This file contains the implementation of "graph" outputs.
+ */
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
