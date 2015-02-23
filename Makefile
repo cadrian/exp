@@ -78,32 +78,33 @@ install: exe doc target/version
 	-cp target/$(PROJECT) debian/tmp/usr/bin/
 	-cp -a target/*.pdf target/doc/html debian/tmp/usr/share/doc/$(PROJECT)-doc/
 
-release.main: target/dpkg/release.main
+release.main: target/dpkg/release.main release.doc
 
 target/dpkg/release.main: exe target/version
 	@echo "Releasing main version $(shell cat target/version)"
 	debuild -us -uc -nc -F
-	mkdir target/dpkg
+	mkdir -p target/dpkg
 	mv ../$(PROJECT)*_$(shell cat target/version)_*.deb    target/dpkg/
 	mv ../$(PROJECT)_$(shell cat target/version).dsc       target/dpkg/
 	mv ../$(PROJECT)_$(shell cat target/version).tar.[gx]z target/dpkg/
 	mv ../$(PROJECT)_$(shell cat target/version)_*.build   target/dpkg/
 	mv ../$(PROJECT)_$(shell cat target/version)_*.changes target/dpkg/
+ifeq "$(wildcard /usr/bin/doxygen)" ""
 	(cd target && tar cfz $(PROJECT)_$(shell cat target/version)_$(shell gcc -v 2>&1 | grep '^Target:' | sed 's/^Target: //').tgz $(PROJECT) dpkg)
+else
+	(cd target && tar cfz $(PROJECT)_$(shell cat target/version)_$(shell gcc -v 2>&1 | grep '^Target:' | sed 's/^Target: //').tgz $(PROJECT) $(PROJECT).pdf $(PROJECT)-htmldoc.tgz dpkg)
+endif
 	touch target/dpkg/release.main
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # doc (copied from libcad with a few changes)
 
-ifneq "$(wildcard /usr/bin/doxygen)" ""
+ifeq "$(wildcard /usr/bin/doxygen)" ""
+release.doc:
+else
 release.doc: target/dpkg/release.doc
 
 target/dpkg/release.doc: doc
-	@echo "Releasing doc version $(shell cat target/version)"
-	debuild -us -uc -nc -F
-	mkdir -p target/dpkg
-	mv ../$(PROJECT)*_$(shell cat target/version)_*.deb    target/dpkg/
-	(cd target && tar cfz $(PROJECT)_$(shell cat target/version)_$(shell gcc -v 2>&1 | grep '^Target:' | sed 's/^Target: //').tgz $(PROJECT).pdf $(PROJECT)-htmldoc.tgz dpkg)
 	touch target/dpkg/release.doc
 
 doc: target/$(PROJECT).pdf target/$(PROJECT)-htmldoc.tgz
