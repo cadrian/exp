@@ -92,6 +92,13 @@ static void usage(const char *cmd) {
 }
 
 /**
+ * Print ExP's version.
+ */
+static void print_version(void) {
+     printf("ExP version %d.%d.%d\nCopyleft (C) 2015, Cyril Adrian <cyril.adrian@gmail.com>\n", EXP_GRAND_VERSION, EXP_MAJOR_VERSION, EXP_MINOR_VERSION);
+}
+
+/**
  * The long options definition.
  */
 static struct option long_options[] = {
@@ -191,7 +198,7 @@ static void parse_options(int argc, char * const argv[]) {
                break;
 
           case 'V':
-               printf("ExP version %d.%d.%d\nCopyleft (C) 2015, Cyril Adrian <cyril.adrian@gmail.com>\n", EXP_GRAND_VERSION, EXP_MAJOR_VERSION, EXP_MINOR_VERSION);
+               print_version();
                exit(0);
 
           case 'h':
@@ -277,6 +284,10 @@ int main(int argc, char * const argv[]) {
           output = new_output_ygraph(log, input, options);
           break;
      default:
+          if (argc == optind) {
+               print_version();
+               exit(0);
+          }
           fprintf(stderr, "**** Undefined mode\n");
           exit(2);
      }
