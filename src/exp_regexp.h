@@ -62,6 +62,15 @@ typedef struct match_s match_t;
 typedef match_t *(*regexp_match_fn)(regexp_t *this, const char *string, int start, int length, int pcre_flags);
 
 /**
+ * Return the regexp pattern
+ *
+ * @param[in] this the target regexp
+ *
+ * @return the pattern
+ */
+typedef const char *(*regexp_pattern_fn)(regexp_t *this);
+
+/**
  * Replace all occurrences of the regular expressions in *string* by
  * the given *replace*.
  *
@@ -83,6 +92,10 @@ typedef void (*regexp_replace_all_fn)(regexp_t *this, const char *replace, char 
 typedef void (*regexp_free_fn)(regexp_t *this);
 
 struct regexp_s {
+     /**
+      * @see regexp_pattern_fn
+      */
+     regexp_pattern_fn pattern;
      /**
       * @see regexp_match_fn
       */

@@ -52,8 +52,8 @@ static regexp_t *syslog_regexp(logger_t log) {
      static regexp_t *result = NULL;
      if (result == NULL) {
           result = new_regexp(log,
-                              "^(?<date>(?<strmonth>[A-Z][a-z]{2}) +(?<day>[0-9][0-9]?) +(?<hour>[0-9]{2}):(?<minute>[0-9]{2}):(?<second>[0-9]{2})) +"
-                              "(?<host>[^ ]+) +(?<daemon>[^ ]+): +(?<log>.*)$", 0);
+                              "^(?<date>(?<strmonth>[A-Z][a-z]{2})[[:space:]]+(?<day>[0-9][0-9]?)[[:space:]]+(?<hour>[0-9]{2}):(?<minute>[0-9]{2}):(?<second>[0-9]{2}))[[:space:]]+"
+                              "(?<host>[^[:space:]]+)[[:space:]]+(?<daemon>[^[:space:]]+)[[:space:]]+(?<log>.*?)[[:space:]]*$", 0);
           if (result == NULL) {
                exit(1);
           }
@@ -65,8 +65,8 @@ static regexp_t *rsyslog_regexp(logger_t log) {
      static regexp_t *result = NULL;
      if (result == NULL) {
           result = new_regexp(log,
-                              "^(?<date>(?<year>[0-9]{4})-(?<month>[0-9]{2})-(?<day>[0-9]{2})T(?<hour>[0-9]{2}):(?<minute>[0-9]{2}):(?<second>[0-9]{2})\\.[0-9]+[-+][0-9]{2}:[0-9]{2}) +"
-                              "(?<host>[^ ]+) +(?<daemon>[^ ]+): +(?<log>.*)$", 0);
+                              "^(?<date>(?<year>[0-9]{4})-(?<month>[0-9]{2})-(?<day>[0-9]{2})T(?<hour>[0-9]{2}):(?<minute>[0-9]{2}):(?<second>[0-9]{2})\\.[0-9]+[-+][0-9]{2}:[0-9]{2})[[:space:]]+"
+                              "(?<host>[^[:space:]]+)[[:space:]]+(?<daemon>[^[:space:]]+)[[:space:]]+(?<log>.*?)[[:space:]]*$", 0);
           if (result == NULL) {
                exit(1);
           }
@@ -79,9 +79,9 @@ static regexp_t *apache_access_regexp(logger_t log) {
      if (result == NULL) {
           // 127.0.0.1 - frank [10/Oct/2000:13:55:36 -0700] "GET /apache_pb.gif HTTP/1.0" 200 2326
           result = new_regexp(log,
-                              "^(?<ip>[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}) - (?<user>[^ ]*) - "
-                              "\\[(?<date>(?<day>[0-9][0-9]?)/+(?<strmonth>[A-Z][a-z]{2})/(?<year>[0-9]{4}):(?<hour>[0-9]{2}):(?<minute>[0-9]{2}):(?<second>[0-9]{2}) +[-+][0-9]{4})\\] +"
-                              "(?<log>\"(?<query>[^\"]+)\" +(?<status>[0-9]{3}) +(?<contentlength>([0-9]+|-)))$", 0);
+                              "^(?<ip>[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}) (?<host>[^[:space:]]+) - ((?<user>[^[:space:]]*) - )?"
+                              "\\[(?<date>(?<day>[0-9][0-9]?)/+(?<strmonth>[A-Z][a-z]{2})/(?<year>[0-9]{4}):(?<hour>[0-9]{2}):(?<minute>[0-9]{2}):(?<second>[0-9]{2})[[:space:]]+[-+][0-9]{4})\\][[:space:]]+"
+                              "\"(?<query>[A-Z]+[[:space:]]+(?<log>[^\"]+?)[[:space:]]+HTTP/[12]\\.[01])\"[[:space:]]+(?<status>[0-9]{3})[[:space:]]+(?<contentlength>([0-9]+|-)).*?[[:space:]]*$", 0);
           if (result == NULL) {
                exit(1);
           }
@@ -94,8 +94,8 @@ static regexp_t *apache_error_regexp(logger_t log) {
      if (result == NULL) {
           // [Wed Oct 11 14:32:52 2000] [error] [client 127.0.0.1] client denied by server configuration: /export/home/live/ap/htdocs/test
           result = new_regexp(log,
-                              "^\\[(?<date>(?<strday>[A-Z][a-z]{2}) +(?<strmonth>[A-Z][a-z]{2}) +(?<day>[0-9][0-9]?) +(?<hour>[0-9]{2}):(?<minute>[0-9]{2}):(?<second>[0-9]{2}) +(?<year>[0-9]{4}))\\] +"
-                              "(?<log>\\[(?<level>[a-z]+)\\] +\\[(?<client>[^]]+)\\] +(?<message>.*))$", 0);
+                              "^\\[(?<date>(?<strday>[A-Z][a-z]{2})[[:space:]]+(?<strmonth>[A-Z][a-z]{2})[[:space:]]+(?<day>[0-9][0-9]?)[[:space:]]+(?<hour>[0-9]{2}):(?<minute>[0-9]{2}):(?<second>[0-9]{2})[[:space:]]+(?<year>[0-9]{4}))\\][[:space:]]+"
+                              "(?<log>\\[(?<level>[a-z]+)\\][[:space:]]+(\\[(?<client>[^]]+)\\][[:space:]]+)?(?<message>.*?))[[:space:]]*$", 0);
           if (result == NULL) {
                exit(1);
           }
@@ -107,8 +107,8 @@ static regexp_t *snort_regexp(logger_t log) {
      static regexp_t *result = NULL;
      if (result == NULL) {
           result = new_regexp(log,
-                              "^(?<date>(?<month>[0-9]{2})/(?<day>[0-9]{2}):(?<hour>[0-9]{2}):(?<minute>[0-9]{2}):(?<second>[0-9]{2})\\.[0-9]+) +"
-                              "(?<log>.*)$", 0);
+                              "^(?<date>(?<month>[0-9]{2})/(?<day>[0-9]{2})-(?<hour>[0-9]{2}):(?<minute>[0-9]{2}):(?<second>[0-9]{2})\\.[0-9]{6})[[:space:]]+"
+                              "(?<log>.*?)[[:space:]]*$", 0);
           if (result == NULL) {
                exit(1);
           }
@@ -120,7 +120,19 @@ static regexp_t *raw_regexp(logger_t log) {
      static regexp_t *result = NULL;
      if (result == NULL) {
           result = new_regexp(log,
-                              "^(?<log>.*)$", 0);
+                              "^(?<log>.*?)[[:space:]]*$", 0);
+          if (result == NULL) {
+               exit(1);
+          }
+     }
+     return result;
+}
+
+static regexp_t *space_regexp(logger_t log) {
+     static regexp_t *result = NULL;
+     if (result == NULL) {
+          result = new_regexp(log,
+                              "[[:space:]]+", 0);
           if (result == NULL) {
                exit(1);
           }
@@ -143,7 +155,7 @@ static bool_t syslog_tally_logic(syslog_entry_factory_t *this, size_t tally, siz
 }
 
 static bool_t securelog_tally_logic(syslog_entry_factory_t *this, size_t tally, size_t tally_threshold, size_t max_sample_lines) {
-     bool_t result = tally > max_sample_lines;
+     bool_t result = tally >= max_sample_lines;
      this->log(debug, "%s tally_logic: %lu > %lu = %s\n", this->name, (unsigned long)tally, (unsigned long)max_sample_lines, result?"true":"false");
      return result;
 }
@@ -302,9 +314,13 @@ static entry_t *syslog_new_entry(syslog_entry_factory_t *this, line_t *line) {
      syslog_entry_t *result = malloc(sizeof(syslog_entry_t));
 
      regexp_t *regexp = this->regexp(this->log);
+     regexp_t *re_sp = space_regexp(this->log);
      match_t *match = regexp->match(regexp, line->buffer, 0, line->length, 0);
+     char *logline;
 
      result->fn = syslog_entry_fn;
+     result->name    = this->name;
+     result->log     = this->log;
 
      if (match != NULL) {
           result->year    = string_2_int(match, "year",   this_year);
@@ -315,18 +331,18 @@ static entry_t *syslog_new_entry(syslog_entry_factory_t *this, line_t *line) {
           result->second  = string_2_int(match, "second", one);
           result->host    = string_clone(match->named_substring(match, "host"));
           result->daemon  = string_clone(match->named_substring(match, "daemon"));
-          result->logline = string_clone(match->named_substring(match, "log"));
-
-          result->log     = this->log;
-          result->name    = this->name;
-
+          logline         = string_clone(match->named_substring(match, "log"));
+          if (logline) re_sp->replace_all(re_sp, " ", logline);
+          result->logline = logline;
           match->free(match);
      } else {
           result->year = 1900;
           result->day = result->month = result->hour = result->minute = result->second = 1;
           result->host = result->daemon = "#";
           if (line->length > 0) {
-               result->logline = line->buffer;
+               logline = string_clone(line->buffer);
+               if (logline) re_sp->replace_all(re_sp, " ", logline);
+               result->logline = logline;
           } else {
                result->logline = "#";
           }

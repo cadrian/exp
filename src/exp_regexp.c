@@ -48,11 +48,12 @@ typedef struct {
 } match_impl_t;
 
 static const char *match_impl_substring(match_impl_t *this, int index) {
-   int status;
-   if (this->sub != NULL) {
-      pcre_free_substring(this->sub);
-   }
-   status = pcre_get_substring(this->string, this->subs, this->subslen, index, &(this->sub));
+     int status;
+     if (this->sub != NULL) {
+          pcre_free_substring(this->sub);
+          this->sub = NULL;
+     }
+     status = pcre_get_substring(this->string, this->subs, this->subslen, index, &(this->sub));
      if (status < 0) {
           return NULL;
      }
@@ -60,7 +61,12 @@ static const char *match_impl_substring(match_impl_t *this, int index) {
 }
 
 static const char *match_impl_named_substring(match_impl_t *this, const char *name) {
-     int status = pcre_get_named_substring(this->regexp->re, this->string, this->subs, this->subslen, name, &(this->sub));
+     int status;
+     if (this->sub != NULL) {
+          pcre_free_substring(this->sub);
+          this->sub = NULL;
+     }
+     status = pcre_get_named_substring(this->regexp->re, this->string, this->subs, this->subslen, name, &(this->sub));
      if (status < 0) {
           return NULL;
      }
@@ -79,6 +85,10 @@ static match_t match_impl_fn = {
      .named_substring = (regexp_match_named_substring_fn)match_impl_named_substring,
      .free = (regexp_match_free_fn)match_impl_free,
 };
+
+static const char *regexp_impl_pattern(regexp_impl_t *this) {
+     return this->regex;
+}
 
 static match_impl_t *regexp_impl_match(regexp_impl_t *this, const char *string, int start, int length, int pcre_flags) {
      int subsmax = this->max_substrings * 3;
@@ -121,6 +131,7 @@ static void regexp_impl_replace_all(regexp_impl_t *this, const char *replace, ch
      match_impl_t *match;
      int start, end, lost = 0, delta;
 
+     this->log(debug, "s/%s/%s/%d|%s\n", this->regex, replace, len_string, string);
      match = regexp_impl_match(this, string, 0, len_string, 0);
      while (match != NULL) {
           start = match->subs[0];
@@ -131,11 +142,11 @@ static void regexp_impl_replace_all(regexp_impl_t *this, const char *replace, ch
                delta = end - start - len_replace;
                lost += delta;
                if (delta < 0) {
-                    bcopy(string + end, string + end - delta, len_string - delta);
+                    bcopy(string + end, string + end - delta, len_string - delta - start);
                }
                memcpy(string + start, replace, len_replace);
                if (delta > 0) {
-                    bcopy(string + end, string + end - delta, len_string - delta);
+                    bcopy(string + end, string + end - delta, len_string - delta - start);
                }
                len_string -= delta;
                string[len_string] = '\0';
@@ -147,7 +158,7 @@ static void regexp_impl_replace_all(regexp_impl_t *this, const char *replace, ch
           } else {
                len_string -= end;
                string += end;
-               match = regexp_impl_match(this, string, 0, len_string, PCRE_NOTEMPTY_ATSTART | PCRE_ANCHORED);
+               match = regexp_impl_match(this, string, 0, len_string, PCRE_NOTEMPTY_ATSTART);
           }
      }
 }
@@ -166,6 +177,7 @@ static void regexp_impl_free(regexp_impl_t *this) {
 }
 
 static regexp_t regexp_impl_fn = {
+     .pattern = (regexp_pattern_fn)regexp_impl_pattern,
      .match = (regexp_match_fn)regexp_impl_match,
      .replace_all = (regexp_replace_all_fn)regexp_impl_replace_all,
      .free = (regexp_free_fn)regexp_impl_free,

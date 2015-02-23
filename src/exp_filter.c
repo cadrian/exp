@@ -60,9 +60,11 @@ static const char *impl_scrub(filter_impl_t *this, const char *line) {
      regexp_t *stopword;
      strncpy(result, line, MAX_LINE_SIZE);
      result[MAX_LINE_SIZE-1] = '\0';
+     this->log(debug, "Scrubbing %2d | %s\n", n, line);
      for (i = 0; i < n; i++) {
           stopword = this->stopwords[i];
           stopword->replace_all(stopword, this->replacements[i], result);
+          this->log(debug, " - %2d/%2d | %s | %s\n", i+1, n, stopword->pattern(stopword), result);
      }
      return result;
 }
@@ -180,16 +182,14 @@ static bool_t impl_extend_(filter_impl_t *this, const char *dir, const char *fil
 static void impl_extend(filter_impl_t *this, const char *filename, const char *replacement) {
      const char *dir;
      int i;
-     bool_t found = false, f;
+     bool_t found = false;
      if (this->extradirs != NULL) {
-          for (i = 0; (dir = this->extradirs[i]) != NULL; i++) {
-               f = impl_extend_(this, dir, filename, replacement);
-               found |= f;
+          for (i = 0; !found && (dir = this->extradirs[i]) != NULL; i++) {
+               found = impl_extend_(this, dir, filename, replacement);
           }
      }
-     for (i = 0; (dir = dirs[i]) != NULL; i++) {
-          f = impl_extend_(this, dir, filename, replacement);
-          found |= f;
+     for (i = 0; !found && (dir = dirs[i]) != NULL; i++) {
+          found = impl_extend_(this, dir, filename, replacement);
      }
      if (!found) {
           this->log(debug, "%s not found\n", filename);

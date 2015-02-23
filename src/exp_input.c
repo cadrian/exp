@@ -93,7 +93,7 @@ static void impl_sort_files(input_impl_t *this) {
 
 static entry_factory_t *select_entry_factory(logger_t log, line_t *lines) {
      entry_factory_t *result = NULL;
-     int i, f, nl, nlines;
+     int i, f, n, nl, nlines;
      int nf = entry_factories_length();
      line_t *line;
      entry_factory_t *factory;
@@ -108,12 +108,11 @@ static entry_factory_t *select_entry_factory(logger_t log, line_t *lines) {
 
      do {
           for (i = 0; i < SAMPLE_SIZE; i++) {
-               nl = rand() % nlines;
-               log(debug, "Sample line %d/%d\n", nl+1, nlines);
-               for (line = lines; nl --> 0; line = line->next) {
+               n = nl = rand() % nlines;
+               for (line = lines; n --> 0; line = line->next) {
                     // TODO change the lines structure from linked list to array (this is dumb)
                }
-               log(debug, "%.*s\n", (int)line->length, line->buffer);
+               log(debug, "Sample line %4d/%4d | %.*s\n", nl+1, nlines, (int)line->length, line->buffer);
                found = false;
                for (f = 0; !found && f < nf; f++) {
                     factory = entry_factory(f);

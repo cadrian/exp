@@ -60,7 +60,7 @@ static output_options_t options = {
      .fingerprint = false,
      .tick = "#",
      .wide = false,
-     .sample = sample_none,
+     .sample = sample_threshold,
 };
 
 /**
