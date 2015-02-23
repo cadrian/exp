@@ -74,6 +74,8 @@ typedef struct {
      char    *tick;
      bool_t   wide;
      sample_t sample;
+     char   **filter_extradirs;
+     char   **fingerprint_extradirs;
 } output_options_t;
 
 /**
@@ -88,6 +90,8 @@ typedef struct {
      bool_t tick;
      bool_t wide;
      bool_t sample;
+     bool_t filter_extradirs;
+     bool_t fingerprint_extradirs;
 } options_set_t;
 
 /**

@@ -48,6 +48,7 @@ struct fingerprint_impl_s {
      logger_t log;
      input_t *input;
      output_t *output;
+     char **extradirs;
 };
 
 static void fingerprint_impl_run(fingerprint_impl_t *this, void *output) {
@@ -100,13 +101,18 @@ static void scan_input_dir(fingerprint_impl_t *this, const char *dir) {
 static void prepare_input(fingerprint_impl_t *this) {
      const char *dir;
      int i;
+     if (this->extradirs != NULL) {
+          for (i = 0; (dir = this->extradirs[i]) != NULL; i++) {
+               scan_input_dir(this, dir);
+          }
+     }
      for (i = 0; (dir = dirs[i]) != NULL; i++) {
           scan_input_dir(this, dir);
      }
      this->input->sort_files(this->input);
 }
 
-fingerprint_t *new_fingerprint(logger_t log) {
+fingerprint_t *new_fingerprint(logger_t log, char **extradirs) {
      output_options_t options = {
           .filter = true,
           .fingerprint = false,

@@ -58,10 +58,11 @@ struct fingerprint_s {
  * Create a new fingerprint.
  *
  * @param[in] log the logger
+ * @param[in] extradirs extra directories to scan
  *
  * @return the new fingerprint
  */
-fingerprint_t *new_fingerprint(logger_t log);
+fingerprint_t *new_fingerprint(logger_t log, char **extradirs);
 
 /**
  * @}

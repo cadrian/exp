@@ -51,6 +51,7 @@ struct filter_impl_s {
      size_t capacity;
      regexp_t **stopwords;
      char **replacements;
+     char **extradirs;
 };
 
 static const char *impl_scrub(filter_impl_t *this, const char *line) {
@@ -175,6 +176,11 @@ static void impl_extend_(filter_impl_t *this, const char *dir, const char *filen
 static void impl_extend(filter_impl_t *this, const char *filename, const char *replacement) {
      const char *dir;
      int i;
+     if (this->extradirs != NULL) {
+          for (i = 0; (dir = this->extradirs[i]) != NULL; i++) {
+               impl_extend_(this, dir, filename, replacement);
+          }
+     }
      for (i = 0; (dir = dirs[i]) != NULL; i++) {
           impl_extend_(this, dir, filename, replacement);
      }
@@ -186,13 +192,14 @@ static filter_t filter_impl_fn = {
      .bleach = (filter_bleach_fn)impl_bleach,
 };
 
-filter_t *new_filter(logger_t log) {
+filter_t *new_filter(logger_t log, char **extradirs) {
      filter_impl_t *result = malloc(sizeof(filter_impl_t));
 
      result->fn = filter_impl_fn;
      result->log = log;
      result->length = result->capacity = 0;
      result->stopwords = NULL;
+     result->extradirs = extradirs;
 
      return &(result->fn);
 }

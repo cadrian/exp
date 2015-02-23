@@ -35,6 +35,15 @@
 static level_t   verbose         = warn;
 static expmode_t mode            = mode_undefined;
 
+typedef struct {
+     int capacity;
+     int count;
+     char **dirs;
+} dirs_t;
+
+static dirs_t filterdirs = {0,0,NULL};
+static dirs_t fingerprintdirs = {0,0,NULL};
+
 /**
  * The options setting mask.
  */
@@ -102,41 +111,73 @@ static void print_version(void) {
  * The long options definition.
  */
 static struct option long_options[] = {
-     {"verbose",     no_argument,       NULL, 'v'},
-     {"help",        no_argument,       NULL, 'h'},
-     {"version",     no_argument,       NULL, 'V'},
+     {"verbose",        no_argument,       NULL, 'v'},
+     {"help",           no_argument,       NULL, 'h'},
+     {"version",        no_argument,       NULL, 'V'},
 
-     {"sample",      no_argument,       NULL,  1 },
-     {"nosample",    no_argument,       NULL,  2 },
-     {"allsample",   no_argument,       NULL,  3 },
+     {"sample",         no_argument,       NULL,  1 },
+     {"nosample",       no_argument,       NULL,  2 },
+     {"allsample",      no_argument,       NULL,  3 },
 
-     {"filter",      no_argument,       NULL,  4 },
-     {"nofilter",    no_argument,       NULL,  5 },
+     {"filter",         no_argument,       NULL,  4 },
+     {"nofilter",       no_argument,       NULL,  5 },
 
-     {"wide",        no_argument,       NULL,  6 },
-     {"fingerprint", no_argument,       NULL,  7 },
-     {"tick",        required_argument, NULL, 't'},
+     {"wide",           no_argument,       NULL,  6 },
+     {"fingerprint",    no_argument,       NULL,  7 },
+     {"tick",           required_argument, NULL, 't'},
 
-     {"hash",        no_argument,       NULL, 'x'},
-     {"wordcount",   no_argument,       NULL, 'w'},
-     {"daemon",      no_argument,       NULL, 'D'},
-     {"host",        no_argument,       NULL, 'H'},
-     {"sgraph",      no_argument,       NULL, 's'},
-     {"mgraph",      no_argument,       NULL, 'm'},
-     {"hgraph",      no_argument,       NULL, 'X'},
-     {"dgraph",      no_argument,       NULL, 'd'},
-     {"mograph",     no_argument,       NULL, 'M'},
-     {"ygraph",      no_argument,       NULL, 'y'},
+     {"hash",           no_argument,       NULL, 'x'},
+     {"wordcount",      no_argument,       NULL, 'w'},
+     {"daemon",         no_argument,       NULL, 'D'},
+     {"host",           no_argument,       NULL, 'H'},
+     {"sgraph",         no_argument,       NULL, 's'},
+     {"mgraph",         no_argument,       NULL, 'm'},
+     {"hgraph",         no_argument,       NULL, 'X'},
+     {"dgraph",         no_argument,       NULL, 'd'},
+     {"mograph",        no_argument,       NULL, 'M'},
+     {"ygraph",         no_argument,       NULL, 'y'},
+
+     {"filterdir",      required_argument, NULL,  8 },
+     {"fingerprintdir", required_argument, NULL,  9 },
 
      {0,0,0,0}
 };
 
+/**
+ * Set the mode, does not allow to set twice
+ *
+ * @param[in] m the mode to set
+ */
 static void set_mode(int m) {
      if (mode != mode_undefined) {
           fprintf(stderr, "**** Error: cannot set mode twice\n");
           exit(2);
      }
      mode = m;
+}
+
+/**
+ * Add an extra directory, ensures that the array always finishes with a NULL entry
+ *
+ * @param[in] dirs the directory array
+ * @param[in] dir the directory to add
+ */
+static void add_extradir(dirs_t *dirs, const char *dir) {
+     int size;
+     if (dirs->capacity == dirs->count) {
+          if (dirs->capacity == 0) {
+               dirs->capacity = 2;
+               size = (dirs->capacity + 1) * sizeof(char*);
+               dirs->dirs = malloc(size);
+               memset(dirs->dirs, 0, size);
+          } else {
+               dirs->capacity *= 2;
+               size = (dirs->capacity + 1) * sizeof(char*);
+               dirs->dirs = realloc(dirs->dirs, size);
+               memset(dirs->dirs + dirs->count, 0, (dirs->count + 1) * sizeof(char*));
+          }
+          dirs->dirs[dirs->count++] = strdup(dir);
+     }
 }
 
 static void parse_options(int argc, char * const argv[]) {
@@ -217,6 +258,16 @@ static void parse_options(int argc, char * const argv[]) {
           case 'M': set_mode(mode_mograph);   break;
           case 'y': set_mode(mode_ygraph);    break;
 
+          case 8:
+               add_extradir(&filterdirs, optarg);
+               options_set.filter_extradirs = true;
+               break;
+
+          case 9:
+               add_extradir(&fingerprintdirs, optarg);
+               options_set.fingerprint_extradirs = true;
+               break;
+
           case '?':
           default:
                usage(argv[0]);
@@ -233,6 +284,8 @@ static bool_t check_options_set(options_set_t allowed_options) {
      check_option(tick);
      check_option(wide);
      check_option(sample);
+     check_option(filter_extradirs);
+     check_option(fingerprint_extradirs);
      return true;
 }
 
@@ -251,6 +304,9 @@ int main(int argc, char * const argv[]) {
      parse_options(argc, argv);
      log = new_logger(verbose);
      input = new_input(log);
+
+     options.filter_extradirs = filterdirs.dirs;
+     options.fingerprint_extradirs = fingerprintdirs.dirs;
 
      switch(mode) {
      case mode_hash:

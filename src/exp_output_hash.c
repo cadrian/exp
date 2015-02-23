@@ -245,7 +245,7 @@ static void hash_prepare(output_hash_t *this) {
      for (i = 0; i < n; i++) {
           file = this->input->file(this->input, i);
           factory = file->get_factory(file);
-          this->filters[i] = filter = new_filter(this->log);
+          this->filters[i] = filter = new_filter(this->log, this->options.filter_extradirs);
           if (this->options.filter) {
                snprintf(filename, 128, "%s.stopwords", this->type);
                filter->extend(filter, filename, "#");
@@ -339,7 +339,7 @@ static void output_hash_display(output_hash_t *this) {
 
 static options_set_t output_hash_options_set(output_hash_t *this) {
      static options_set_t result = {
-          true, true, false, false, true,
+          true, true, false, false, true, true, true,
      };
      return result;
 }
@@ -360,7 +360,7 @@ static output_t *new_output_(logger_t log, input_t *input, output_options_t opti
      result->dict = cad_new_hash(stdlib_memory, cad_hash_strings);
      result->max_count = 0;
      if (options.fingerprint) {
-          result->fingerprint = new_fingerprint(log);
+          result->fingerprint = new_fingerprint(log, options.fingerprint_extradirs);
      }
      result->fill = fill;
      return &(result->fn);

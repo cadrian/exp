@@ -95,10 +95,11 @@ struct filter_s {
  * Create a new filter.
  *
  * @param[in] log the logger
+ * @param[in] extradirs extra directories to scan
  *
  * @return the new filter
  */
-filter_t *new_filter(logger_t log);
+filter_t *new_filter(logger_t log, char **extradirs);
 
 /**
  * @}
