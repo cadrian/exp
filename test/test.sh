@@ -15,7 +15,7 @@ cd $(dirname $(readlink -f $0))
 fingerprintdir=$(cd ../data/fingerprints; pwd)/
 filterdir=$(cd ../data/filters; pwd)/
 petit() {
-    ../target/exp -v --fingerprintdir $fingerprintdir --filterdir $filterdir "$@"
+    ../target/exp -vv --fingerprintdir $fingerprintdir --filterdir $filterdir "$@"
 }
 
 ################################################################################
@@ -51,7 +51,7 @@ do
 
         # Run test
         echo -n "Testing: petit --$function $test.log: "
-        petit --${function} data/${test}.log > ${test}-${function}.tmp
+        petit --${function} data/${test}.log > ${test}-${function}.tmp 2> ${test}-${function}.log
 
         if ! diff output/${test}-${function}.output ${test}-${function}.tmp
         then
@@ -59,7 +59,7 @@ do
             # Leave data in place to inspect on failure #
             exit 1
         else
-            rm ${test}-${function}.tmp
+            rm ${test}-${function}.{tmp,log}
             echo " Passed"
         fi
 
