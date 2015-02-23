@@ -65,8 +65,8 @@ static regexp_t *rsyslog_regexp(logger_t log) {
      static regexp_t *result = NULL;
      if (result == NULL) {
           result = new_regexp(log,
-                              "^(?<date>(?<year>[0-9]{4})-(?<month>[0-9]{2})-(?<day>[0-9]{2})T(?<hour>[0-9]{2}):(?<minute>[0-9]{2}):(?<second>[0-9]{2})\\.[0-9]+[-+][0-9]{2}:[0-9]{2})[[:space:]]+"
-                              "(?<host>[^[:space:]]+)[[:space:]]+(?<daemon>[^[:space:]]+)[[:space:]]+(?<log>.*?)[[:space:]]*$", 0);
+                              "^(?<date>(?<year>[0-9]{4})-(?<month>[0-9]{2})-(?<day>[0-9]{2})T(?<hour>[0-9]{2}):(?<minute>[0-9]{2}):(?<second>[0-9]{2})(\\.[0-9]{6})?[-+][0-9]{2}:[0-9]{2})[[:space:]]+"
+                              "(?<host>[^[:space:]]+)[[:space:]]+(?<daemon>[^[:space:]]+)[[:space:]]+(?<log>[^[:space:]].*?)[[:space:]]*$", 0);
           if (result == NULL) {
                exit(1);
           }
@@ -315,8 +315,9 @@ static entry_t *syslog_new_entry(syslog_entry_factory_t *this, line_t *line) {
 
      regexp_t *regexp = this->regexp(this->log);
      regexp_t *re_sp = space_regexp(this->log);
+     regexp_t *re_raw = raw_regexp(this->log);
      match_t *match = regexp->match(regexp, line->buffer, 0, line->length, 0);
-     char *logline;
+     char *logline = NULL;
 
      result->fn = syslog_entry_fn;
      result->name    = this->name;
@@ -332,22 +333,27 @@ static entry_t *syslog_new_entry(syslog_entry_factory_t *this, line_t *line) {
           result->host    = string_clone(match->named_substring(match, "host"));
           result->daemon  = string_clone(match->named_substring(match, "daemon"));
           logline         = string_clone(match->named_substring(match, "log"));
-          if (logline) re_sp->replace_all(re_sp, " ", logline);
-          result->logline = logline;
           match->free(match);
      } else {
           result->year = 1900;
           result->day = result->month = result->hour = result->minute = result->second = 1;
           result->host = result->daemon = "#";
           if (line->length > 0) {
-               logline = string_clone(line->buffer);
-               if (logline) re_sp->replace_all(re_sp, " ", logline);
-               result->logline = logline;
-          } else {
-               result->logline = "#";
+               match = re_raw->match(re_raw, line->buffer, 0, line->length, 0);
+               if (match != NULL) {
+                    logline = string_clone(match->named_substring(match, "log"));
+                    match->free(match);
+               } else {
+                    logline = string_clone(line->buffer);
+               }
           }
      }
-
+     if (logline) {
+          re_sp->replace_all(re_sp, " ", logline);
+          result->logline = logline;
+     } else {
+          result->logline = "#";
+     }
      return &(result->fn);
 }
 

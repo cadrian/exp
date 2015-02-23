@@ -301,6 +301,7 @@ int main(int argc, char * const argv[]) {
      input_t *input;
      output_t *output;
      int lastoptind;
+     bool_t has_data = false;
 
      srand(time(NULL));
 
@@ -361,18 +362,25 @@ int main(int argc, char * const argv[]) {
 
      if (optind == argc) {
           log(debug, "Input: stdin\n");
-          input->parse(input, "-");
+          if (input->parse(input, "-") != NULL) {
+               has_data = true;
+          }
      } else{
           lastoptind = optind;
           while (optind < argc) {
                log(debug, "Input %d/%d: %s\n", optind - lastoptind + 1, argc - lastoptind, argv[optind]);
-               input->parse(input, argv[optind++]);
+               if (input->parse(input, argv[optind++]) != NULL) {
+                    has_data = true;
+               }
           }
      }
-     input->sort_files(input);
-     log(debug, "Input done\n");
-
-     output->display(output);
+     if (has_data) {
+          input->sort_files(input);
+          log(debug, "Input done\n");
+          output->display(output);
+     } else {
+          fputs("No data found\n", stdout);
+     }
 
      return 0;
 }

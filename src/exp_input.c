@@ -106,36 +106,38 @@ static entry_factory_t *select_entry_factory(logger_t log, line_t *lines) {
           nlines++;
      }
 
-     do {
-          for (i = 0; i < SAMPLE_SIZE; i++) {
-               n = nl = rand() % nlines;
-               for (line = lines; n --> 0; line = line->next) {
-                    // TODO change the lines structure from linked list to array (this is dumb)
-               }
-               log(debug, "Sample line %4d/%4d | %.*s\n", nl+1, nlines, (int)line->length, line->buffer);
-               found = false;
-               for (f = 0; !found && f < nf; f++) {
-                    factory = entry_factory(f);
-                    if (factory->is_type(factory, line)) {
-                         log(debug, " => %s\n", factory->get_name(factory));
-                         tally[f]++;
-                         found = true;
+     if (nlines > 0) {
+          do {
+               for (i = 0; i < SAMPLE_SIZE; i++) {
+                    n = nl = rand() % nlines;
+                    for (line = lines; n --> 0; line = line->next) {
+                         // TODO change the lines structure from linked list to array (this is dumb)
+                    }
+                    log(debug, "Sample line %4d/%4d | %.*s\n", nl+1, nlines, (int)line->length, line->buffer);
+                    found = false;
+                    for (f = 0; !found && f < nf; f++) {
+                         factory = entry_factory(f);
+                         if (factory->is_type(factory, line)) {
+                              log(debug, " => %s\n", factory->get_name(factory));
+                              tally[f]++;
+                              found = true;
+                         }
                     }
                }
-          }
 
-          for (f = 0; f < nf; f++) {
-               factory = entry_factory(f);
-               log(debug, "tally[%s] = %lu\n", factory->get_name(factory), (unsigned long)tally[f]);
-          }
-
-          for (f = 0; result == NULL && f < nf; f++) {
-               factory = entry_factory(f);
-               if (factory->tally_logic(factory, tally[f], TALLY_THRESHOLD, SAMPLE_SIZE)) {
-                    result = factory;
+               for (f = 0; f < nf; f++) {
+                    factory = entry_factory(f);
+                    log(debug, "tally[%s] = %lu\n", factory->get_name(factory), (unsigned long)tally[f]);
                }
-          }
-     } while (result == NULL);
+
+               for (f = 0; result == NULL && f < nf; f++) {
+                    factory = entry_factory(f);
+                    if (factory->tally_logic(factory, tally[f], TALLY_THRESHOLD, SAMPLE_SIZE)) {
+                         result = factory;
+                    }
+               }
+          } while (result == NULL);
+     }
 
      return result;
 }
