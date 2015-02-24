@@ -210,13 +210,14 @@ static void daemon_fill_(output_hash_t *this, input_file_t *file, filter_t *filt
 }
 
 static void host_fill_(output_hash_t *this, input_file_t *file, filter_t *filter) {
-     int i, n = file->entries_length(file);
+     int i, n = file->entries_length(file), inc;
      entry_t *entry;
      const char *key;
      for (i = 0; i < n; i++) {
           entry = file->entry(file, i);
           key = filter->scrub(filter, entry->host(entry));
-          hash_increment(this, key, entry);
+          inc = hash_increment(this, key, entry);
+          this->log(debug, "Host %d/%d | %s | %s <%d>\n", i+1, n, entry->host(entry), key, inc);
      }
 }
 
@@ -357,7 +358,7 @@ static output_options_t output_hash_default_options(output_hash_t *this) {
      return result;
 }
 
-static output_options_t output_words_default_options(output_hash_t *this) {
+static output_options_t output_nothash_default_options(output_hash_t *this) {
      static output_options_t result = {
           .filter = true,
           .fingerprint = false,
@@ -401,14 +402,18 @@ output_t *new_output_hash(logger_t log, input_t *input) {
 
 output_t *new_output_wordcount(logger_t log, input_t *input) {
      output_t *result = new_output_(log, input, "words", wordcount_fill_);
-     result->default_options = (output_default_options_fn)output_words_default_options;
+     result->default_options = (output_default_options_fn)output_nothash_default_options;
      return result;
 }
 
 output_t *new_output_daemon(logger_t log, input_t *input) {
-     return new_output_(log, input, "daemon", daemon_fill_);
+     output_t *result = new_output_(log, input, "daemon", daemon_fill_);
+     result->default_options = (output_default_options_fn)output_nothash_default_options;
+     return result;
 }
 
 output_t *new_output_host(logger_t log, input_t *input) {
-     return new_output_(log, input, "host", host_fill_);
+     output_t *result = new_output_(log, input, "host", host_fill_);
+     result->default_options = (output_default_options_fn)output_nothash_default_options;
+     return result;
 }
