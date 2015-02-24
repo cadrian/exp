@@ -181,7 +181,7 @@ static void add_extradir(dirs_t *dirs, const char *dir) {
                dirs->capacity *= 2;
                size = (dirs->capacity + 1) * sizeof(char*);
                dirs->dirs = realloc(dirs->dirs, size);
-               memset(dirs->dirs + dirs->count, 0, (dirs->count + 1) * sizeof(char*));
+               memset(dirs->dirs + dirs->count, 0, size - (dirs->count) * sizeof(char*));
           }
           dirs->dirs[dirs->count++] = strdup(dir);
      }
@@ -334,9 +334,6 @@ int main(int argc, char * const argv[]) {
      log = new_logger(verbose);
      input = new_input(log);
 
-     options.filter_extradirs = filterdirs.dirs;
-     options.fingerprint_extradirs = fingerprintdirs.dirs;
-
      switch(mode) {
      case mode_hash:
           output = new_output_hash(log, input);
@@ -377,11 +374,13 @@ int main(int argc, char * const argv[]) {
           exit(2);
      }
 
-     check_options_set(log, output->options_set(output), output->default_options(output));
-     output->set_options(output, options);
-
      register_all_factories(log);
      sort_factories(log);
+
+     check_options_set(log, output->options_set(output), output->default_options(output));
+     options.filter_extradirs = filterdirs.dirs;
+     options.fingerprint_extradirs = fingerprintdirs.dirs;
+     output->set_options(output, options);
 
      if (optind == argc) {
           log(debug, "Input: stdin\n");

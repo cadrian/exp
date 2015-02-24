@@ -119,11 +119,14 @@ fingerprint_t *new_fingerprint(logger_t log, char **extradirs) {
           .sample = sample_none,
      };
      fingerprint_impl_t *result = malloc(sizeof(fingerprint_impl_t));
+
      result->fn = fingerprint_impl_fn;
      result->log = log;
      result->input = new_input(log);
+     result->extradirs = extradirs;
      prepare_input(result);
      result->output = new_output_hash(log, result->input);
      result->output->set_options(result->output, options);
+
      return &(result->fn);
 }

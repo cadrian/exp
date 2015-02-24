@@ -88,7 +88,7 @@ static int impl_file_comparator(input_file_impl_t **file1, input_file_impl_t **f
 }
 
 static void impl_sort_files(input_impl_t *this) {
-     return qsort(&(this->files), this->count, sizeof(input_file_impl_t*), (int(*)(const void*, const void*))impl_file_comparator);
+     qsort(this->files, this->count, sizeof(input_file_impl_t*), (int(*)(const void*, const void*))impl_file_comparator);
 }
 
 static entry_factory_t *select_entry_factory(logger_t log, line_t *lines) {
@@ -113,7 +113,7 @@ static entry_factory_t *select_entry_factory(logger_t log, line_t *lines) {
                     for (line = lines; n --> 0; line = line->next) {
                          // TODO change the lines structure from linked list to array (this is dumb)
                     }
-                    log(debug, "Sample line %4d/%4d | %.*s\n", nl+1, nlines, (int)line->length, line->buffer);
+                    log(debug, "Sample line %4d/%4d [%d %s] | %.*s\n", nl+1, nlines, nf, nf == 1 ? "factory" : "factories", (int)line->length, line->buffer);
                     found = false;
                     for (f = 0; !found && f < nf; f++) {
                          factory = entry_factory(f);
@@ -122,6 +122,9 @@ static entry_factory_t *select_entry_factory(logger_t log, line_t *lines) {
                               tally[f]++;
                               found = true;
                          }
+                    }
+                    if (!found) {
+                              log(debug, " => NOT FOUND\n");
                     }
                }
 
