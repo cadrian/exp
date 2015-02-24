@@ -54,6 +54,7 @@ struct fingerprint_impl_s {
 static void fingerprint_impl_run(fingerprint_impl_t *this, void *output) {
      int i, n = this->input->files_length(this->input);
      bool_t done = false;
+     this->output->prepare(this->output);
      for (i = 0; !done && i < n; i++) {
           done = this->output->fingerprint_file(this->output, i, output);
      }

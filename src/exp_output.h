@@ -136,7 +136,14 @@ typedef output_options_t (*output_default_options_fn)(output_t *this);
 typedef void (*output_set_options_fn)(output_t *this, output_options_t options);
 
 /**
- * Actually run the log analysis and display relevant results.
+ * Prepare the log analysis and display relevant results.
+ *
+ * @param[in] this the target output
+ */
+typedef void (*output_prepare_fn)(output_t *this);
+
+/**
+ * Actually run the log analysis and display relevant results. Must be prepared first.
  *
  * @param[in] this the target output
  */
@@ -159,6 +166,10 @@ struct output_s {
       * @see output_set_options_fn
       */
      output_set_options_fn set_options;
+     /**
+      * @see output_prepare_fn
+      */
+     output_prepare_fn prepare;
      /**
       * @see output_display_fn
       */

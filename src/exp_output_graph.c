@@ -82,7 +82,7 @@ static int cmpstr(const char **a, const char **b) {
      return strcmp(*a, *b);
 }
 
-static void graph_prepare(output_graph_t *this) {
+static void output_graph_prepare(output_graph_t *this) {
      struct tm current = {0,};
      bool_t is_first = true;
      input_file_t *file;
@@ -172,7 +172,7 @@ static void graph_normalize(cad_hash_t *hash, int index, const char *key, double
      }
 }
 
-static void graph_display(output_graph_t *this) {
+static void output_graph_display(output_graph_t *this) {
      graph_t graph = {
           .log = this->log,
           .height = DEFAULT_GRAPH_HEIGHT,
@@ -291,11 +291,6 @@ static void graph_display(output_graph_t *this) {
      fputc('\n', stdout);
 }
 
-static void output_graph_display(output_graph_t *this) {
-     graph_prepare(this);
-     graph_display(this);
-}
-
 static options_set_t output_graph_options_set(output_graph_t *this) {
      static options_set_t result = {
           .filter=false,
@@ -336,6 +331,7 @@ static output_t output_graph_fn = {
      .options_set = (output_options_set_fn)output_graph_options_set,
      .default_options = (output_default_options_fn)output_graph_default_options,
      .set_options = (output_set_options_fn)output_graph_set_options,
+     .prepare = (output_prepare_fn)output_graph_prepare,
      .display = (output_display_fn)output_graph_display,
 };
 

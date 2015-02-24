@@ -399,6 +399,7 @@ int main(int argc, char * const argv[]) {
      if (has_data) {
           input->sort_files(input);
           log(debug, "Input done\n");
+          output->prepare(output);
           output->display(output);
      } else {
           fputs("No data found\n", stdout);

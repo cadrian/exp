@@ -56,27 +56,25 @@ typedef struct {
      char key[0];
 } dict_entry_t;
 
-static bool_t fingerprint_has_key(output_hash_t *data, const char *key) {
-     return data->dict->get(data->dict, key) != NULL;
-}
-
-static void fingerprint_del_key(output_hash_t *data, const char *key) {
-     data->dict->del(data->dict, key);
-}
-
 typedef struct {
+     logger_t log;
      size_t count;
      output_hash_t *data;
+     cad_hash_t *dict;
 } fingerprint_data_t;
 
 static void fingerprint_file_count(cad_hash_t *dict, int index, const char *key, dict_entry_t *value, fingerprint_data_t *data) {
-     if (fingerprint_has_key(data->data, key)) {
+     if (data->data->dict->get(data->data->dict, key) != NULL) {
           data->count++;
      }
 }
 
+static void fingerprint_file_copy_key(cad_hash_t *dict, int index, const char *key, dict_entry_t *value, fingerprint_data_t *data) {
+     data->dict->set(data->dict, key, value);
+}
+
 static void fingerprint_file_del_key(cad_hash_t *dict, int index, const char *key, dict_entry_t *value, fingerprint_data_t *data) {
-     fingerprint_del_key(data->data, key);
+     data->data->dict->del(data->data->dict, key);
 }
 
 static int hash_increment(output_hash_t *this, const char *key, entry_t *value) {
@@ -116,17 +114,29 @@ static bool_t output_hash_fingerprint_file(output_hash_t *this, int index, outpu
      // This function runs in the "output" embedded in the fingerprint object.
      // The given "data" is the actual output to filter if a fingerprint is found.
      bool_t result = false;
-     fingerprint_data_t fingerprint = { 0, data };
+     fingerprint_data_t fingerprint = {
+          .log = this->log,
+          .count = 0,
+          .data = data,
+          .dict = NULL,
+     };
      input_file_t *file = this->input->file(this->input, index);
      size_t threshold = (int)(THRESHOLD_COEFFICIENT * (float)file->entries_length(file) + 0.5);
-     this->log(info, "Threshold: %lu/%lu\n", (unsigned long)threshold, (unsigned long)file->entries_length(file));
+     this->log(debug, "Threshold %s: %lu/%lu\n", file->get_name(file), (unsigned long)threshold, (unsigned long)file->entries_length(file));
 
      this->dict->iterate(this->dict, (cad_hash_iterator_fn)fingerprint_file_count, &fingerprint);
 
      if (fingerprint.count > threshold) {
-          this->dict->iterate(this->dict, (cad_hash_iterator_fn)fingerprint_file_del_key, &fingerprint);
+          this->log(info, "Found fingerprint (got %lu): %s\n", (unsigned long)fingerprint.count, file->get_name(file));
+          /* We must copy the dictionary to iterate over that copy to remove keys in the original dictionary. */
+          fingerprint.dict = cad_new_hash(stdlib_memory, cad_hash_strings);
+          this->dict->iterate(this->dict, (cad_hash_iterator_fn)fingerprint_file_copy_key, &fingerprint);
+          fingerprint.dict->iterate(fingerprint.dict, (cad_hash_iterator_fn)fingerprint_file_del_key, &fingerprint);
+          fingerprint.dict->free(fingerprint.dict);
           fingerprint_increment(this, file);
           result = true;
+     } else {
+          this->log(info, "Only got %lu\n", (unsigned long)fingerprint.count);
      }
 
      return result;
@@ -240,7 +250,7 @@ static void hash_fill(output_hash_t *this) {
      }
 }
 
-static void hash_prepare(output_hash_t *this) {
+static void output_hash_prepare(output_hash_t *this) {
      int i, n = this->input->files_length(this->input);
      input_file_t *file;
      entry_factory_t *factory;
@@ -260,11 +270,11 @@ static void hash_prepare(output_hash_t *this) {
           }
      }
 
+     hash_fill(this);
+
      if (this->options.fingerprint) {
           this->fingerprint->run(this->fingerprint, this);
      }
-
-     hash_fill(this);
 }
 
 static int dict_comp(const dict_entry_t **e1, const dict_entry_t **e2) {
@@ -317,7 +327,7 @@ static void hash_display_count(output_hash_t *this, size_t count) {
      free(entries);
 }
 
-static void hash_display(output_hash_t *this) {
+static void output_hash_display(output_hash_t *this) {
      size_t i;
 
      switch(this->options.sample) {
@@ -335,11 +345,6 @@ static void hash_display(output_hash_t *this) {
      for (i = this->max_count; i > 0; i--) {
           hash_display_count(this, i);
      }
-}
-
-static void output_hash_display(output_hash_t *this) {
-     hash_prepare(this);
-     hash_display(this);
 }
 
 static options_set_t output_hash_options_set(output_hash_t *this) {
@@ -387,6 +392,7 @@ static output_t output_hash_fn = {
      .options_set = (output_options_set_fn)output_hash_options_set,
      .default_options = (output_default_options_fn)output_hash_default_options,
      .set_options = (output_set_options_fn)output_hash_set_options,
+     .prepare = (output_prepare_fn)output_hash_prepare,
      .display = (output_display_fn)output_hash_display,
 };
 
