@@ -34,6 +34,8 @@
 #include "exp_entry.h"
 #include "exp_entry_factory.h"
 
+#define THIS_YEAR 0
+
 typedef struct syslog_entry_factory_s syslog_entry_factory_t;
 
 typedef regexp_t *(*regexp_fn)(logger_t log);
@@ -49,6 +51,7 @@ struct syslog_entry_factory_s {
      const char *default_host;
      const char *default_daemon;
      const char *default_logline;
+     int default_year;
 };
 
 static regexp_t *syslog_regexp(logger_t log) {
@@ -265,26 +268,26 @@ static entry_t syslog_entry_fn = {
      .logline  = (entry_logline_fn )syslog_entry_logline,
 };
 
-static int string_2_int(match_t *match, const char *field, int (*deflt)(match_t*)) {
+static int string_2_int(syslog_entry_factory_t *this, match_t *match, const char *field, int (*deflt)(syslog_entry_factory_t*,match_t*)) {
      int result;
      const char *value = match->named_substring(match, field);
      if (value == NULL) {
-          result = deflt(match);
+          result = deflt(this, match);
      } else {
           result = atoi(value);
      }
      return result;
 }
 
-static int one(match_t *match) {
+static int one(syslog_entry_factory_t *this, match_t *match) {
      return 1;
 }
 
-static int zero(match_t *match) {
-     return 0;
+static int default_year(syslog_entry_factory_t *this, match_t *match) {
+     return this->default_year;
 }
 
-static int str_month(match_t *match) {
+static int str_month(syslog_entry_factory_t *this, match_t *match) {
      int result;
      const char *strmonth = match->named_substring(match, "strmonth");
      if (strmonth == NULL) {
@@ -319,12 +322,12 @@ static entry_t *syslog_new_entry(syslog_entry_factory_t *this, line_t *line) {
      result->log     = this->log;
 
      if (match != NULL) {
-          result->year    = string_2_int(match, "year",   zero);
-          result->month   = string_2_int(match, "month",  str_month);
-          result->day     = string_2_int(match, "day",    one);
-          result->hour    = string_2_int(match, "hour",   one);
-          result->minute  = string_2_int(match, "minute", one);
-          result->second  = string_2_int(match, "second", one);
+          result->year    = string_2_int(this, match, "year",   default_year);
+          result->month   = string_2_int(this, match, "month",  str_month);
+          result->day     = string_2_int(this, match, "day",    one);
+          result->hour    = string_2_int(this, match, "hour",   one);
+          result->minute  = string_2_int(this, match, "minute", one);
+          result->second  = string_2_int(this, match, "second", one);
           result->host    = string_clone(match->named_substring(match, "host"), this->default_host);
           result->daemon  = string_clone(match->named_substring(match, "daemon"), this->default_daemon);
           logline         = string_clone(match->named_substring(match, "log"), NULL);
@@ -371,6 +374,7 @@ entry_factory_t *new_syslog_entry_factory(logger_t log) {
      result->default_host = "";
      result->default_daemon = "";
      result->default_logline = "#";
+     result->default_year = THIS_YEAR;
      return &(result->fn);
 }
 
@@ -385,6 +389,7 @@ entry_factory_t *new_rsyslog_entry_factory(logger_t log) {
      result->default_host = "";
      result->default_daemon = "";
      result->default_logline = "#";
+     result->default_year = THIS_YEAR;
      return &(result->fn);
 }
 
@@ -399,6 +404,7 @@ entry_factory_t *new_apache_access_entry_factory(logger_t log) {
      result->default_host = "";
      result->default_daemon = "";
      result->default_logline = "#";
+     result->default_year = THIS_YEAR;
      return &(result->fn);
 }
 
@@ -413,6 +419,7 @@ entry_factory_t *new_apache_error_entry_factory(logger_t log) {
      result->default_host = "";
      result->default_daemon = "";
      result->default_logline = "#";
+     result->default_year = THIS_YEAR;
      return &(result->fn);
 }
 
@@ -428,6 +435,7 @@ entry_factory_t *new_securelog_entry_factory(logger_t log) {
      result->default_host = "";
      result->default_daemon = "";
      result->default_logline = "#";
+     result->default_year = THIS_YEAR;
      return &(result->fn);
 }
 
@@ -442,6 +450,7 @@ entry_factory_t *new_snort_entry_factory(logger_t log) {
      result->default_host = "";
      result->default_daemon = "";
      result->default_logline = "#";
+     result->default_year = THIS_YEAR;
      return &(result->fn);
 }
 
@@ -456,6 +465,7 @@ entry_factory_t *new_raw_entry_factory(logger_t log) { /* is it used? */
      result->default_host = "#";
      result->default_daemon = "#";
      result->default_logline = "#";
+     result->default_year = 1900;
      return &(result->fn);
 }
 

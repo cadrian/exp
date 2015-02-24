@@ -25,7 +25,6 @@
 #include <stdio.h>
 #include <time.h>
 #include <string.h>
-#include <limits.h>
 #include <math.h>
 #include <cad_hash.h>
 
@@ -50,7 +49,7 @@ struct output_graph_s {
      increment_time_fn increment_time;
      value_fn value;
      cad_hash_t *dict;
-     int minh, minz, max;
+     double minh, minz, max;
      struct tm start, middle, end;
      char **keys;
 };
@@ -61,15 +60,18 @@ static const char* strdate(struct tm*time) {
      return result;
 }
 
-static void graph_prepare_min_max(cad_hash_t *hash, int index, const char *key, int *value, output_graph_t *graph) {
+static void graph_prepare_max(cad_hash_t *hash, int index, const char *key, double *value, output_graph_t *graph) {
+     if (graph->max < *value) {
+          graph->max = *value;
+     }
+}
+
+static void graph_prepare_min(cad_hash_t *hash, int index, const char *key, double *value, output_graph_t *graph) {
      if (graph->minz > *value) {
           graph->minz = *value;
      }
      if (*value > 0 && graph->minh >= *value) {
           graph->minh = *value / 2;
-     }
-     if (graph->max < *value) {
-          graph->max = *value;
      }
 }
 
@@ -84,7 +86,7 @@ static void graph_prepare(output_graph_t *this) {
      entry_t *entry;
      int i, n = this->input->files_length(this->input), j, m;
      const char *key;
-     int *value;
+     double *value;
 
      this->start = this->middle = this->end = current;
 
@@ -109,8 +111,8 @@ static void graph_prepare(output_graph_t *this) {
                this->middle = current;
           }
           key = strdate(&current);
-          value = malloc(sizeof(int));
-          *value = 0;
+          value = malloc(sizeof(double));
+          *value = 0.0;
           this->dict->set(this->dict, key, value);
           this->keys[i] = strdup(key);
      }
@@ -135,27 +137,28 @@ static void graph_prepare(output_graph_t *this) {
                }
           }
      }
-     this->dict->iterate(this->dict, (cad_hash_iterator_fn)graph_prepare_min_max, this);
-     this->log(info, "Graph: dates from %s to %s, occurrences between %d and %d\n", strdate(&(this->start)), strdate(&(this->end)), this->minz, this->max);
+     this->dict->iterate(this->dict, (cad_hash_iterator_fn)graph_prepare_max, this);
+     this->minz = this->minh = this->max;
+     this->dict->iterate(this->dict, (cad_hash_iterator_fn)graph_prepare_min, this);
 }
 
 typedef struct {
      logger_t log;
      int height;
      int width;
-     int min;
-     int max;
+     double min;
+     double max;
 } graph_t;
 
-static void graph_normalize(cad_hash_t *hash, int index, const char *key, int *value, graph_t *graph) {
-     int normalized;
+static void graph_normalize(cad_hash_t *hash, int index, const char *key, double *value, graph_t *graph) {
+     double normalized;
      if (*value >= 0) {
           if (graph->max > graph->min) {
-               normalized = (int)(ceil((double)(*value - graph->min) * (double)graph->height / (double)(graph->max - graph->min)));
-               graph->log(debug, "((%d - %d) * %d) / (%d - %d) = %d\n", *value, graph->min, graph->height, graph->max, graph->min, normalized);
+               normalized = ceil((*value - graph->min) * graph->height / (graph->max - graph->min));
+               graph->log(debug, "ceil(((%g - %g) * %d) / (%g - %g)) = %g\n", *value, graph->min, graph->height, graph->max, graph->min, normalized);
           } else {
-               normalized = (int)(ceil((double)(*value) * (double)graph->height / (double)(graph->max)));
-               graph->log(debug, "%d * %d / %d = %d\n", *value, graph->height, graph->max, normalized);
+               normalized = ceil((*value) * graph->height / (graph->max));
+               graph->log(debug, "ceil(%g * %d / %g) = %g\n", *value, graph->height, graph->max, normalized);
           }
           *value = normalized;
      }
@@ -177,19 +180,20 @@ static void graph_display(output_graph_t *this) {
      int graph_position_start, graph_position_middle, graph_position_end;
      int graph_width;
      const char *key;
-     int *value;
+     double *value;
 
      if (this->minz == 0) {
           graph.min = this->minh;
-          printf("%d\n", graph.min);
      }
 
-     scale = (double)(this->max - this->minz) / (double)graph.height;
+     scale = (this->max - this->minz) / graph.height;
+
+     this->log(info, "Graph: dates from %sto %s-- occurrences between %g and %g\n", strdate(&(this->start)), strdate(&(this->end)), graph.min, graph.max);
 
      for (i = 0; i < this->duration; i++) {
           key = this->keys[i];
           value = this->dict->get(this->dict, key);
-          this->log(debug, "Count <%d> | %s\n", *value, key);
+          this->log(debug, "Count <%g> | %s\n", *value, key);
      }
 
      this->dict->iterate(this->dict, (cad_hash_iterator_fn)graph_normalize, &graph);
@@ -197,23 +201,23 @@ static void graph_display(output_graph_t *this) {
      for (i = 0; i < this->duration; i++) {
           key = this->keys[i];
           value = this->dict->get(this->dict, key);
-          this->log(debug, "Normalized <%d> | %s\n", *value, key);
+          this->log(debug, "Normalized <%g> | %s\n", *value, key);
      }
 
      if (this->options.wide) {
           sprintf(char_fill, "%c%c", this->options.tick[0], this->options.tick[1] == '\0' ? ' ' : this->options.tick[1]);
           strcpy(char_blank, "  ");
           graph_width = graph.width * 2;
-          graph_position_start = 0;
-          graph_position_middle = graph.width - (graph.width % 2) - 1;
-          graph_position_end = graph_width - 4;
+          graph_position_start = 1;
+          graph_position_middle = graph.width - ((int)(graph.width) % 2);
+          graph_position_end = graph_width - 3;
      } else {
           sprintf(char_fill, "%c", this->options.tick[0]);
           strcpy(char_blank, " ");
           graph_width = graph.width;
-          graph_position_start = 0;
-          graph_position_middle = graph_width / 2 - 1;
-          graph_position_end = graph_width - 3;
+          graph_position_start = 1;
+          graph_position_middle = graph_width / 2;
+          graph_position_end = graph_width - 2;
      }
      this->log(debug, "wide: %s fill='%s' blank='%s'\n", this->options.wide ? "true":"false", char_fill, char_blank);
 
@@ -238,7 +242,7 @@ static void graph_display(output_graph_t *this) {
      }
      fputc('\n', stdout);
 
-     for (i = 0; i < graph_width-1; i++) {
+     for (i = 1; i < graph_width; i++) {
           if (i == graph_position_start) {
                printf("%.2d", this->value(&(this->start)) % 2000);
           } else if (i == graph_position_middle) {
@@ -252,9 +256,9 @@ static void graph_display(output_graph_t *this) {
      fputc('\n', stdout);
 
      fputc('\n', stdout);
-     printf("Start Time:\t%s\t\tMinimum Value: %d\n", strdate(&(this->start)), this->minz);
-     printf("End Time:\t%s\t\tMaximum Value: %d\n", strdate(&(this->end)), this->max);
-     printf("Duration:\t%d %ss \t\t\tScale: %.12g\n", this->duration, this->unit, scale);
+     printf("Start Time:\t%s\t\tMinimum Value: %g\n", strdate(&(this->start)), this->minz);
+     printf("End Time:\t%s\t\tMaximum Value: %g\n", strdate(&(this->end)), this->max);
+     printf("Duration:\t%d %ss \t\t\tScale: %.12g%s\n", this->duration, this->unit, scale, (scale == (int)scale) ? ".0" : "");
      fputc('\n', stdout);
 }
 
@@ -315,8 +319,7 @@ static output_t *new_output_graph(logger_t log, input_t *input, const char *unit
      result->increment_time = increment_time;
      result->value = value;
      result->dict = cad_new_hash(stdlib_memory, cad_hash_strings);
-     result->minh = result->minz = INT_MAX;
-     result->max = 0;
+     result->minh = result->minz = result->max = 0;
      result->keys = malloc(duration * sizeof(char*));
      memset(result->keys, 0, duration * sizeof(char*));
      memset(&(result->options), 0, sizeof(output_options_t));
