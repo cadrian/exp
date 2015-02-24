@@ -46,7 +46,7 @@ do
         if [ "$1" == "update" ]
         then
             echo "Updating: petit --$function $test.log: "
-            petit --${function} data/${test}.log > output/${test}-${function}.output
+            petit --${function} data/${test}.log > output/${test}-${function}.output 2>/dev/null
         fi
 
         # Run test
@@ -83,7 +83,7 @@ do
         if [ "$1" == "update" ]
         then
             echo "Updating: petit --$function --${option} $test.log: "
-            petit --${function} --${option} data/${test}.log > output/${test}-${function}-${option}.output
+            petit --${function} --${option} data/${test}.log > output/${test}-${function}-${option}.output 2>/dev/null
         fi
 
         # Run Test
