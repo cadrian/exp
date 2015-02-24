@@ -167,7 +167,7 @@ static void wordcount_fill_(output_hash_t *this, input_file_t *file, filter_t *f
      bool_t full;
      for (i = 0; i < n; i++) {
           entry = file->entry(file, i);
-          strcpy(keybuf, filter->scrub(filter, hash_key(entry)));
+          strcpy(keybuf, filter->scrub(filter, entry->logline(entry)));
           key = next = keybuf;
           full = false;
           while (*next) {
