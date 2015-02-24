@@ -1,3 +1,4 @@
+189:	#]
 189:	[client
 189:	[error]
 154:	File
@@ -41,7 +42,6 @@
 2:	resuming
 2:	secret
 2:	stat
-1:	#]
 1:	'/var/www/html/carmenletgo.fat#linux.com/wp-login.php'
 1:	(wrap#:
 1:	/usr/sbin/suexec)
