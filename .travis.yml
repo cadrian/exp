@@ -18,6 +18,7 @@ before_install:
 install:
   - "make exe"
 script:
+  - "test/test.sh"
   - "make clean"
   - "build/build.sh main"
   - "sudo dpkg -i target/dpkg/*.deb"
