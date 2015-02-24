@@ -140,7 +140,7 @@ static const char *hash_key(entry_t *entry) {
      logline = entry->logline(entry);
      if (logline == NULL) {
           result = "#";
-     } else if (daemon == NULL) {
+     } else if (daemon == NULL || daemon[0] == '\0') {
           result = logline;
      } else {
           snprintf(buffer, MAX_LINE_SIZE, "%s %s", daemon, logline);

@@ -46,6 +46,9 @@ struct syslog_entry_factory_s {
      const char *name;
      extra_is_type_fn extra_is_type;
      int priority;
+     const char *default_host;
+     const char *default_daemon;
+     const char *default_logline;
 };
 
 static regexp_t *syslog_regexp(logger_t log) {
@@ -300,10 +303,10 @@ static int str_month(match_t *match) {
      return result;
 }
 
-static char *string_clone(const char *string) {
+static char *string_clone(const char *string, const char *def) {
      char *result;
      if (string == NULL) {
-          result = NULL;
+          result = def == NULL ? NULL : strdup(def);
      } else {
           result = strdup(string);
      }
@@ -330,9 +333,9 @@ static entry_t *syslog_new_entry(syslog_entry_factory_t *this, line_t *line) {
           result->hour    = string_2_int(match, "hour",   one);
           result->minute  = string_2_int(match, "minute", one);
           result->second  = string_2_int(match, "second", one);
-          result->host    = string_clone(match->named_substring(match, "host"));
-          result->daemon  = string_clone(match->named_substring(match, "daemon"));
-          logline         = string_clone(match->named_substring(match, "log"));
+          result->host    = string_clone(match->named_substring(match, "host"), this->default_host);
+          result->daemon  = string_clone(match->named_substring(match, "daemon"), this->default_daemon);
+          logline         = string_clone(match->named_substring(match, "log"), NULL);
           match->free(match);
      } else {
           result->year = 1900;
@@ -341,18 +344,18 @@ static entry_t *syslog_new_entry(syslog_entry_factory_t *this, line_t *line) {
           if (line->length > 0) {
                match = re_raw->match(re_raw, line->buffer, 0, line->length, 0);
                if (match != NULL) {
-                    logline = string_clone(match->named_substring(match, "log"));
+                    logline = string_clone(match->named_substring(match, "log"), NULL);
                     match->free(match);
                } else {
-                    logline = string_clone(line->buffer);
+                    logline = string_clone(line->buffer, NULL);
                }
           }
      }
-     if (logline) {
+     if (logline == NULL) {
+          result->logline = this->default_logline;
+     } else {
           re_sp->replace_all(re_sp, " ", logline);
           result->logline = logline;
-     } else {
-          result->logline = "#";
      }
      return &(result->fn);
 }
@@ -373,6 +376,9 @@ entry_factory_t *new_syslog_entry_factory(logger_t log) {
      result->name = "syslog";
      result->extra_is_type = syslog_extra_is_type;
      result->priority = 1;
+     result->default_host = "";
+     result->default_daemon = "";
+     result->default_logline = "#";
      return &(result->fn);
 }
 
@@ -384,6 +390,9 @@ entry_factory_t *new_rsyslog_entry_factory(logger_t log) {
      result->name = "rsyslog";
      result->extra_is_type = NULL;
      result->priority = 1;
+     result->default_host = "";
+     result->default_daemon = "";
+     result->default_logline = "#";
      return &(result->fn);
 }
 
@@ -395,6 +404,9 @@ entry_factory_t *new_apache_access_entry_factory(logger_t log) {
      result->name = "apache_access";
      result->extra_is_type = NULL;
      result->priority = 0;
+     result->default_host = "";
+     result->default_daemon = "";
+     result->default_logline = "#";
      return &(result->fn);
 }
 
@@ -406,6 +418,9 @@ entry_factory_t *new_apache_error_entry_factory(logger_t log) {
      result->name = "apache_error";
      result->extra_is_type = NULL;
      result->priority = 0;
+     result->default_host = "";
+     result->default_daemon = "";
+     result->default_logline = "#";
      return &(result->fn);
 }
 
@@ -418,6 +433,9 @@ entry_factory_t *new_securelog_entry_factory(logger_t log) {
      result->name = "securelog";
      result->extra_is_type = securelog_extra_is_type;
      result->priority = 2;
+     result->default_host = "";
+     result->default_daemon = "";
+     result->default_logline = "#";
      return &(result->fn);
 }
 
@@ -429,6 +447,9 @@ entry_factory_t *new_snort_entry_factory(logger_t log) {
      result->name = "snort";
      result->extra_is_type = NULL;
      result->priority = 0;
+     result->default_host = "";
+     result->default_daemon = "";
+     result->default_logline = "#";
      return &(result->fn);
 }
 
@@ -440,6 +461,9 @@ entry_factory_t *new_raw_entry_factory(logger_t log) { /* is it used? */
      result->name = "raw";
      result->extra_is_type = NULL;
      result->priority = -1;
+     result->default_host = "#";
+     result->default_daemon = "#";
+     result->default_logline = "#";
      return &(result->fn);
 }
 
