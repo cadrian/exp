@@ -277,9 +277,15 @@ static void parse_options(int argc, char * const argv[]) {
      }
 }
 
-#define check_option(option) do { if (!allowed_options.option && options_set.option) return false; } while(0)
+#define check_option(option) do { \
+    if (!allowed_options.option && options_set.option) return false; \
+    if (!options_set.option) { \
+         options.option = default_options.option;       \
+         log(debug, "Setting default option: %s\n", #option); \
+    }                                                   \
+} while(0)
 
-static bool_t check_options_set(options_set_t allowed_options) {
+static bool_t check_options_set(logger_t log, options_set_t allowed_options, output_options_t default_options) {
      check_option(filter);
      check_option(fingerprint);
      check_option(tick);
@@ -314,34 +320,34 @@ int main(int argc, char * const argv[]) {
 
      switch(mode) {
      case mode_hash:
-          output = new_output_hash(log, input, options);
+          output = new_output_hash(log, input);
           break;
      case mode_wordcount:
-          output = new_output_wordcount(log, input, options);
+          output = new_output_wordcount(log, input);
           break;
      case mode_daemon:
-          output = new_output_daemon(log, input, options);
+          output = new_output_daemon(log, input);
           break;
      case mode_host:
-          output = new_output_host(log, input, options);
+          output = new_output_host(log, input);
           break;
      case mode_sgraph:
-          output = new_output_sgraph(log, input, options);
+          output = new_output_sgraph(log, input);
           break;
      case mode_mgraph:
-          output = new_output_mgraph(log, input, options);
+          output = new_output_mgraph(log, input);
           break;
      case mode_hgraph:
-          output = new_output_hgraph(log, input, options);
+          output = new_output_hgraph(log, input);
           break;
      case mode_dgraph:
-          output = new_output_dgraph(log, input, options);
+          output = new_output_dgraph(log, input);
           break;
      case mode_mograph:
-          output = new_output_mograph(log, input, options);
+          output = new_output_mograph(log, input);
           break;
      case mode_ygraph:
-          output = new_output_ygraph(log, input, options);
+          output = new_output_ygraph(log, input);
           break;
      default:
           if (argc == optind) {
@@ -352,10 +358,11 @@ int main(int argc, char * const argv[]) {
           exit(2);
      }
 
-     if (!check_options_set(output->options_set(output))) {
+     if (!check_options_set(log, output->options_set(output), output->default_options(output))) {
           fprintf(stderr, "**** Incompatible options\n");
           exit(2);
      }
+     output->set_options(output, options);
 
      register_all_factories(log);
      sort_factories(log);

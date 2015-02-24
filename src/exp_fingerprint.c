@@ -123,6 +123,7 @@ fingerprint_t *new_fingerprint(logger_t log, char **extradirs) {
      result->log = log;
      result->input = new_input(log);
      prepare_input(result);
-     result->output = new_output_hash(log, result->input, options);
+     result->output = new_output_hash(log, result->input);
+     result->output->set_options(result->output, options);
      return &(result->fn);
 }

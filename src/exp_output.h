@@ -115,6 +115,23 @@ typedef bool_t (*output_fingerprint_file_fn)(output_t *this, int index, void *da
 typedef options_set_t (*output_options_set_fn)(output_t *this);
 
 /**
+ * The default options for this output.
+ *
+ * @param[in] this the target output
+ *
+ * @return the default options
+ */
+typedef output_options_t (*output_default_options_fn)(output_t *this);
+
+/**
+ * Set the user-supplied options
+ *
+ * @param[in] this the target output
+ * @param[in] options the user-supplied options
+ */
+typedef void (*output_set_options_fn)(output_t *this, output_options_t options);
+
+/**
  * Actually run the log analysis and display relevant results.
  *
  * @param[in] this the target output
@@ -131,6 +148,14 @@ struct output_s {
       */
      output_options_set_fn options_set;
      /**
+      * @see output_default_options_fn
+      */
+     output_default_options_fn default_options;
+     /**
+      * @see output_set_options_fn
+      */
+     output_set_options_fn set_options;
+     /**
       * @see output_display_fn
       */
      output_display_fn display;
@@ -141,110 +166,100 @@ struct output_s {
  *
  * @param[in] log the logger
  * @param[in] input the input files
- * @param[in] options the user-supplied options
  *
  * @return the new output
  */
-output_t *new_output_hash     (logger_t log, input_t *input, output_options_t options);
+output_t *new_output_hash     (logger_t log, input_t *input);
 
 /**
  * Create a new "wordcount" output.
  *
  * @param[in] log the logger
  * @param[in] input the input files
- * @param[in] options the user-supplied options
  *
  * @return the new output
  */
-output_t *new_output_wordcount(logger_t log, input_t *input, output_options_t options);
+output_t *new_output_wordcount(logger_t log, input_t *input);
 
 /**
  * Create a new "daemon" output.
  *
  * @param[in] log the logger
  * @param[in] input the input files
- * @param[in] options the user-supplied options
  *
  * @return the new output
  */
-output_t *new_output_daemon   (logger_t log, input_t *input, output_options_t options);
+output_t *new_output_daemon   (logger_t log, input_t *input);
 
 /**
  * Create a new "hosy" output.
  *
  * @param[in] log the logger
  * @param[in] input the input files
- * @param[in] options the user-supplied options
  *
  * @return the new output
  */
-output_t *new_output_host     (logger_t log, input_t *input, output_options_t options);
+output_t *new_output_host     (logger_t log, input_t *input);
 
 /**
  * Create a new "sgraph" output.
  *
  * @param[in] log the logger
  * @param[in] input the input files
- * @param[in] options the user-supplied options
  *
  * @return the new output
  */
-output_t *new_output_sgraph (logger_t log, input_t *input, output_options_t options);
+output_t *new_output_sgraph (logger_t log, input_t *input);
 
 /**
  * Create a new "mgraph" output.
  *
  * @param[in] log the logger
  * @param[in] input the input files
- * @param[in] options the user-supplied options
  *
  * @return the new output
  */
-output_t *new_output_mgraph (logger_t log, input_t *input, output_options_t options);
+output_t *new_output_mgraph (logger_t log, input_t *input);
 
 /**
  * Create a new "hgraph" output.
  *
  * @param[in] log the logger
  * @param[in] input the input files
- * @param[in] options the user-supplied options
  *
  * @return the new output
  */
-output_t *new_output_hgraph (logger_t log, input_t *input, output_options_t options);
+output_t *new_output_hgraph (logger_t log, input_t *input);
 
 /**
  * Create a new "dgraph" output.
  *
  * @param[in] log the logger
  * @param[in] input the input files
- * @param[in] options the user-supplied options
  *
  * @return the new output
  */
-output_t *new_output_dgraph (logger_t log, input_t *input, output_options_t options);
+output_t *new_output_dgraph (logger_t log, input_t *input);
 
 /**
  * Create a new "mograph" output.
  *
  * @param[in] log the logger
  * @param[in] input the input files
- * @param[in] options the user-supplied options
  *
  * @return the new output
  */
-output_t *new_output_mograph(logger_t log, input_t *input, output_options_t options);
+output_t *new_output_mograph(logger_t log, input_t *input);
 
 /**
  * Create a new "ygraph" output.
  *
  * @param[in] log the logger
  * @param[in] input the input files
- * @param[in] options the user-supplied options
  *
  * @return the new output
  */
-output_t *new_output_ygraph (logger_t log, input_t *input, output_options_t options);
+output_t *new_output_ygraph (logger_t log, input_t *input);
 
 /**
  * @}

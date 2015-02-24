@@ -250,18 +250,31 @@ static options_set_t output_graph_options_set(output_graph_t *this) {
      return result;
 }
 
+static output_options_t output_graph_default_options(output_graph_t *this) {
+     static output_options_t result = {
+          .tick = "#",
+          .wide = false,
+     };
+     return result;
+}
+
+static void output_graph_set_options(output_hash_t *this, output_options_t options) {
+     this->options = options;
+}
+
 static output_t output_graph_fn = {
      .fingerprint_file = NULL,
      .options_set = (output_options_set_fn)output_graph_options_set,
+     .default_options = (output_default_options_fn)output_graph_default_options,
+     .set_options = (output_set_options_fn)output_graph_set_options,
      .display = (output_display_fn)output_graph_display,
 };
 
-static output_t *new_output_graph(logger_t log, input_t *input, output_options_t options, const char *unit, int duration, time_fn time, increment_time_fn increment_time, value_fn value) {
+static output_t *new_output_graph(logger_t log, input_t *input, const char *unit, int duration, time_fn time, increment_time_fn increment_time, value_fn value) {
      output_graph_t *result = malloc(sizeof(output_graph_t));
      result->fn = output_graph_fn;
      result->log = log;
      result->input = input;
-     result->options = options;
      result->unit = unit;
      result->duration = duration;
      result->time = time;
@@ -374,26 +387,26 @@ static int year_value(struct tm*time) {
      return time->tm_year;
 }
 
-output_t *new_output_sgraph(logger_t log, input_t *input, output_options_t options) {
+output_t *new_output_sgraph(logger_t log, input_t *input) {
      return new_output_graph(log, input, options, "second", 60, second_time, second_increment_time, second_value);
 }
 
-output_t *new_output_mgraph(logger_t log, input_t *input, output_options_t options) {
+output_t *new_output_mgraph(logger_t log, input_t *input) {
      return new_output_graph(log, input, options, "minute", 60, minute_time, minute_increment_time, minute_value);
 }
 
-output_t *new_output_hgraph(logger_t log, input_t *input, output_options_t options) {
+output_t *new_output_hgraph(logger_t log, input_t *input) {
      return new_output_graph(log, input, options, "hour", 24, hour_time, hour_increment_time, hour_value);
 }
 
-output_t *new_output_dgraph(logger_t log, input_t *input, output_options_t options) {
+output_t *new_output_dgraph(logger_t log, input_t *input) {
      return new_output_graph(log, input, options, "day", 31, day_time, day_increment_time, day_value);
 }
 
-output_t *new_output_mograph(logger_t log, input_t *input, output_options_t options) {
+output_t *new_output_mograph(logger_t log, input_t *input) {
      return new_output_graph(log, input, options, "month", 12, month_time, month_increment_time, month_value);
 }
 
-output_t *new_output_ygraph(logger_t log, input_t *input, output_options_t options) {
+output_t *new_output_ygraph(logger_t log, input_t *input) {
      return new_output_graph(log, input, options, "year", 10, year_time, year_increment_time, year_value);
 }

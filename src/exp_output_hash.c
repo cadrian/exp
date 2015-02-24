@@ -169,6 +169,7 @@ static void wordcount_fill_(output_hash_t *this, input_file_t *file, filter_t *f
           entry = file->entry(file, i);
           strcpy(keybuf, filter->scrub(filter, entry->logline(entry)));
           key = next = keybuf;
+          this->log(debug, "Wordcount fill | %s | %s\n", entry->logline(entry), key);
           full = false;
           while (*next) {
                switch(*next) {
@@ -176,6 +177,7 @@ static void wordcount_fill_(output_hash_t *this, input_file_t *file, filter_t *f
                case '\t':
                     if (full) {
                          *next = '\0';
+                         this->log(debug, " => %s\n", key);
                          hash_increment(this, key, entry);
                          full = false;
                     }
@@ -188,6 +190,7 @@ static void wordcount_fill_(output_hash_t *this, input_file_t *file, filter_t *f
                next++;
           }
           if (full) {
+               this->log(debug, " => %s\n", key);
                hash_increment(this, key, entry);
           }
      }
@@ -343,19 +346,42 @@ static options_set_t output_hash_options_set(output_hash_t *this) {
      return result;
 }
 
+static output_options_t output_hash_default_options(output_hash_t *this) {
+     static output_options_t result = {
+          .filter = true,
+          .fingerprint = false,
+          .sample = sample_threshold,
+     };
+     return result;
+}
+
+static output_options_t output_words_default_options(output_hash_t *this) {
+     static output_options_t result = {
+          .filter = true,
+          .fingerprint = false,
+          .sample = sample_none,
+     };
+     return result;
+}
+
+static void output_hash_set_options(output_hash_t *this, output_options_t options) {
+     this->options = options;
+}
+
 static output_t output_hash_fn = {
      .fingerprint_file = (output_fingerprint_file_fn)output_hash_fingerprint_file,
      .options_set = (output_options_set_fn)output_hash_options_set,
+     .default_options = (output_default_options_fn)output_hash_default_options,
+     .set_options = (output_set_options_fn)output_hash_set_options,
      .display = (output_display_fn)output_hash_display,
 };
 
-static output_t *new_output_(logger_t log, input_t *input, output_options_t options, const char *type, void (*fill)(output_hash_t*,input_file_t*,filter_t*)) {
+static output_t *new_output_(logger_t log, input_t *input, const char *type, void (*fill)(output_hash_t*,input_file_t*,filter_t*)) {
      output_hash_t *result = malloc(sizeof(output_hash_t));
      result->fn = output_hash_fn;
      result->type = type;
      result->log = log;
      result->input = input;
-     result->options = options;
      result->dict = cad_new_hash(stdlib_memory, cad_hash_strings);
      result->max_count = 0;
      if (options.fingerprint) {
@@ -365,18 +391,20 @@ static output_t *new_output_(logger_t log, input_t *input, output_options_t opti
      return &(result->fn);
 }
 
-output_t *new_output_hash(logger_t log, input_t *input, output_options_t options) {
+output_t *new_output_hash(logger_t log, input_t *input) {
      return new_output_(log, input, options, "hash", hash_fill_);
 }
 
-output_t *new_output_wordcount(logger_t log, input_t *input, output_options_t options) {
-     return new_output_(log, input, options, "words", wordcount_fill_);
+output_t *new_output_wordcount(logger_t log, input_t *input) {
+     output_t *result = new_output_(log, input, options, "words", wordcount_fill_);
+     result->default_options = (output_default_options_fn)output_words_default_options;
+     return result;
 }
 
-output_t *new_output_daemon(logger_t log, input_t *input, output_options_t options) {
+output_t *new_output_daemon(logger_t log, input_t *input) {
      return new_output_(log, input, options, "daemon", daemon_fill_);
 }
 
-output_t *new_output_host(logger_t log, input_t *input, output_options_t options) {
+output_t *new_output_host(logger_t log, input_t *input) {
      return new_output_(log, input, options, "host", host_fill_);
 }
