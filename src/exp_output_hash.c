@@ -366,6 +366,9 @@ static output_options_t output_words_default_options(output_hash_t *this) {
 
 static void output_hash_set_options(output_hash_t *this, output_options_t options) {
      this->options = options;
+     if (options.fingerprint) {
+          this->fingerprint = new_fingerprint(this->log, options.fingerprint_extradirs);
+     }
 }
 
 static output_t output_hash_fn = {
@@ -384,27 +387,26 @@ static output_t *new_output_(logger_t log, input_t *input, const char *type, voi
      result->input = input;
      result->dict = cad_new_hash(stdlib_memory, cad_hash_strings);
      result->max_count = 0;
-     if (options.fingerprint) {
-          result->fingerprint = new_fingerprint(log, options.fingerprint_extradirs);
-     }
      result->fill = fill;
+     result->fingerprint = NULL;
+     memset(&(result->options), 0, sizeof(output_options_t));
      return &(result->fn);
 }
 
 output_t *new_output_hash(logger_t log, input_t *input) {
-     return new_output_(log, input, options, "hash", hash_fill_);
+     return new_output_(log, input, "hash", hash_fill_);
 }
 
 output_t *new_output_wordcount(logger_t log, input_t *input) {
-     output_t *result = new_output_(log, input, options, "words", wordcount_fill_);
+     output_t *result = new_output_(log, input, "words", wordcount_fill_);
      result->default_options = (output_default_options_fn)output_words_default_options;
      return result;
 }
 
 output_t *new_output_daemon(logger_t log, input_t *input) {
-     return new_output_(log, input, options, "daemon", daemon_fill_);
+     return new_output_(log, input, "daemon", daemon_fill_);
 }
 
 output_t *new_output_host(logger_t log, input_t *input) {
-     return new_output_(log, input, options, "host", host_fill_);
+     return new_output_(log, input, "host", host_fill_);
 }
