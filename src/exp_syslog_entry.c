@@ -79,9 +79,9 @@ static regexp_t *apache_access_regexp(logger_t log) {
      if (result == NULL) {
           // 127.0.0.1 - frank [10/Oct/2000:13:55:36 -0700] "GET /apache_pb.gif HTTP/1.0" 200 2326
           result = new_regexp(log,
-                              "^(?<ip>[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}) (?<host>[^[:space:]]+) - ((?<user>[^[:space:]]*) - )?"
+                              "^(?<ip>[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}) (?<rhost>[^[:space:]]+) - ((?<user>[^[:space:]]*) - )?"
                               "\\[(?<date>(?<day>[0-9][0-9]?)/+(?<strmonth>[A-Z][a-z]{2})/(?<year>[0-9]{4}):(?<hour>[0-9]{2}):(?<minute>[0-9]{2}):(?<second>[0-9]{2})[[:space:]]+[-+][0-9]{4})\\][[:space:]]+"
-                              "\"(?<query>[A-Z]+[[:space:]]+(?<log>[^\"]+?)[[:space:]]+HTTP/[12]\\.[01])\"[[:space:]]+(?<status>[0-9]{3})[[:space:]]+(?<contentlength>([0-9]+|-)).*?[[:space:]]*$", 0);
+                              "\"(?<query>[A-Z]+[[:space:]]+(?<host>(?<log>[^\"]+?))[[:space:]]+HTTP/[12]\\.[01])\"[[:space:]]+(?<status>[0-9]{3})[[:space:]]+(?<contentlength>([0-9]+|-)).*?[[:space:]]*$", 0);
           if (result == NULL) {
                exit(1);
           }
