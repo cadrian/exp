@@ -277,15 +277,18 @@ static void parse_options(int argc, char * const argv[]) {
      }
 }
 
-#define check_option(option) do { \
-    if (!allowed_options.option && options_set.option) return false; \
-    if (!options_set.option) { \
-         options.option = default_options.option;       \
-         log(debug, "Setting default option: %s\n", #option); \
-    }                                                   \
+#define check_option(option) do {                                       \
+     if (allowed_options.option) {                                      \
+          if (!options_set.option) {                                    \
+               options.option = default_options.option;                 \
+               log(debug, "Setting default option: %s\n", #option);     \
+          }                                                             \
+     } else if (options_set.option) {                                   \
+          log(warn, "Incompatible option: %s (ignored)\n", #option);    \
+     }                                                                  \
 } while(0)
 
-static bool_t check_options_set(logger_t log, options_set_t allowed_options, output_options_t default_options) {
+static void check_options_set(logger_t log, options_set_t allowed_options, output_options_t default_options) {
      check_option(filter);
      check_option(fingerprint);
      check_option(tick);
@@ -293,7 +296,6 @@ static bool_t check_options_set(logger_t log, options_set_t allowed_options, out
      check_option(sample);
      check_option(filter_extradirs);
      check_option(fingerprint_extradirs);
-     return true;
 }
 
 /**
@@ -358,10 +360,7 @@ int main(int argc, char * const argv[]) {
           exit(2);
      }
 
-     if (!check_options_set(log, output->options_set(output), output->default_options(output))) {
-          fprintf(stderr, "**** Incompatible options\n");
-          exit(2);
-     }
+     check_options_set(log, output->options_set(output), output->default_options(output));
      output->set_options(output, options);
 
      register_all_factories(log);

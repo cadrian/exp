@@ -245,7 +245,13 @@ static void output_graph_display(output_graph_t *this) {
 
 static options_set_t output_graph_options_set(output_graph_t *this) {
      static options_set_t result = {
-          false, false, true, true, false, false, false,
+          .filter=false,
+          .fingerprint=false,
+          .tick=true,
+          .wide=true,
+          .sample=false,
+          .filter_extradirs=false,
+          .fingerprint_extradirs=false,
      };
      return result;
 }

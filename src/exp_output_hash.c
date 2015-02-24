@@ -344,7 +344,13 @@ static void output_hash_display(output_hash_t *this) {
 
 static options_set_t output_hash_options_set(output_hash_t *this) {
      static options_set_t result = {
-          true, true, false, false, true, true, true,
+          .filter=true,
+          .fingerprint=true,
+          .tick=false,
+          .wide=false,
+          .sample=true,
+          .filter_extradirs=true,
+          .fingerprint_extradirs=true,
      };
      return result;
 }
