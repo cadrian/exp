@@ -49,7 +49,7 @@ static dirs_t fingerprintdirs = {0,0,NULL};
  * The options setting mask.
  */
 static options_set_t options_set = {
-     false, false, false, false, false,
+     false, false, false, false, false, false,
 };
 
 /**
@@ -61,6 +61,9 @@ static output_options_t options = {
      .tick = "#",
      .wide = false,
      .sample = sample_threshold,
+     .filter_extradirs= NULL,
+     .fingerprint_extradirs= NULL,
+     .year = 0,
 };
 
 /**
@@ -140,6 +143,7 @@ static struct option long_options[] = {
 
      {"filterdir",      required_argument, NULL,  8 },
      {"fingerprintdir", required_argument, NULL,  9 },
+     {"year",           required_argument, NULL, 10 },
 
      {0,0,0,0}
 };
@@ -269,6 +273,11 @@ static void parse_options(int argc, char * const argv[]) {
                options_set.fingerprint_extradirs = true;
                break;
 
+          case 10:
+               options.year = atoi(optarg);
+               options_set.year = true;
+               break;
+
           case '?':
           default:
                usage(argv[0]);
@@ -296,6 +305,7 @@ static void check_options_set(logger_t log, options_set_t allowed_options, outpu
      check_option(sample);
      check_option(filter_extradirs);
      check_option(fingerprint_extradirs);
+     check_option(year);
 }
 
 /**

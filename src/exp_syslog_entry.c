@@ -276,20 +276,12 @@ static int string_2_int(match_t *match, const char *field, int (*deflt)(match_t*
      return result;
 }
 
-static int this_year(match_t *match) {
-     static int result = 0;
-     time_t tm;
-     static bool_t init = false;
-     if (!init) {
-          init = true;
-          tm = time(NULL);
-          result = localtime(&tm)->tm_year + 1900;
-     }
-     return result;
-}
-
 static int one(match_t *match) {
      return 1;
+}
+
+static int zero(match_t *match) {
+     return 0;
 }
 
 static int str_month(match_t *match) {
@@ -327,7 +319,7 @@ static entry_t *syslog_new_entry(syslog_entry_factory_t *this, line_t *line) {
      result->log     = this->log;
 
      if (match != NULL) {
-          result->year    = string_2_int(match, "year",   this_year);
+          result->year    = string_2_int(match, "year",   zero);
           result->month   = string_2_int(match, "month",  str_month);
           result->day     = string_2_int(match, "day",    one);
           result->hour    = string_2_int(match, "hour",   one);
