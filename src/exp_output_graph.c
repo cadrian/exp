@@ -66,10 +66,13 @@ static void graph_prepare_max(cad_hash_t *hash, int index, const char *key, doub
      }
 }
 
-static void graph_prepare_min(cad_hash_t *hash, int index, const char *key, double *value, output_graph_t *graph) {
+static void graph_prepare_minz(cad_hash_t *hash, int index, const char *key, double *value, output_graph_t *graph) {
      if (graph->minz > *value) {
           graph->minz = *value;
      }
+}
+
+static void graph_prepare_minh(cad_hash_t *hash, int index, const char *key, double *value, output_graph_t *graph) {
      if (*value > 0 && graph->minh >= *value) {
           graph->minh = *value / 2;
      }
@@ -139,7 +142,12 @@ static void graph_prepare(output_graph_t *this) {
      }
      this->dict->iterate(this->dict, (cad_hash_iterator_fn)graph_prepare_max, this);
      this->minz = this->minh = this->max;
-     this->dict->iterate(this->dict, (cad_hash_iterator_fn)graph_prepare_min, this);
+     this->dict->iterate(this->dict, (cad_hash_iterator_fn)graph_prepare_minz, this);
+     if (this->minz != 0) {
+          this->minh = this->minz;
+     } else {
+          this->dict->iterate(this->dict, (cad_hash_iterator_fn)graph_prepare_minh, this);
+     }
 }
 
 typedef struct {
@@ -154,11 +162,11 @@ static void graph_normalize(cad_hash_t *hash, int index, const char *key, double
      double normalized;
      if (*value >= 0) {
           if (graph->max > graph->min) {
-               normalized = ceil((*value - graph->min) * graph->height / (graph->max - graph->min));
-               graph->log(debug, "ceil(((%g - %g) * %d) / (%g - %g)) = %g\n", *value, graph->min, graph->height, graph->max, graph->min, normalized);
+               normalized = ceil(graph->height* (*value - graph->min) / (graph->max - graph->min));
+               graph->log(debug, "ceil(((%.4g - %.4g) * %d) / (%.4g - %.4g)) = %.4g\n", *value, graph->min, graph->height, graph->max, graph->min, normalized);
           } else {
-               normalized = ceil((*value) * graph->height / (graph->max));
-               graph->log(debug, "ceil(%g * %d / %g) = %g\n", *value, graph->height, graph->max, normalized);
+               normalized = ceil(graph->height * (*value) / (graph->max));
+               graph->log(debug, "ceil(%.4g * %d / %.4g) = %.4g\n", *value, graph->height, graph->max, normalized);
           }
           *value = normalized;
      }
@@ -169,31 +177,27 @@ static void graph_display(output_graph_t *this) {
           .log = this->log,
           .height = DEFAULT_GRAPH_HEIGHT,
           .width = this->duration,
-          .min = this->minz,
-          .max = this->max,
+          .min = floor(this->minh),
+          .max = floor(this->max),
      };
      double scale;
      char char_fill[4];
      char char_blank[4];
-     int y, i;
+     int y, i, p;
 
      int graph_position_start, graph_position_middle, graph_position_end;
      int graph_width;
      const char *key;
      double *value;
 
-     if (this->minz == 0) {
-          graph.min = this->minh;
-     }
-
      scale = (this->max - this->minz) / graph.height;
 
-     this->log(info, "Graph: dates from %sto %s-- occurrences between %g and %g\n", strdate(&(this->start)), strdate(&(this->end)), graph.min, graph.max);
+     this->log(info, "Graph: dates from %sto %s-- occurrences between %.4g and %.4g\n", strdate(&(this->start)), strdate(&(this->end)), graph.min, graph.max);
 
      for (i = 0; i < this->duration; i++) {
           key = this->keys[i];
           value = this->dict->get(this->dict, key);
-          this->log(debug, "Count <%g> | %s\n", *value, key);
+          this->log(debug, "Count <%.4g> | %s\n", *value, key);
      }
 
      this->dict->iterate(this->dict, (cad_hash_iterator_fn)graph_normalize, &graph);
@@ -201,7 +205,7 @@ static void graph_display(output_graph_t *this) {
      for (i = 0; i < this->duration; i++) {
           key = this->keys[i];
           value = this->dict->get(this->dict, key);
-          this->log(debug, "Normalized <%g> | %s\n", *value, key);
+          this->log(debug, "Normalized <%.4g> | %s\n", *value, key);
      }
 
      if (this->options.wide) {
@@ -221,8 +225,27 @@ static void graph_display(output_graph_t *this) {
      }
      this->log(debug, "wide: %s fill='%s' blank='%s'\n", this->options.wide ? "true":"false", char_fill, char_blank);
 
+     if (this->options.exp_mode) {
+          p = (int)ceil(log10(graph.max));
+          if (p == 0) {
+               p++;
+          }
+          if (graph.min < 0) {
+               p++;
+          }
+     }
+
      fputc('\n', stdout);
-     for (y = graph.height - 1; y > 0; y--) {
+     for (y = graph.height; y > 0; y--) {
+          if (this->options.exp_mode) {
+               if (y == graph.height) {
+                    printf("% *d - ", p, (int)graph.max);
+               } else if (y == 1) {
+                    printf("% *d - ", p, (int)graph.min);
+               } else {
+                    printf(" %*s - ", p, "");
+               }
+          }
           for (i = 0; i < this->duration; i++) {
                key = this->keys[i];
                value = this->dict->get(this->dict, key);
@@ -237,18 +260,24 @@ static void graph_display(output_graph_t *this) {
           fputc('\n', stdout);
      }
 
+     if (this->options.exp_mode) {
+          printf(" %*s   ", p, "");
+     }
      for (i = 0; i < this->duration; i++) {
           fputs(char_fill, stdout);
      }
      fputc('\n', stdout);
 
+     if (this->options.exp_mode) {
+          printf(" %*s   ", p, "");
+     }
      for (i = 1; i < graph_width; i++) {
           if (i == graph_position_start) {
-               printf("%.2d", this->value(&(this->start)) % 2000);
+               printf("%.2d", this->value(&(this->start)) % 100);
           } else if (i == graph_position_middle) {
-               printf("%.2d", this->value(&(this->middle)) % 2000);
+               printf("%.2d", this->value(&(this->middle)) % 100);
           } else if (i == graph_position_end) {
-               printf("%.2d", this->value(&(this->end)) % 2000);
+               printf("%.2d", this->value(&(this->end)) % 100);
           } else {
                fputc(' ', stdout);
           }
@@ -277,6 +306,7 @@ static options_set_t output_graph_options_set(output_graph_t *this) {
           .filter_extradirs=false,
           .fingerprint_extradirs=false,
           .year = true,
+          .exp_mode = true,
      };
      return result;
 }
@@ -285,6 +315,7 @@ static output_options_t output_graph_default_options(output_graph_t *this) {
      static output_options_t result = {
           .tick = "#",
           .wide = false,
+          .exp_mode = false,
      };
      time_t tm;
      static bool_t init = false;
@@ -350,6 +381,7 @@ static void second_time(output_graph_t *this, struct tm *time, entry_t *entry) {
      time->tm_mday = entry->day(entry);
      time->tm_mon  = entry->month(entry) - 1;
      time->tm_year = year(this, entry);
+     time->tm_isdst = -1;
 }
 
 static void second_increment_time(struct tm*time) {
@@ -362,11 +394,13 @@ static int second_value(struct tm*time) {
 }
 
 static void minute_time(output_graph_t *this, struct tm *time, entry_t *entry) {
+     time->tm_sec  = 0;
      time->tm_min  = entry->minute(entry);
      time->tm_hour = entry->hour(entry);
      time->tm_mday = entry->day(entry);
      time->tm_mon  = entry->month(entry) - 1;
      time->tm_year = year(this, entry);
+     time->tm_isdst = -1;
 }
 
 static void minute_increment_time(struct tm*time) {
@@ -379,10 +413,13 @@ static int minute_value(struct tm*time) {
 }
 
 static void hour_time(output_graph_t *this, struct tm *time, entry_t *entry) {
+     time->tm_sec  = 0;
+     time->tm_min  = 0;
      time->tm_hour = entry->hour(entry);
      time->tm_mday = entry->day(entry);
      time->tm_mon  = entry->month(entry) - 1;
      time->tm_year = year(this, entry);
+     time->tm_isdst = -1;
 }
 
 static void hour_increment_time(struct tm*time) {
@@ -395,9 +432,13 @@ static int hour_value(struct tm*time) {
 }
 
 static void day_time(output_graph_t *this, struct tm *time, entry_t *entry) {
+     time->tm_sec  = 0;
+     time->tm_min  = 0;
+     time->tm_hour = 0;
      time->tm_mday = entry->day(entry);
      time->tm_mon  = entry->month(entry) - 1;
      time->tm_year = year(this, entry);
+     time->tm_isdst = -1;
 }
 
 static void day_increment_time(struct tm*time) {
@@ -410,8 +451,13 @@ static int day_value(struct tm*time) {
 }
 
 static void month_time(output_graph_t *this, struct tm *time, entry_t *entry) {
+     time->tm_sec  = 0;
+     time->tm_min  = 0;
+     time->tm_hour = 0;
+     time->tm_mday = 1;
      time->tm_mon  = entry->month(entry) - 1;
      time->tm_year = year(this, entry);
+     time->tm_isdst = -1;
 }
 
 static void month_increment_time(struct tm*time) {
@@ -420,11 +466,17 @@ static void month_increment_time(struct tm*time) {
 }
 
 static int month_value(struct tm*time) {
-     return time->tm_mon;
+     return time->tm_mon + 1;
 }
 
 static void year_time(output_graph_t *this, struct tm *time, entry_t *entry) {
+     time->tm_sec  = 0;
+     time->tm_min  = 0;
+     time->tm_hour = 0;
+     time->tm_mday = 1;
+     time->tm_mon  = 0;
      time->tm_year = year(this, entry);
+     time->tm_isdst = -1;
 }
 
 static void year_increment_time(struct tm*time) {

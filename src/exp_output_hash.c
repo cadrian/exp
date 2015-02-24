@@ -352,6 +352,7 @@ static options_set_t output_hash_options_set(output_hash_t *this) {
           .filter_extradirs=true,
           .fingerprint_extradirs=true,
           .year = false,
+          .exp_mode = false,
      };
      return result;
 }

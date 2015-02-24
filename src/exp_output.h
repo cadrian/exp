@@ -77,6 +77,7 @@ typedef struct {
      char   **filter_extradirs;
      char   **fingerprint_extradirs;
      int      year;
+     bool_t   exp_mode;
 } output_options_t;
 
 /**
@@ -94,6 +95,7 @@ typedef struct {
      bool_t filter_extradirs;
      bool_t fingerprint_extradirs;
      bool_t year;
+     bool_t exp_mode;
 } options_set_t;
 
 /**
