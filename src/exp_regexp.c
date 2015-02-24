@@ -131,7 +131,7 @@ static void regexp_impl_replace_all(regexp_impl_t *this, const char *replace, ch
      match_impl_t *match;
      int start, end, lost = 0, delta;
 
-     this->log(debug, "s/%s/%s/%d|%s\n", this->regex, replace, len_string, string);
+     //this->log(debug, "s/%s/%s/%d|%s\n", this->regex, replace, len_string, string);
      match = regexp_impl_match(this, string, 0, len_string, 0);
      while (match != NULL) {
           start = match->subs[0];

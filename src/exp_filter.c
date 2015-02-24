@@ -60,11 +60,11 @@ static const char *impl_scrub(filter_impl_t *this, const char *line) {
      regexp_t *stopword;
      strncpy(result, line, MAX_LINE_SIZE);
      result[MAX_LINE_SIZE-1] = '\0';
-     this->log(debug, "Scrubbing %2d | %s\n", n, line);
+     //this->log(debug, "Scrubbing %2d | %s\n", n, line);
      for (i = 0; i < n; i++) {
           stopword = this->stopwords[i];
           stopword->replace_all(stopword, this->replacements[i], result);
-          this->log(debug, " - %2d/%2d | %s | %s\n", i+1, n, stopword->pattern(stopword), result);
+          //this->log(debug, " - %2d/%2d | %s | %s\n", i+1, n, stopword->pattern(stopword), result);
      }
      return result;
 }

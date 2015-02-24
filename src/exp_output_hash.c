@@ -79,7 +79,7 @@ static void fingerprint_file_del_key(cad_hash_t *dict, int index, const char *ke
      fingerprint_del_key(data->data, key);
 }
 
-static void hash_increment(output_hash_t *this, const char *key, entry_t *value) {
+static int hash_increment(output_hash_t *this, const char *key, entry_t *value) {
      dict_entry_t *entry = this->dict->get(this->dict, key);
      if (entry == NULL) {
           entry = malloc(sizeof(dict_entry_t) + strlen(key) + 1);
@@ -96,6 +96,7 @@ static void hash_increment(output_hash_t *this, const char *key, entry_t *value)
      if (entry->count > this->max_count) {
           this->max_count = entry->count;
      }
+     return entry->count;
 }
 
 static void fingerprint_increment(output_hash_t *this, input_file_t *file) {
@@ -160,13 +161,14 @@ static void hash_fill_(output_hash_t *this, input_file_t *file, filter_t *filter
 }
 
 static void wordcount_fill_(output_hash_t *this, input_file_t *file, filter_t *filter) {
-     int i, n = file->entries_length(file);
+     int i, n = file->entries_length(file), inc;
      entry_t *entry;
      char keybuf[MAX_LINE_SIZE];
      char *key, *next;
      bool_t full;
      for (i = 0; i < n; i++) {
           entry = file->entry(file, i);
+          this->log(info, "Wordcount %d/%d | %s\n", i+1, n, entry->logline(entry));
           strcpy(keybuf, filter->scrub(filter, entry->logline(entry)));
           key = next = keybuf;
           this->log(debug, "Wordcount fill | %s | %s\n", entry->logline(entry), key);
@@ -177,8 +179,8 @@ static void wordcount_fill_(output_hash_t *this, input_file_t *file, filter_t *f
                case '\t':
                     if (full) {
                          *next = '\0';
-                         this->log(debug, " => %s\n", key);
-                         hash_increment(this, key, entry);
+                         inc = hash_increment(this, key, entry);
+                         this->log(debug, " <%d> %s\n", inc, key);
                          full = false;
                     }
                     key = next + 1;
@@ -190,8 +192,8 @@ static void wordcount_fill_(output_hash_t *this, input_file_t *file, filter_t *f
                next++;
           }
           if (full) {
-               this->log(debug, " => %s\n", key);
-               hash_increment(this, key, entry);
+               inc = hash_increment(this, key, entry);
+               this->log(debug, " <%d> %s\n", inc, key);
           }
      }
 }
