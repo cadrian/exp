@@ -91,6 +91,7 @@ static void scan_input_dir(fingerprint_impl_t *this, const char *dir) {
      if (count < 0) {
           this->log(debug, "Error opening directory %s: %s\n", dir, strerror(errno));
      } else {
+          this->log(debug, "Scanning directory %s (%d %s)\n", dir, count, count == 1 ? "entry" : "entries");
           for (i = 0; i < count; i++) {
                parse_entry(this, dir, namelist[i]->d_name);
                free(namelist[i]);

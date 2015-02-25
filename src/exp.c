@@ -181,10 +181,10 @@ static void add_extradir(dirs_t *dirs, const char *dir) {
                dirs->capacity *= 2;
                size = (dirs->capacity + 1) * sizeof(char*);
                dirs->dirs = realloc(dirs->dirs, size);
-               memset(dirs->dirs + dirs->count, 0, size - (dirs->count) * sizeof(char*));
+               memset(dirs->dirs + dirs->count, 0, (dirs->count + 1) * sizeof(char*));
           }
-          dirs->dirs[dirs->count++] = strdup(dir);
      }
+     dirs->dirs[dirs->count++] = strdup(dir);
 }
 
 static void parse_options(int argc, char * const argv[]) {
