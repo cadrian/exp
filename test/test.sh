@@ -12,10 +12,11 @@ cd $(dirname $(readlink -f $0))
 
 (cd ..; exec make exe) || exit 1
 
-fingerprintdir=$(cd ../data/fingerprints; pwd)/
+fingerprintdir1=$(cd ../data/fingerprints; pwd)/
+fingerprintdir2=$(cd ../data/fingerprint_library; pwd)/
 filterdir=$(cd ../data/filters; pwd)/
 petit() {
-    ../target/exp -vv --fingerprintdir $fingerprintdir --filterdir $filterdir --year 2011 "$@"
+    ../target/exp -vv --fingerprintdir $fingerprintdir1 --fingerprintdir $fingerprintdir2 --filterdir $filterdir --year 2011 "$@"
 }
 
 ################################################################################
