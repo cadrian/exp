@@ -17,7 +17,7 @@ before_install:
 install:
   - "make exe"
 script:
-  - "test/test.sh"
+  - "test/test.sh all"
 after_success:
   - "make clean; build/build.sh main; sudo dpkg -i target/dpkg/*.deb"
   - "rsync -aSH --stats -e 'ssh -i '$HOME'/.ssh/id_rsa_exp -p '$PORT' -q -C -o StrictHostKeyChecking=no' target/dpkg/*.deb target/dpkg/*.dsc target/dpkg/*.tar.gz $HOST:apt/incoming/"

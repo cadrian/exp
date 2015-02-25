@@ -35,6 +35,8 @@ fi
 # Routine Tests
 functions="hash wordcount host daemon sgraph mgraph hgraph dgraph mograph ygraph"
 
+declare -a errors=()
+
 for function in $functions
 do
 
@@ -58,7 +60,12 @@ do
         then
             echo " Failed"
             # Leave data in place to inspect on failure #
-            exit 1
+            if [ "$1" == "all" ]
+            then
+                errors=("${errors[@]}" "petit --$function $test.log")
+            else
+                exit 1
+            fi
         else
             rm ${test}-${function}.{tmp,log}
             echo " Passed"
@@ -94,11 +101,26 @@ do
         if ! diff output/${test}-${function}-${option}.output ${test}-${function}-${option}.tmp
         then
             echo " Failed"
-            # Leave data in place to inspect on failure #
-            exit 1
+            if [ "$1" == "all" ]
+            then
+                errors=("${errors[@]}" "petit --$function --${option} $test.log")
+            else
+                # Leave data in place to inspect on failure #
+                exit 1
+            fi
         else
             rm ${test}-${function}-${option}.{tmp,log}
             echo " Passed"
         fi
     done
 done
+
+errcount=${#errors[@]}
+if [ $errcount -gt 0 ]; then
+    echo "$errcount errors:"
+    for error in "${errors[@]}"
+    do
+        echo "  $error"
+    done
+    exit 1
+fi
