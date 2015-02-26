@@ -23,101 +23,87 @@ petit() {
 # (no changes below)
 #
 
+update=false
+all=false
+declare -a errors=()
+case "$1" in
+    update)
+        update=true
+        ;;
+    all)
+        all=true
+        ;;
+esac
+
+# This function runs one test
+function run_test() {
+    local tst=$1
+    local fun=$2
+    local opt=$3
+
+    local funarg=--$fun
+    local optarg=${opt:+--$opt}
+    local filename=$tst-$fun${opt:+-$opt}
+
+
+    # Update files?
+    if $update; then
+        echo "Updating: petit $funarg $optarg $tst.log: "
+        petit $funarg $optarg data/$tst.log >output/$filename.output 2>/dev/null
+    fi
+
+    # Run test
+    echo -n "Testing: petit $funarg $optarg $tst.log: "
+    petit $funarg $optarg data/$tst.log >$filename.tmp 2>$filename.log
+
+    if diff -q output/$filename.output $filename.tmp >/dev/null; then
+        rm $filename.{tmp,log}
+        echo " Passed"
+    else
+        echo " FAILED"
+        diff -u output/$filename.output $filename.tmp > $filename.diff
+        # Leave data in place to inspect on failure #
+        if $all; then
+            errors=("${errors[@]}" "petit $funarg $optarg $tst.log")
+        else
+            cat $filename.diff
+            exit 1
+        fi
+    fi
+}
+
 # First test with no input, should print version
-if ! petit
-then
+if petit; then
+    echo " Passed: Default with no input"
+else
     echo " Failed: Default with no input"
     exit 1
-else
-    echo " Passed: Default with no input"
 fi
 
-# Routine Tests
-functions="hash wordcount host daemon sgraph mgraph hgraph dgraph mograph ygraph"
-
-declare -a errors=()
-
-for function in $functions
-do
-
-    for test in `ls data/*.log`
-    do
-        # Get the right name for the test
-        test=`basename $test | cut -f1 -d"."`
-
-        # Update files?
-        if [ "$1" == "update" ]
-        then
-            echo "Updating: petit --$function $test.log: "
-            petit --${function} data/${test}.log > output/${test}-${function}.output 2>/dev/null
-        fi
-
-        # Run test
-        echo -n "Testing: petit --$function $test.log: "
-        petit --${function} data/${test}.log > ${test}-${function}.tmp 2> ${test}-${function}.log
-
-        if ! diff output/${test}-${function}.output ${test}-${function}.tmp
-        then
-            echo " Failed"
-            # Leave data in place to inspect on failure #
-            if [ "$1" == "all" ]
-            then
-                errors=("${errors[@]}" "petit --$function $test.log")
-            else
-                exit 1
-            fi
-        else
-            rm ${test}-${function}.{tmp,log}
-            echo " Passed"
-        fi
-
+# Now run each function, some with extra options (see the list in the here-document below)
+while read fun options; do
+    for test in data/*.log; do
+        run_test $(basename $test .log) $fun
+        for opt in $options; do
+            run_test $(basename $test .log) $fun $opt
+        done
     done
-done
-
-# Special hashing tests
-
-options="fingerprint nosample nofilter"
-function="hash"
-
-for option in $options
-do
-    for test in `ls data/*.log`
-    do
-        # Get the right name for the test
-        test=`basename $test | cut -f1 -d"."`
-
-        # Run test
-        # Update files?
-        if [ "$1" == "update" ]
-        then
-            echo "Updating: petit --$function --${option} $test.log: "
-            petit --${function} --${option} data/${test}.log > output/${test}-${function}-${option}.output 2>/dev/null
-        fi
-
-        # Run Test
-        echo -n "Testing: petit --$function --${option} $test.log: "
-        petit --${function} --${option} data/${test}.log > ${test}-${function}-${option}.tmp 2> ${test}-${function}-${option}.log
-
-        if ! diff output/${test}-${function}-${option}.output ${test}-${function}-${option}.tmp
-        then
-            echo " Failed"
-            if [ "$1" == "all" ]
-            then
-                errors=("${errors[@]}" "petit --$function --${option} $test.log")
-            else
-                # Leave data in place to inspect on failure #
-                exit 1
-            fi
-        else
-            rm ${test}-${function}-${option}.{tmp,log}
-            echo " Passed"
-        fi
-    done
-done
+done <<EOF
+hash fingerprint nosample nofilter
+wordcount
+host
+daemon
+sgraph
+mgraph
+hgraph
+dgraph
+mograph
+ygraph
+EOF
 
 errcount=${#errors[@]}
 if [ $errcount -gt 0 ]; then
-    echo "$errcount errors:"
+    echo "$errcount failed tests:"
     for error in "${errors[@]}"
     do
         echo "  $error"
