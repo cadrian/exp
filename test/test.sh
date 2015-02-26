@@ -25,7 +25,6 @@ petit() {
 
 update=false
 all=false
-declare -a errors=()
 case "$1" in
     update)
         update=true
@@ -34,6 +33,9 @@ case "$1" in
         all=true
         ;;
 esac
+
+declare -a errors=()
+nbtests=0
 
 # This function runs one test
 function run_test() {
@@ -45,6 +47,7 @@ function run_test() {
     local optarg=${opt:+--$opt}
     local filename=$tst-$fun${opt:+-$opt}
 
+    nbtests=$(($nbtests + 1))
 
     # Update files?
     if $update; then
@@ -102,11 +105,11 @@ ygraph
 EOF
 
 errcount=${#errors[@]}
+echo "$errcount failed out of $nbtests tests ($((100 * ($nbtests - $errcount) / $nbtests))% success)"
 if [ $errcount -gt 0 ]; then
-    echo "$errcount failed tests:"
     for error in "${errors[@]}"
     do
-        echo "  $error"
+        echo "  FAILED: $error"
     done
     exit 1
 fi
