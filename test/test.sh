@@ -28,9 +28,11 @@ all=false
 case "$1" in
     update)
         update=true
+        shift
         ;;
     all)
         all=true
+        shift
         ;;
 esac
 
@@ -60,7 +62,7 @@ function run_test() {
     petit $funarg $optarg data/$tst.log >$filename.tmp 2>$filename.log
 
     if diff -q output/$filename.output $filename.tmp >/dev/null; then
-        rm $filename.{tmp,log}
+        rm -f $filename.{tmp,log,diff}
         echo " Passed"
     else
         echo " FAILED"
@@ -83,15 +85,23 @@ else
     exit 1
 fi
 
-# Now run each function, some with extra options (see the list in the here-document below)
-while read fun options; do
-    for test in data/*.log; do
-        run_test $(basename $test .log) $fun
-        for opt in $options; do
-            run_test $(basename $test .log) $fun $opt
+if [ $# -gt 0 ]; then
+    run_test "$@"
+    errcount=${#errors[@]}
+    if [ $errcount -gt 0 ]; then
+        echo "  FAILED: ${errors}"
+        exit 1
+    fi
+else
+    # Now run each function, some with extra options (see the list in the here-document below)
+    while read fun options; do
+        for test in data/*.log; do
+            run_test $(basename $test .log) $fun
+            for opt in $options; do
+                run_test $(basename $test .log) $fun $opt
+            done
         done
-    done
-done <<EOF
+    done <<EOF
 hash fingerprint nosample nofilter
 wordcount
 host
@@ -104,12 +114,13 @@ mograph
 ygraph
 EOF
 
-errcount=${#errors[@]}
-echo "$errcount failed out of $nbtests tests ($((100 * ($nbtests - $errcount) / $nbtests))% success)"
-if [ $errcount -gt 0 ]; then
-    for error in "${errors[@]}"
-    do
-        echo "  FAILED: $error"
-    done
-    exit 1
+    errcount=${#errors[@]}
+    echo "$errcount failed out of $nbtests tests ($((100 * ($nbtests - $errcount) / $nbtests))% success)"
+    if [ $errcount -gt 0 ]; then
+        for error in "${errors[@]}"
+        do
+            echo "  FAILED: $error"
+        done
+        exit 1
+    fi
 fi
