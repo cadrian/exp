@@ -25,6 +25,8 @@
 #include <string.h>
 #include <stdio.h>
 #include <time.h>
+#include <libgen.h>
+#include <math.h>
 #include <cad_hash.h>
 
 #include "exp_output.h"
@@ -58,23 +60,61 @@ typedef struct {
 
 typedef struct {
      logger_t log;
+     size_t fgcount;
      size_t count;
+     size_t delcount;
      output_hash_t *data;
-     cad_hash_t *dict;
 } fingerprint_data_t;
 
-static void fingerprint_file_count(cad_hash_t *dict, int index, const char *key, dict_entry_t *value, fingerprint_data_t *data) {
+typedef void (*fingerprint_iterator_fn)(const char *key, fingerprint_data_t *data);
+
+static const char *hash_key(entry_t *entry) {
+     const char *result;
+     static char buffer[MAX_LINE_SIZE];
+     const char *daemon, *logline;
+     daemon = entry->daemon(entry);
+     logline = entry->logline(entry);
+     if (logline == NULL) {
+          result = "#";
+     } else if (daemon == NULL || daemon[0] == '\0') {
+          result = logline;
+     } else {
+          snprintf(buffer, MAX_LINE_SIZE, "%s %s", daemon, logline);
+          result = buffer;
+     }
+     return result;
+}
+
+static void fingerprint_iterate(input_file_t *file, filter_t *filter, fingerprint_iterator_fn iterator, fingerprint_data_t *data) {
+     /*
+      * Quick'n'dirty way to iterate over unique keys of one file
+      */
+     entry_t *entry;
+     int i, n = file->entries_length(file);
+     const char *key;
+     cad_hash_t *dict = cad_new_hash(stdlib_memory, cad_hash_strings);
+     for (i = 0; i < n; i++) {
+          entry = file->entry(file, i);
+          key = filter->scrub(filter, hash_key(entry));
+          if (dict->get(dict, key) == NULL) {
+               iterator(key, data);
+               dict->set(dict, key, entry);
+          }
+     }
+     dict->free(dict);
+}
+
+static void fingerprint_file_count(const char *key, fingerprint_data_t *data) {
      if (data->data->dict->get(data->data->dict, key) != NULL) {
           data->count++;
      }
+     data->fgcount++;
 }
 
-static void fingerprint_file_copy_key(cad_hash_t *dict, int index, const char *key, dict_entry_t *value, fingerprint_data_t *data) {
-     data->dict->set(data->dict, key, value);
-}
-
-static void fingerprint_file_del_key(cad_hash_t *dict, int index, const char *key, dict_entry_t *value, fingerprint_data_t *data) {
-     data->data->dict->del(data->data->dict, key);
+static void fingerprint_file_del_key(const char *key, fingerprint_data_t *data) {
+     if (data->data->dict->del(data->data->dict, key) != NULL) {
+          data->delcount++;
+     }
 }
 
 static int hash_increment(output_hash_t *this, const char *key, entry_t *value) {
@@ -97,65 +137,56 @@ static int hash_increment(output_hash_t *this, const char *key, entry_t *value) 
      return entry->count;
 }
 
-static void fingerprint_increment(output_hash_t *this, input_file_t *file) {
+static void fingerprint_increment(output_hash_t *this, input_file_t *fingerprint_file) {
+     /*
+      * Called from the fingerprint output, add the fingerprint key
+      */
      entry_factory_t *factory;
      entry_t *fingerprint_entry;
      line_t *fingerprint_line;
+     char buffer[MAX_LINE_SIZE];
      const char *filename;
 
-     factory = file->get_factory(file);
-     filename = file->get_name(file);
+     factory = entry_factory_named("raw");
+     strcpy(buffer, fingerprint_file->get_name(fingerprint_file));
+     filename = basename(buffer);
+     this->log(info, "Adding fingerprint: %s\n", filename);
      fingerprint_line = new_line(NULL, strlen(filename), filename);
      fingerprint_entry = factory->new_entry(factory, fingerprint_line);
      hash_increment(this, filename, fingerprint_entry);
 }
 
 static bool_t output_hash_fingerprint_file(output_hash_t *this, int index, output_hash_t *data) {
-     // This function runs in the "output" embedded in the fingerprint object.
-     // The given "data" is the actual output to filter if a fingerprint is found.
+     /*
+      * This function runs in the "output" embedded in the fingerprint object.
+      * The given "data" is the actual output to filter if a fingerprint is found.
+      */
      bool_t result = false;
      fingerprint_data_t fingerprint = {
           .log = this->log,
+          .fgcount = 0,
           .count = 0,
+          .delcount = 0,
           .data = data,
-          .dict = NULL,
      };
      input_file_t *file = this->input->file(this->input, index);
-     size_t threshold = (int)(THRESHOLD_COEFFICIENT * (float)file->entries_length(file) + 0.5);
-     this->log(debug, "Threshold %s: %lu/%lu\n", file->get_name(file), (unsigned long)threshold, (unsigned long)file->entries_length(file));
+     filter_t *filter = this->filters[index];
+     size_t threshold;
 
-     this->dict->iterate(this->dict, (cad_hash_iterator_fn)fingerprint_file_count, &fingerprint);
+     fingerprint_iterate(file, filter, fingerprint_file_count, &fingerprint);
+     threshold = (int)floor(THRESHOLD_COEFFICIENT * (double)fingerprint.fgcount);
+     this->log(debug, "Threshold %s: %lu/%lu\n", file->get_name(file), (unsigned long)threshold, (unsigned long)fingerprint.fgcount);
 
      if (fingerprint.count > threshold) {
-          this->log(info, "Found fingerprint (got %lu): %s\n", (unsigned long)fingerprint.count, file->get_name(file));
-          /* We must copy the dictionary to iterate over that copy to remove keys in the original dictionary. */
-          fingerprint.dict = cad_new_hash(stdlib_memory, cad_hash_strings);
-          this->dict->iterate(this->dict, (cad_hash_iterator_fn)fingerprint_file_copy_key, &fingerprint);
-          fingerprint.dict->iterate(fingerprint.dict, (cad_hash_iterator_fn)fingerprint_file_del_key, &fingerprint);
-          fingerprint.dict->free(fingerprint.dict);
-          fingerprint_increment(this, file);
+          this->log(debug, "Found fingerprint (%lu > %lu): %s\n", (unsigned long)fingerprint.count, (unsigned long)threshold, file->get_name(file));
+          fingerprint_iterate(file, filter, fingerprint_file_del_key, &fingerprint);
+          fingerprint_increment(data, file);
+          this->log(debug, "Removed %lu keys\n", (unsigned long)fingerprint.delcount);
           result = true;
      } else {
-          this->log(info, "Only got %lu\n", (unsigned long)fingerprint.count);
+          this->log(debug, "%lu < %lu\n", (unsigned long)fingerprint.count, (unsigned long)threshold);
      }
 
-     return result;
-}
-
-static const char *hash_key(entry_t *entry) {
-     const char *result;
-     static char buffer[MAX_LINE_SIZE];
-     const char *daemon, *logline;
-     daemon = entry->daemon(entry);
-     logline = entry->logline(entry);
-     if (logline == NULL) {
-          result = "#";
-     } else if (daemon == NULL || daemon[0] == '\0') {
-          result = logline;
-     } else {
-          snprintf(buffer, MAX_LINE_SIZE, "%s %s", daemon, logline);
-          result = buffer;
-     }
      return result;
 }
 
@@ -383,7 +414,7 @@ static output_options_t output_nothash_default_options(output_hash_t *this) {
 static void output_hash_set_options(output_hash_t *this, output_options_t options) {
      this->options = options;
      if (options.fingerprint) {
-          this->fingerprint = new_fingerprint(this->log, options.fingerprint_extradirs);
+          this->fingerprint = new_fingerprint(this->log, options);
      }
 }
 

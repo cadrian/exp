@@ -24,6 +24,7 @@
 
 #include "exp.h"
 #include "exp_log.h"
+#include "exp_output.h"
 
 /**
  * @addtogroup exp_output
@@ -58,11 +59,11 @@ struct fingerprint_s {
  * Create a new fingerprint.
  *
  * @param[in] log the logger
- * @param[in] extradirs extra directories to scan
+ * @param[in] output_options the output options
  *
  * @return the new fingerprint
  */
-fingerprint_t *new_fingerprint(logger_t log, char **extradirs);
+fingerprint_t *new_fingerprint(logger_t log, output_options_t output_options);
 
 /**
  * @}

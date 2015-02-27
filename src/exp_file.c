@@ -34,6 +34,7 @@ struct file_impl_s {
      file_t fn;
      logger_t log;
      size_t length;
+     size_t size;
      line_t *lines;
 };
 
@@ -43,6 +44,10 @@ static size_t impl_lines_count(file_impl_t *this) {
 
 static line_t *impl_lines(file_impl_t *this) {
      return this->lines;
+}
+
+static size_t impl_size(file_impl_t *this) {
+     return this->size;
 }
 
 static void impl_free(file_impl_t *this) {
@@ -59,6 +64,7 @@ static void impl_free(file_impl_t *this) {
 static file_t file_impl_fn = {
      .lines_count = (file_lines_count_fn)impl_lines_count,
      .lines = (file_lines_fn)impl_lines,
+     .size = (file_size_fn)impl_size,
      .free = (file_free_fn)impl_free,
 };
 
@@ -89,6 +95,7 @@ static void read_all_lines(file_impl_t *this, FILE *in) {
      size_t count_lines_too_long = 0;
 
      this->length = 0;
+     this->size = 0;
 
      while ((buffer_length = fread(buffer, 1, MAX_LINE_SIZE, in)) > 0) {
           for (buffer_index = 0; buffer_index < buffer_length; buffer_index++) {
@@ -97,9 +104,10 @@ static void read_all_lines(file_impl_t *this, FILE *in) {
                     if (first == NULL) {
                          first = last;
                     }
+                    this->size += line_length;
+                    this->length++;
                     line_length = 0;
                     line_too_long_flag = false;
-                    this->length++;
                } else if (line_length >= MAX_LINE_SIZE) {
                     if (!line_too_long_flag) {
                          this->log(info, "Truncating line %lu\n", (unsigned long)this->length);
@@ -120,8 +128,11 @@ static void read_all_lines(file_impl_t *this, FILE *in) {
           if (first == NULL) {
                first = last;
           }
+          this->size += line_length;
           this->length++;
      }
+
+     this->size += this->length; /* count 1 per EOL */
 
      if (count_lines_too_long > 0) {
           this->log(warn, "%lu line%s too long, truncated to %d characters\n", (unsigned long)count_lines_too_long, count_lines_too_long > 1 ? "s" : "", MAX_LINE_SIZE - 1);

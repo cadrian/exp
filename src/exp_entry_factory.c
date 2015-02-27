@@ -22,6 +22,7 @@
  */
 
 #include <string.h>
+#include <cad_hash.h>
 
 #include "exp_entry_factory.h"
 #include "exp_log.h"
@@ -31,6 +32,7 @@
 static entry_factory_t **list = NULL;
 static size_t list_size = 0;
 static size_t list_capacity = 0;
+static cad_hash_t *factories = NULL;
 
 static void resize_list() {
      size_t new_capacity;
@@ -70,6 +72,10 @@ void register_factory(entry_factory_t *factory) {
           resize_list();
      }
      list[list_size++] = factory;
+     if (factories == NULL) {
+          factories = cad_new_hash(stdlib_memory, cad_hash_strings);
+     }
+     factories->set(factories, factory->get_name(factory), factory);
 }
 
 size_t entry_factories_length(void) {
@@ -78,4 +84,8 @@ size_t entry_factories_length(void) {
 
 entry_factory_t *entry_factory(int index) {
      return list[index];
+}
+
+entry_factory_t *entry_factory_named(const char *name) {
+     return factories->get(factories, name);
 }

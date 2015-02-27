@@ -148,6 +148,15 @@ size_t entry_factories_length(void);
 entry_factory_t *entry_factory(int index);
 
 /**
+ * The factory by its name.
+ *
+ * @param[in] name the name of the factory to return
+ *
+ * @return the factory named `name`.
+ */
+entry_factory_t *entry_factory_named(const char *name);
+
+/**
  * @}
  */
 

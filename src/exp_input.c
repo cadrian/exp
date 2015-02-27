@@ -40,6 +40,7 @@ typedef struct {
      file_t *file;
      entry_factory_t *factory;
      size_t length;
+     size_t size;
      entry_t **entries;
      char filename[0];
 } input_file_impl_t;
@@ -56,6 +57,10 @@ static size_t impl_entries_length(input_file_impl_t *this) {
      return this->length;
 }
 
+static size_t impl_size(input_file_impl_t *this) {
+     return this->size;
+}
+
 static entry_t *impl_entry(input_file_impl_t *this, int index) {
      return this->entries[index];
 }
@@ -64,6 +69,7 @@ static input_file_t input_file_impl_fn = {
      .get_factory = (input_file_get_factory_fn)impl_get_factory,
      .get_name = (input_file_get_name_fn)impl_get_name,
      .entries_length = (input_file_entries_length_fn)impl_entries_length,
+     .size = (input_file_size_fn)impl_size,
      .entry = (input_file_entry_fn)impl_entry,
 };
 
@@ -84,7 +90,14 @@ static input_file_t *impl_file(input_impl_t *this, int index) {
 }
 
 static int impl_file_comparator(input_file_impl_t **file1, input_file_impl_t **file2) {
-     return (*file2)->length - (*file1)->length;
+     int result = (*file2)->size - (*file1)->size;
+     if (result == 0) {
+          result = (*file2)->length - (*file1)->length;
+          if (result == 0) {
+               result = strcmp((*file1)->filename, (*file2)->filename);
+          }
+     }
+     return result;
 }
 
 static void impl_sort_files(input_impl_t *this) {
@@ -162,6 +175,7 @@ static input_file_impl_t *do_parse(input_impl_t *this, file_t *in, const char *f
           result->file = in;
           result->factory = factory;
           result->length = in->lines_count(in);
+          result->size = in->size(in);
           result->entries = malloc(result->length * sizeof(entry_t*));
           strcpy(result->filename, filename);
           for (line = lines; line != NULL; line = line->next) {

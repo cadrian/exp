@@ -27,9 +27,7 @@
 #include <errno.h>
 
 #include "exp_fingerprint.h"
-#include "exp_log.h"
 #include "exp_input.h"
-#include "exp_output.h"
 
 static const char *dirs[] = {
      "/var/lib/exp/fingerprints/",
@@ -53,10 +51,9 @@ struct fingerprint_impl_s {
 
 static void fingerprint_impl_run(fingerprint_impl_t *this, void *output) {
      int i, n = this->input->files_length(this->input);
-     bool_t done = false;
      this->output->prepare(this->output);
-     for (i = 0; !done && i < n; i++) {
-          done = this->output->fingerprint_file(this->output, i, output);
+     for (i = 0; i < n; i++) {
+          this->output->fingerprint_file(this->output, i, output);
      }
 }
 
@@ -114,18 +111,19 @@ static void prepare_input(fingerprint_impl_t *this) {
      this->input->sort_files(this->input);
 }
 
-fingerprint_t *new_fingerprint(logger_t log, char **extradirs) {
+fingerprint_t *new_fingerprint(logger_t log, output_options_t output_options) {
      output_options_t options = {
           .filter = true,
           .fingerprint = false,
           .sample = sample_none,
+          .filter_extradirs = output_options.filter_extradirs,
      };
      fingerprint_impl_t *result = malloc(sizeof(fingerprint_impl_t));
 
      result->fn = fingerprint_impl_fn;
      result->log = log;
      result->input = new_input(log);
-     result->extradirs = extradirs;
+     result->extradirs = output_options.fingerprint_extradirs;
      prepare_input(result);
      result->output = new_output_hash(log, result->input);
      result->output->set_options(result->output, options);

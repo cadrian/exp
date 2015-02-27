@@ -72,7 +72,7 @@ typedef size_t (*input_files_length_fn)(input_t *this);
 typedef input_file_t *(*input_file_fn)(input_t *this, int index);
 
 /**
- * Sort the input file by descending order of [length](@ref input_file_entries_length_fn).
+ * Sort the input file by descending order of [size](@ref input_file_size_fn).
  *
  * @param[in] this the target input
  */
@@ -128,6 +128,15 @@ typedef const char *(*input_file_get_name_fn)(input_file_t *this);
 typedef size_t (*input_file_entries_length_fn)(input_file_t *this);
 
 /**
+ * Get the size of the input file.
+ *
+ * @param[in] this the target input file
+ *
+ * @return the size of the input file
+ */
+typedef size_t (*input_file_size_fn)(input_file_t *this);
+
+/**
  * Get the *index*-th analyzed line.
  *
  * @param[in] this the target input file
@@ -150,6 +159,10 @@ struct input_file_s {
       * @see input_file_entries_length_fn
       */
      input_file_entries_length_fn entries_length;
+     /**
+      * @see input_file_size_fn
+      */
+     input_file_size_fn size;
      /**
       * @see input_file_entry_fn
       */

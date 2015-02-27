@@ -43,7 +43,7 @@ struct line_s {
       */
      line_t *next;
      /**
-      * The lenght of the line
+      * The length of the line
       */
      size_t length;
      /**
@@ -65,6 +65,15 @@ typedef struct file_s file_t;
  * @return the number of lines
  */
 typedef size_t (*file_lines_count_fn)(file_t *this);
+
+/**
+ * Get the size of the file.
+ *
+ * @param[in] this the target file
+ *
+ * @return the size
+ */
+typedef size_t (*file_size_fn)(file_t *this);
 
 /**
  * Get all the file lines.
@@ -91,6 +100,10 @@ struct file_s {
       * @see file_lines_fn
       */
      file_lines_fn lines;
+     /**
+      * @see file_size_fn
+      */
+     file_size_fn size;
      /**
       * @see file_free_fn
       */
