@@ -462,8 +462,8 @@ entry_factory_t *new_raw_entry_factory(logger_t log) { /* is it used? */
      result->name = "raw";
      result->extra_is_type = NULL;
      result->priority = -1;
-     result->default_host = "#";
-     result->default_daemon = "#";
+     result->default_host = "";
+     result->default_daemon = "";
      result->default_logline = "#";
      result->default_year = 1900;
      return &(result->fn);
