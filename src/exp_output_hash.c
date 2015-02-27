@@ -294,10 +294,10 @@ static void output_hash_prepare(output_hash_t *this) {
           factory = file->get_factory(file);
           this->filters[i] = filter = new_filter(this->log, this->options.filter_extradirs);
           if (this->options.filter) {
-               snprintf(filename, 128, "%s.stopwords", this->type);
-               filter->extend(filter, filename, "#");
                snprintf(filename, 128, "%s.%s.stopwords", this->type, factory->get_name(factory));
                filter->extend(filter, filename, NULL);
+               snprintf(filename, 128, "%s.stopwords", this->type);
+               filter->extend(filter, filename, "#");
           }
      }
 

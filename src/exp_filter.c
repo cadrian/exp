@@ -155,7 +155,7 @@ static bool_t impl_extend_(filter_impl_t *this, const char *dir, const char *fil
      if (file != NULL) {
           result = true;
           line = file->lines(file);
-          while (line != NULL) {
+          while (line != NULL && line->length > 0) {
                if (has_replacement) {
                     re = (char*)line->buffer;
                } else {
