@@ -410,7 +410,7 @@ static options_set_t output_hash_options_set(output_hash_t *this) {
           .sample=true,
           .filter_extradirs=true,
           .fingerprint_extradirs=true,
-          .year = false,
+          .year = true,
           .exp_mode = false,
           .dev = true,
      };
@@ -424,6 +424,13 @@ static output_options_t output_hash_default_options(output_hash_t *this) {
           .sample = sample_threshold,
           .dev = 0,
      };
+     time_t tm;
+     static bool_t init = false;
+     if (!init) {
+          init = true;
+          tm = time(NULL);
+          result.year = localtime(&tm)->tm_year + 1900;
+     }
      return result;
 }
 
