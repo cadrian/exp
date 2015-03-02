@@ -1,0 +1,16 @@
+24:	last message repeated # times
+8:	crond(pam_unix)[#]: session closed for user root
+8:	crond(pam_unix)[#]: session opened for user root by (uid=#)
+7:	clurgmgrd: [#]: <info> Executing /etc/init.d/httpd status
+7:	clurgmgrd: [#]: <info> Executing /etc/init.d/mysqld status
+6:	kernel: BIOS-#: # - # (reserved)
+6:	sshd[#]: Accepted publickey for root from #.#.#.# port # ssh#
+6:	sshd[#]: pam_unix(sshd:session): session closed for user root
+6:	sshd[#]: pam_unix(sshd:session): session opened for user root by (uid=#)
+5:	kernel: NET: Registered protocol family #
+5:	sshd(pam_unix)[#]: session closed for user root
+5:	sshd(pam_unix)[#]: session opened for user root by (uid=#)
+5:	sshd[#]: Accepted publickey for root from ::ffff:#.#.#.# port # ssh#
+4:	clurgmgrd: [#]: <info> Executing /etc/init.d/nfs status
+4:	kernel: ACPI: PCI interrupt #:#:#.#[A] -> GSI # (level, low) -> IRQ #
+4:	sshd[#]: Postponed publickey for root from ::ffff:#.#.#.# port # ssh#

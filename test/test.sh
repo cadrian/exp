@@ -102,7 +102,7 @@ else
             done
         done
     done <<EOF
-hash fingerprint nosample nofilter
+hash fingerprint nosample nofilter dev1 dev2
 wordcount
 host
 daemon

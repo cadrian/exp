@@ -1,0 +1,54 @@
+24:	last message repeated # times
+11:	kernel: BIOS-#: # - # (reserved)
+11:	kernel: NET: Registered protocol family #
+10:	kernel: (# KHz - # KHz @ # KHz), (# mBi, # mBm)
+9:	kernel: system #:#: iomem range #x#-#x# has been reserved
+8:	crond(pam_unix)[#]: session closed for user root
+8:	crond(pam_unix)[#]: session opened for user root by (uid=#)
+8:	kernel: integrated sync not supported
+8:	kernel: pci #:#:#.#: PME# disabled
+7:	clurgmgrd: [#]: <info> Executing /etc/init.d/httpd status
+7:	clurgmgrd: [#]: <info> Executing /etc/init.d/mysqld status
+6:	kernel: system #:#: ioport range #x#-#x# has been reserved
+6:	sshd[#]: Accepted publickey for root from #.#.#.# port # ssh#
+6:	sshd[#]: pam_unix(sshd:session): session closed for user root
+6:	sshd[#]: pam_unix(sshd:session): session opened for user root by (uid=#)
+5:	init: tty# main process (#) killed by TERM signal
+5:	kernel: BIOS-#: # - # (usable)
+5:	kernel: hub #-#:#.#: # ports detected
+5:	kernel: hub #-#:#.#: USB hub found
+5:	kernel: pci #:#:#.#: PME# supported from D# D#hot D#old
+5:	kernel: usb us#: New USB device found, idVendor=#, idProduct=#
+5:	kernel: usb us#: New USB device strings: Mfr=#, Product=#, SerialNumber=#
+5:	kernel: usb us#: SerialNumber: #:#:#.#
+5:	kernel: usb us#: configuration # chosen from # choice
+5:	sshd(pam_unix)[#]: session closed for user root
+5:	sshd(pam_unix)[#]: session opened for user root by (uid=#)
+5:	sshd[#]: Accepted publickey for root from ::ffff:#.#.#.# port # ssh#
+4:	NetworkManager: <info> (wlan#): device state change: # -> # (reason #)
+4:	clurgmgrd: [#]: <info> Executing /etc/init.d/nfs status
+4:	kernel: ACPI: PCI interrupt #:#:#.#[A] -> GSI # (level, low) -> IRQ #
+4:	kernel: pci #:#:#.#: PCI bridge, secondary bus #:#
+4:	kernel: uhci_hcd #:#:#.#: UHCI Host Controller
+4:	kernel: uhci_hcd #:#:#.#: irq #, io base #x#
+4:	kernel: uhci_hcd #:#:#.#: new USB bus registered, assigned bus number #
+4:	kernel: usb us#: Manufacturer: Linux #.#.#.#-#.#.i# uhci_hcd
+4:	kernel: usb us#: Product: UHCI Host Controller
+4:	sshd[#]: Postponed publickey for root from ::ffff:#.#.#.# port # ssh#
+3:	ACPI: LAPIC (acpi_id[0x00] lapic_id[0x00] enabled)
+3:	CPU: L2 cache: 1024K
+3:	EXT3 FS on sda1, internal journal
+3:	EXT3-fs: mounted filesystem with ordered data mode.
+3:	Initializing CPU#0
+3:	Intel machine check architecture supported.
+3:	Intel machine check reporting enabled on CPU#0.
+3:	PM: Registered nosave memory: 000000000009f000 - 00000000000a0000
+3:	kjournald starting. Commit interval 5 seconds
+3:	pci 0000:00:1f.0: ICH7 LPC Generic IO decode 1 PIO at 0380 (mask 0003)
+3:	pci 0000:00:1c.0: IO window: disabled
+3:	pci 0000:00:1c.0: PREFETCH window: disabled
+3:	system 00:08: iomem range 0xfff00000-0xffffffff could not be reserved
+3:	usb 1-5: New USB device found, idVendor=058f, idProduct=6335
+3:	usb 1-5: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+3:	usb 1-5: configuration #1 chosen from 1 choice
+3:	x86 PAT enabled: cpu 0, old 0x7040600070406, new 0x7010600070106

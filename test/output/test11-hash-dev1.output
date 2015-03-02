@@ -1,0 +1,2 @@
+11:	dhclient: bound to #.#.#.# -- renewal in # seconds.
+8:	puppetd[#]: (//collectd/File[/etc/collectd/collectd.conf]/content) content changed '{m#}#' to '{m#}#'

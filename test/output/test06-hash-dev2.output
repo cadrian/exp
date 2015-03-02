@@ -1,0 +1,27 @@
+24:	last message repeated # times
+11:	kernel: BIOS-#: # - # (reserved)
+11:	kernel: NET: Registered protocol family #
+10:	kernel: (# KHz - # KHz @ # KHz), (# mBi, # mBm)
+9:	kernel: system #:#: iomem range #x#-#x# has been reserved
+8:	crond(pam_unix)[#]: session closed for user root
+8:	crond(pam_unix)[#]: session opened for user root by (uid=#)
+8:	kernel: integrated sync not supported
+8:	kernel: pci #:#:#.#: PME# disabled
+7:	clurgmgrd: [#]: <info> Executing /etc/init.d/httpd status
+7:	clurgmgrd: [#]: <info> Executing /etc/init.d/mysqld status
+6:	kernel: system #:#: ioport range #x#-#x# has been reserved
+6:	sshd[#]: Accepted publickey for root from #.#.#.# port # ssh#
+6:	sshd[#]: pam_unix(sshd:session): session closed for user root
+6:	sshd[#]: pam_unix(sshd:session): session opened for user root by (uid=#)
+5:	init: tty# main process (#) killed by TERM signal
+5:	kernel: BIOS-#: # - # (usable)
+5:	kernel: hub #-#:#.#: # ports detected
+5:	kernel: hub #-#:#.#: USB hub found
+5:	kernel: pci #:#:#.#: PME# supported from D# D#hot D#old
+5:	kernel: usb us#: New USB device found, idVendor=#, idProduct=#
+5:	kernel: usb us#: New USB device strings: Mfr=#, Product=#, SerialNumber=#
+5:	kernel: usb us#: SerialNumber: #:#:#.#
+5:	kernel: usb us#: configuration # chosen from # choice
+5:	sshd(pam_unix)[#]: session closed for user root
+5:	sshd(pam_unix)[#]: session opened for user root by (uid=#)
+5:	sshd[#]: Accepted publickey for root from ::ffff:#.#.#.# port # ssh#
