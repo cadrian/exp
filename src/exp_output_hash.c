@@ -393,7 +393,7 @@ static void output_hash_display(output_hash_t *this) {
 
      for (i = this->max_count; i > 0; i--) {
           this->log(debug, "%lu: %g vs %g\n", (unsigned long)i, fabs(i - mean), dev);
-          if (fabs(i - mean) > dev) {
+          if (dev == 0 || fabs(i - mean) > dev) {
                hash_display_count(this, i);
           } else {
                this->log(debug, "%lu: with std dev %g - %g\n", (unsigned long)i, mean - dev, mean + dev);
