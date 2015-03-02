@@ -60,6 +60,9 @@ Yet, `ExP` has extentions of its own. Here are those extensions:
   current year.
 * The `--filterdir` and `--fingerprintdir` allow to add extra
   directories to scan for resp. filters and fingerprints.
+* `--dev1` and `--dev2` allow to display only the data out of once
+  (resp. twice) the standard deviation from the average.
+  This idea comes from *Petit*'s Roadmap.
 
 # Future work
 
@@ -71,5 +74,4 @@ Yet, `ExP` has extentions of its own. Here are those extensions:
 * Cumulated data in graphs: what happens *each* second, minute, etc.
 * Port `scriptlog` from *Petit*?
 * Ideas from *Petit*
-  * `--dev1` and `--dev2` sound cool
   * Missing fingerprints (Debian, etc.)

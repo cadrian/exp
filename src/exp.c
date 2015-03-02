@@ -74,35 +74,53 @@ static output_options_t options = {
  */
 static void usage(const char *cmd) {
      fprintf(stderr,
-             "Usage: %s [options] [file...]\n\nOptions:\n"
-             "  -h, --help         Show this help message and exit\n"
-             "  -v, --verbose      Show verbose output (may be specified twice)\n"
-             "  -V, --version      Show verbose output\n"
+             "Usage: %s [options] [file...]\n"
              "\n"
-             "  -x, --hash         Show hashes of log files with numbers removed\n"
-             "  -w, --wordcount    Show word count for given word\n"
-             "  -D, --daemon       Show a report of entries from each daemon\n"
-             "  -H, --host         Show a report of entries from each host\n"
-             "  -s, --sgraph       Show a graph of the first 60 seconds\n"
-             "  -m, --mgraph       Show a graph of the first 60 minutes\n"
-             "  -X, --hgraph       Show a graph of the first 24 hours\n"
-             "  -d, --dgraph       Show a graph of the first 31 days\n"
-             "  -M, --mograph      Show a graph of the first 12 months\n"
-             "  -y, --ygraph       Show a graph of the first 10 years\n"
+             "Options:\n"
+             "  -h, --help             Show this help message and exit\n"
+             "  -v, --verbose          Show verbose output (may be specified twice)\n"
+             "  -V, --version          Show verbose output\n"
              "\n"
-             "  hash-specific options:\n"
-             "  --sample           Show sample output for small numbered entries\n"
-             "  --nosample         Do not sample output for low count entries\n"
-             "  --allsample        Show samples instead of munged text for all entries\n"
-             "  --filter           Use filter files during processing\n"
-             "  --nofilter         Do not use filter files during processing\n"
-             "  --fingerprint      Use fingerprinting to remove certain patterns\n"
+             "  Exactly one mode (either Hash or Graph) must be specified.\n"
              "\n"
-             "  graph-specific options:\n"
-             "  --wide             Use wider graph characters\n"
-             "  -t, --tick=TICK    Change tick character from default\n"
+             "  Hash modes:\n"
+             "  -x, --hash             Show hashes of log files with numbers removed\n"
+             "  -w, --wordcount        Show word count for given word\n"
+             "  -D, --daemon           Show a report of entries from each daemon\n"
+             "  -H, --host             Show a report of entries from each host\n"
              "\n"
-             "If no file is specified, data is read from stdin.\n\n", cmd);
+             "  Graph modes:\n"
+             "  -s, --sgraph           Show a graph of the first 60 seconds\n"
+             "  -m, --mgraph           Show a graph of the first 60 minutes\n"
+             "  -X, --hgraph           Show a graph of the first 24 hours\n"
+             "  -d, --dgraph           Show a graph of the first 31 days\n"
+             "  -M, --mograph          Show a graph of the first 12 months\n"
+             "  -y, --ygraph           Show a graph of the first 10 years\n"
+             "\n"
+             "  Hash modes specific options:\n"
+             "  --sample               Show sample output for small numbered entries\n"
+             "  --nosample             Do not sample output for low count entries\n"
+             "  --allsample            Show samples instead of munged text for all entries\n"
+             "  --filter               Use filter files during processing\n"
+             "  --nofilter             Do not use filter files during processing\n"
+             "  --fingerprint          Use fingerprinting to remove certain patterns\n"
+             "  --dev1                 Display only rows with count out of 1x the standard\n"
+             "                         deviation\n"
+             "  --dev2                 Display only rows with count out of 2x the standard\n"
+             "                         deviation\n"
+             "\n"
+             "  Graph modes specific options:\n"
+             "  --wide                 Use wider graph characters\n"
+             "  -t, --tick=TICK        Change tick character from default\n"
+             "  --year=YEAR            Change the \"current year\" (default is sysdate's)\n"
+             "\n"
+             "  Extra options:\n"
+             "  --filterdir=DIR        Add a directory to scan for filter files\n"
+             "  --fingerprintdir=DIR   Add a directory to scan for fingerprint files\n"
+             "\n"
+             "If no file is provided, data is read from stdin.\n"
+             "\n",
+             cmd);
 }
 
 /**
@@ -146,6 +164,9 @@ static struct option long_options[] = {
      {"fingerprintdir", required_argument, NULL,  9 },
      {"year",           required_argument, NULL, 10 },
      {"exp_mode",       no_argument,       NULL, 11 },
+
+     {"dev1",           no_argument,       NULL, 12 },
+     {"dev2",           no_argument,       NULL, 13 },
 
      {0,0,0,0}
 };
@@ -285,6 +306,16 @@ static void parse_options(int argc, char * const argv[]) {
                options_set.exp_mode = true;
                break;
 
+          case 12:
+               options.dev = 1;
+               options_set.dev = true;
+               break;
+
+          case 13:
+               options.dev = 2;
+               options_set.dev = true;
+               break;
+
           case '?':
           default:
                usage(argv[0]);
@@ -313,6 +344,7 @@ static void check_options_set(logger_t log, options_set_t allowed_options, outpu
      check_option(filter_extradirs);
      check_option(fingerprint_extradirs);
      check_option(year);
+     check_option(dev);
 }
 
 /**

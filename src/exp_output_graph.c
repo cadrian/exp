@@ -298,6 +298,7 @@ static options_set_t output_graph_options_set(output_graph_t *this) {
           .fingerprint_extradirs=false,
           .year = true,
           .exp_mode = true,
+          .dev = false,
      };
      return result;
 }

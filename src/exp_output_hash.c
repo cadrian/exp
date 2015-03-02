@@ -48,6 +48,8 @@ struct output_hash_s {
      cad_hash_t *dict;
      size_t max_count;
      fingerprint_t *fingerprint;
+     size_t meancount;
+     size_t devcount;
      void (*fill)(output_hash_t*,input_file_t*,filter_t*);
 };
 
@@ -281,6 +283,12 @@ static void hash_fill(output_hash_t *this) {
      }
 }
 
+static void hash_calculate_stats(cad_hash_t *dict, int index, const char *key, dict_entry_t *value, output_hash_t *this) {
+     size_t count = value->count;
+     this->meancount += count;
+     this->devcount += count * count;
+}
+
 static void output_hash_prepare(output_hash_t *this) {
      int i, n = this->input->files_length(this->input);
      input_file_t *file;
@@ -306,6 +314,8 @@ static void output_hash_prepare(output_hash_t *this) {
      if (this->options.fingerprint) {
           this->fingerprint->run(this->fingerprint, this);
      }
+
+     this->dict->iterate(this->dict, (cad_hash_iterator_fn)hash_calculate_stats, this);
 }
 
 static int dict_comp(const dict_entry_t **e1, const dict_entry_t **e2) {
@@ -360,6 +370,14 @@ static void hash_display_count(output_hash_t *this, size_t count) {
 
 static void output_hash_display(output_hash_t *this) {
      size_t i;
+     double mean, dev;
+
+     mean = (double)(this->meancount) / (double)(this->dict->count(this->dict));
+     dev = sqrt((double)(this->devcount) / (double)(this->dict->count(this->dict)) - mean * mean);
+
+     this->log(info, "Mean: %g\n", mean);
+     this->log(info, "Standard deviation: %g\n", dev);
+     dev *= this->options.dev;
 
      switch(this->options.sample) {
      case sample_none:
@@ -374,7 +392,12 @@ static void output_hash_display(output_hash_t *this) {
      }
 
      for (i = this->max_count; i > 0; i--) {
-          hash_display_count(this, i);
+          this->log(debug, "%lu: %g vs %g\n", (unsigned long)i, fabs(i - mean), dev);
+          if (fabs(i - mean) > dev) {
+               hash_display_count(this, i);
+          } else {
+               this->log(debug, "%lu: with std dev %g - %g\n", (unsigned long)i, mean - dev, mean + dev);
+          }
      }
 }
 
@@ -389,6 +412,7 @@ static options_set_t output_hash_options_set(output_hash_t *this) {
           .fingerprint_extradirs=true,
           .year = false,
           .exp_mode = false,
+          .dev = true,
      };
      return result;
 }
@@ -398,6 +422,7 @@ static output_options_t output_hash_default_options(output_hash_t *this) {
           .filter = true,
           .fingerprint = false,
           .sample = sample_threshold,
+          .dev = 0,
      };
      return result;
 }
@@ -434,7 +459,7 @@ static output_t *new_output_(logger_t log, input_t *input, const char *type, voi
      result->log = log;
      result->input = input;
      result->dict = cad_new_hash(stdlib_memory, cad_hash_strings);
-     result->max_count = 0;
+     result->max_count = result->meancount = result->devcount = 0;
      result->fill = fill;
      result->fingerprint = NULL;
      memset(&(result->options), 0, sizeof(output_options_t));
