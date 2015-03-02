@@ -75,3 +75,6 @@ Yet, `ExP` has extentions of its own. Here are those extensions:
 * Port `scriptlog` from *Petit*?
 * Ideas from *Petit*
   * Missing fingerprints (Debian, etc.)
+* Move some parts (regex, files?) to [libCad](https://github.com/cadrian/libcad)
+  * Also code abstract dynamic arrays in libCad and use that. There
+    are too many `capacity *= 2` in the code...
