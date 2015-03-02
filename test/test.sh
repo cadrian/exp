@@ -106,12 +106,12 @@ hash fingerprint nosample nofilter
 wordcount
 host
 daemon
-sgraph
-mgraph
-hgraph
-dgraph
-mograph
-ygraph
+sgraph  exp_mode
+mgraph  exp_mode
+hgraph  exp_mode
+dgraph  exp_mode
+mograph exp_mode
+ygraph  exp_mode
 EOF
 
     errcount=${#errors[@]}

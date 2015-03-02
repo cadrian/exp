@@ -183,6 +183,7 @@ static void output_graph_display(output_graph_t *this) {
      double scale;
      char char_fill[4];
      char char_blank[4];
+     char char_scale[64];
      int y, i, p;
 
      int graph_position_start, graph_position_middle, graph_position_end;
@@ -226,25 +227,20 @@ static void output_graph_display(output_graph_t *this) {
      this->log(debug, "wide: %s fill='%s' blank='%s'\n", this->options.wide ? "true":"false", char_fill, char_blank);
 
      if (this->options.exp_mode) {
-          p = (int)ceil(log10(graph.max));
-          if (p == 0) {
-               p++;
-          }
-          if (graph.min < 0) {
-               p++;
-          }
+          p = (int)ceil(log10(graph.max)) + 1;
      }
 
      fputc('\n', stdout);
      for (y = graph.height; y > 0; y--) {
           if (this->options.exp_mode) {
                if (y == graph.height) {
-                    printf("% *d - ", p, (int)graph.max);
+                    sprintf(char_scale, "% *d", p, (int)graph.max);
                } else if (y == 1) {
-                    printf("% *d - ", p, (int)graph.min);
+                    sprintf(char_scale, "% *d", p, (int)graph.min);
                } else {
-                    printf(" %*s - ", p, "");
+                    char_scale[0] = '\0';
                }
+               printf(" %*.*s - ", p+1, p+1, char_scale);
           }
           for (i = 0; i < this->duration; i++) {
                key = this->keys[i];
@@ -261,7 +257,7 @@ static void output_graph_display(output_graph_t *this) {
      }
 
      if (this->options.exp_mode) {
-          printf(" %*s   ", p, "");
+          printf(" %*s   ", p+1, "");
      }
      for (i = 0; i < this->duration; i++) {
           fputs(char_fill, stdout);
@@ -269,7 +265,7 @@ static void output_graph_display(output_graph_t *this) {
      fputc('\n', stdout);
 
      if (this->options.exp_mode) {
-          printf(" %*s   ", p, "");
+          printf(" %*s   ", p+1, "");
      }
      for (i = 1; i < graph_width; i++) {
           if (i == graph_position_start) {
