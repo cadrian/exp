@@ -27,6 +27,7 @@
 #include <time.h>
 #include <libgen.h>
 #include <math.h>
+#include <cad_array.h>
 #include <cad_hash.h>
 
 #include "exp_output.h"
@@ -34,7 +35,6 @@
 #include "exp_fingerprint.h"
 #include "exp_file.h"
 
-#define DEFAULT_DICT_CAPACITY 16
 #define SAMPLE_THRESHOLD 3
 
 typedef struct output_hash_s output_hash_t;
@@ -54,9 +54,7 @@ struct output_hash_s {
 };
 
 typedef struct {
-     size_t count;
-     size_t capacity;
-     entry_t **entries;
+     cad_array_t *entries;
      char key[0];
 } dict_entry_t;
 
@@ -121,22 +119,20 @@ static void fingerprint_file_del_key(const char *key, fingerprint_data_t *data) 
 
 static int hash_increment(output_hash_t *this, const char *key, entry_t *value) {
      dict_entry_t *entry = this->dict->get(this->dict, key);
+     int count;
      if (entry == NULL) {
           entry = malloc(sizeof(dict_entry_t) + strlen(key) + 1);
-          entry->count = 0;
-          entry->capacity = DEFAULT_DICT_CAPACITY;
-          entry->entries = malloc(entry->capacity * sizeof(entry_t*));
+          entry->entries = cad_new_array(stdlib_memory);
           this->dict->set(this->dict, key, entry);
           strcpy(entry->key, key);
-     } else if (entry->count == entry->capacity) {
-          entry->capacity *= 2;
-          entry->entries = realloc(entry->entries, entry->capacity * sizeof(entry_t*));
      }
-     entry->entries[entry->count++] = value;
-     if (entry->count > this->max_count) {
-          this->max_count = entry->count;
+     count = entry->entries->count(entry->entries);
+     entry->entries->insert(entry->entries, count, value);
+     count++; // = entry->entries->count(entry->entries);
+     if (count > this->max_count) {
+          this->max_count = count;
      }
-     return entry->count;
+     return count;
 }
 
 static void fingerprint_increment(output_hash_t *this, input_file_t *fingerprint_file) {
@@ -278,13 +274,13 @@ static void hash_fill(output_hash_t *this) {
 
      entry = this->dict->del(this->dict, "#");
      if (entry != NULL) {
-          free(entry->entries);
+          entry->entries->free(entry->entries);
           free(entry);
      }
 }
 
 static void hash_calculate_stats(cad_hash_t *dict, int index, const char *key, dict_entry_t *value, output_hash_t *this) {
-     size_t count = value->count;
+     size_t count = value->entries->count(value->entries);
      this->meancount += count;
      this->devcount += count * count;
 }
@@ -329,7 +325,7 @@ typedef struct {
 } dict_sort_buf ;
 
 static void hash_display_fill_buf(cad_hash_t *dict, int index, const char *key, dict_entry_t *value, dict_sort_buf *buf) {
-     if (value->count == buf->count) {
+     if (value->entries->count(value->entries) == buf->count) {
           buf->entries[buf->n++] = value;
      }
 }
@@ -338,27 +334,29 @@ static void hash_display_count(output_hash_t *this, size_t count) {
      int i, r;
      dict_entry_t **entries = malloc(this->dict->count(this->dict) * sizeof(dict_entry_t*));
      dict_sort_buf buf = { count, 0, entries };
+     dict_entry_t *dictentry;
      entry_t *entry;
 
      this->dict->iterate(this->dict, (cad_hash_iterator_fn)hash_display_fill_buf, &buf);
      if (buf.n > 0) {
           qsort(entries, buf.n, sizeof(dict_entry_t*), (int(*)(const void*,const void*))dict_comp);
           for (i = 0; i < buf.n; i++) {
+               dictentry = entries[i];
                switch(this->options.sample) {
                case sample_none:
-                    printf("%lu:\t%s\n", (unsigned long)count, entries[i]->key);
+                    printf("%lu:\t%s\n", (unsigned long)count, dictentry->key);
                     break;
                case sample_threshold:
                     if (count <= SAMPLE_THRESHOLD) {
-                         entry = entries[i]->entries[0];
+                         entry = dictentry->entries->get(dictentry->entries, 0);
                          printf("%lu:\t%s\n", (unsigned long)count, entry->logline(entry));
                     } else {
-                         printf("%lu:\t%s\n", (unsigned long)count, entries[i]->key);
+                         printf("%lu:\t%s\n", (unsigned long)count, dictentry->key);
                     }
                     break;
                case sample_all:
                     r = rand() % count;
-                    entry = entries[i]->entries[r];
+                    entry = dictentry->entries->get(dictentry->entries, r);
                     printf("%lu:\t%s\n", (unsigned long)count, entry->logline(entry));
                     break;
                }
