@@ -58,8 +58,8 @@ Yet, `ExP` has extentions of its own. Here are those extensions:
 * The `--year` flag gives the "current year" for logs that don't
   support years. By default, `ExP` behaves like *Petit* and uses the
   current year.
-* The `--filterdir` and `--fingerprintdir` allow to add extra
-  directories to scan for resp. filters and fingerprints.
+* The `--filterdir`, `--fingerprintdir`, and `--factorydir` allow to add extra
+  directories to scan for resp. filters, fingerprints, and factories.
 * `--dev1` and `--dev2` allow to display only the data out of once
   (resp. twice) the standard deviation from the average.
   This idea comes from *Petit*'s Roadmap.
