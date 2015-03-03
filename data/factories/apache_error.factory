@@ -1,0 +1,1 @@
+^\[(?<date>(?<strday>[A-Z][a-z]{2})[[:space:]]+(?<strmonth>[A-Z][a-z]{2})[[:space:]]+(?<day>[0-9][0-9]?)[[:space:]]+(?<hour>[0-9]{2}):(?<minute>[0-9]{2}):(?<second>[0-9]{2})[[:space:]]+(?<year>[0-9]{4}))\][[:space:]]+(?<log>\[(?<level>[a-z]+)\][[:space:]]+(\[(?<client>[^]]+)\][[:space:]]+)?(?<message>.*?))[[:space:]]*$
