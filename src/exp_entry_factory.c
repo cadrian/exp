@@ -22,6 +22,7 @@
  */
 
 #include <string.h>
+#include <cad_array.h>
 #include <cad_hash.h>
 
 #include "exp_entry_factory.h"
@@ -29,24 +30,8 @@
 
 #define DEFAULT_CAPACITY 16
 
-static entry_factory_t **list = NULL;
-static size_t list_size = 0;
-static size_t list_capacity = 0;
-static cad_hash_t *factories = NULL;
-
-static void resize_list() {
-     size_t new_capacity;
-     entry_factory_t **new_list;
-     if (list_capacity == 0) {
-          new_capacity = DEFAULT_CAPACITY;
-          new_list = malloc(new_capacity * sizeof(entry_factory_t*));
-     } else {
-          new_capacity = list_capacity * 2;
-          new_list = realloc(list, new_capacity * sizeof(entry_factory_t*));
-     }
-     list_capacity = new_capacity;
-     list = new_list;
-}
+static cad_array_t *factories_list = NULL;
+static cad_hash_t  *factories_map  = NULL;
 
 static int compare_factories(entry_factory_t **f1, entry_factory_t **f2) {
      int result = (*f2)->priority(*f2) - (*f1)->priority(*f1);
@@ -57,35 +42,38 @@ static int compare_factories(entry_factory_t **f1, entry_factory_t **f2) {
 }
 
 void sort_factories(logger_t log) {
-     int i;
+     int i, n;
      entry_factory_t *f;
-     qsort(list, list_size, sizeof(entry_factory_t*), (int(*)(const void*,const void*))compare_factories);
-     log(debug, "Sorted entry factories:\n");
-     for (i = 0; i < list_size; i++) {
-          f = list[i];
-          log(debug, "%2d: %s (%d)\n", i+1, f->get_name(f), f->priority(f));
+     if (factories_list != NULL) {
+          factories_list->sort(factories_list, (comparator_fn)compare_factories);
+          n = factories_list->count(factories_list);
+          log(debug, "Sorted entry factories:\n");
+          for (i = 0; i < n; i++) {
+               f = factories_list->get(factories_list, i);
+               log(debug, "%2d: %s (%d)\n", i+1, f->get_name(f), f->priority(f));
+          }
      }
 }
 
 void register_factory(entry_factory_t *factory) {
-     if (list_size == list_capacity) {
-          resize_list();
+     if (factories_list == NULL) {
+          factories_list = cad_new_array(stdlib_memory);
      }
-     list[list_size++] = factory;
-     if (factories == NULL) {
-          factories = cad_new_hash(stdlib_memory, cad_hash_strings);
+     factories_list->insert(factories_list, factories_list->count(factories_list), factory);
+     if (factories_map == NULL) {
+          factories_map = cad_new_hash(stdlib_memory, cad_hash_strings);
      }
-     factories->set(factories, factory->get_name(factory), factory);
+     factories_map->set(factories_map, factory->get_name(factory), factory);
 }
 
 size_t entry_factories_length(void) {
-     return list_size;
+     return factories_list == NULL ? 0 : factories_list->count(factories_list);
 }
 
 entry_factory_t *entry_factory(int index) {
-     return list[index];
+     return factories_list->get(factories_list, index);
 }
 
 entry_factory_t *entry_factory_named(const char *name) {
-     return factories->get(factories, name);
+     return factories_map->get(factories_map, name);
 }
