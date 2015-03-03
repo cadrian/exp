@@ -24,13 +24,12 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <cad_array.h>
 
 #include "exp_filter.h"
 #include "exp_log.h"
 #include "exp_regexp.h"
 #include "exp_file.h"
-
-#define DEFAULT_CAPACITY 128
 
 static const char *dirs[] = {
      "/var/lib/exp/filters/",
@@ -42,29 +41,30 @@ static const char *dirs[] = {
      NULL
 };
 
+typedef struct {
+     regexp_t *stopword;
+     char replacement[0];
+} filter_replacement_t;
+
 typedef struct filter_impl_s filter_impl_t;
 
 struct filter_impl_s {
      filter_t fn;
      logger_t log;
-     size_t length;
-     size_t capacity;
-     regexp_t **stopwords;
-     char **replacements;
+     cad_array_t *replacements;
      const char **extradirs;
 };
 
 static const char *impl_scrub(filter_impl_t *this, const char *line) {
      static char result[MAX_LINE_SIZE];
-     int i, n = this->length;
-     regexp_t *stopword;
+     int i, n = this->replacements->count(this->replacements);
+     filter_replacement_t *repl;
+
      strncpy(result, line, MAX_LINE_SIZE);
      result[MAX_LINE_SIZE-1] = '\0';
-     //this->log(debug, "Scrubbing %2d | %s\n", n, line);
      for (i = 0; i < n; i++) {
-          stopword = this->stopwords[i];
-          stopword->replace_all(stopword, this->replacements[i], result);
-          //this->log(debug, " - %2d/%2d | %s | %s\n", i+1, n, stopword->pattern(stopword), result);
+          repl = this->replacements->get(this->replacements, i);
+          repl->stopword->replace_all(repl->stopword, repl->replacement, result);
      }
      return result;
 }
@@ -75,20 +75,12 @@ static bool_t impl_bleach(filter_impl_t *this, const char *line) {
 }
 
 static void add_regexp(filter_impl_t *this, regexp_t *regexp, const char *replacement) {
-     if (this->capacity == this->length) {
-          if (this->capacity == 0) {
-               this->capacity = DEFAULT_CAPACITY;
-               this->stopwords = malloc(this->capacity * sizeof(regexp_t*));
-               this->replacements = malloc(this->capacity * sizeof(char*));
-          } else {
-               this->capacity = this->capacity * 2;
-               this->stopwords = realloc(this->stopwords, this->capacity * sizeof(regexp_t*));
-               this->replacements = realloc(this->replacements, this->capacity * sizeof(char*));
-          }
-     }
-     this->stopwords[this->length] = regexp;
-     this->replacements[this->length] = strdup(replacement);
-     this->length++;
+     int n = strlen(replacement);
+     filter_replacement_t *repl = malloc(sizeof(filter_replacement_t) + n + 1);
+     repl->stopword = regexp;
+     strcpy(repl->replacement, replacement);
+     repl->replacement[n] = '\0';
+     this->replacements->insert(this->replacements, this->replacements->count(this->replacements), repl);
 }
 
 static char *split(char **regexp) {
@@ -214,8 +206,7 @@ filter_t *new_filter(logger_t log, const char **extradirs) {
 
      result->fn = filter_impl_fn;
      result->log = log;
-     result->length = result->capacity = 0;
-     result->stopwords = NULL;
+     result->replacements = cad_new_array(stdlib_memory);
      result->extradirs = extradirs;
 
      return &(result->fn);
