@@ -26,6 +26,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <time.h>
+#include <cad_array.h>
 
 #include "exp.h"
 #include "exp_log.h"
@@ -37,21 +38,28 @@
 static level_t   verbose         = warn;
 static expmode_t mode            = mode_undefined;
 
-typedef struct {
-     int capacity;
-     int count;
-     char **dirs;
-} dirs_t;
+static cad_array_t *filterdirs = NULL;
+static cad_array_t *fingerprintdirs = NULL;
+static cad_array_t *factorydirs = NULL;
 
-static dirs_t filterdirs = {0,0,NULL};
-static dirs_t fingerprintdirs = {0,0,NULL};
-static dirs_t factorydirs = {0,0,NULL};
+static const char** array_to_dirs(cad_array_t **dirsp) {
+     cad_array_t *dirs = *dirsp;
+     int i, n = dirs->count(dirs);
+     char** result = malloc((n + 1) * sizeof(char*));
+     for (i = 0; i < n; i++) {
+          result[i] = dirs->get(dirs, i);
+     }
+     result[n] = NULL;
+     dirs->free(dirs);
+     *dirsp = NULL;
+     return (const char **)result;
+}
 
 /**
  * The options setting mask.
  */
 static options_set_t options_set = {
-     false, false, false, false, false, false, false,
+     false, false, false, false, false, false, false, false,
 };
 
 /**
@@ -63,8 +71,9 @@ static options_t options = {
      .tick = "#",
      .wide = false,
      .sample = sample_threshold,
-     .filter_extradirs= NULL,
-     .fingerprint_extradirs= NULL,
+     .filter_extradirs = NULL,
+     .fingerprint_extradirs = NULL,
+     .factory_extradirs = NULL,
      .year = 0,
      .exp_mode = false,
 };
@@ -188,30 +197,6 @@ static void set_mode(int m) {
      mode = m;
 }
 
-/**
- * Add an extra directory, ensures that the array always finishes with a NULL entry
- *
- * @param[in] dirs the directory array
- * @param[in] dir the directory to add
- */
-static void add_extradir(dirs_t *dirs, const char *dir) {
-     int size;
-     if (dirs->capacity == dirs->count) {
-          if (dirs->capacity == 0) {
-               dirs->capacity = 2;
-               size = (dirs->capacity + 1) * sizeof(char*);
-               dirs->dirs = malloc(size);
-               memset(dirs->dirs, 0, size);
-          } else {
-               dirs->capacity *= 2;
-               size = (dirs->capacity + 1) * sizeof(char*);
-               dirs->dirs = realloc(dirs->dirs, size);
-               memset(dirs->dirs + dirs->count, 0, (dirs->count + 1) * sizeof(char*));
-          }
-     }
-     dirs->dirs[dirs->count++] = strdup(dir);
-}
-
 static void parse_options(int argc, char * const argv[]) {
      int option_index = 0;
      int c;
@@ -311,17 +296,26 @@ static void parse_options(int argc, char * const argv[]) {
                break;
 
           case 20:
-               add_extradir(&filterdirs, optarg);
+               if (filterdirs == NULL) {
+                    filterdirs = cad_new_array(stdlib_memory);
+               }
+               filterdirs->insert(filterdirs, filterdirs->count(filterdirs), strdup(optarg));
                options_set.filter_extradirs = true;
                break;
 
           case 21:
-               add_extradir(&fingerprintdirs, optarg);
+               if (fingerprintdirs == NULL) {
+                    fingerprintdirs = cad_new_array(stdlib_memory);
+               }
+               fingerprintdirs->insert(fingerprintdirs, fingerprintdirs->count(fingerprintdirs), strdup(optarg));
                options_set.fingerprint_extradirs = true;
                break;
 
           case 22:
-               add_extradir(&factorydirs, optarg);
+               if (factorydirs == NULL) {
+                    factorydirs = cad_new_array(stdlib_memory);
+               }
+               factorydirs->insert(factorydirs, factorydirs->count(factorydirs), strdup(optarg));
                options_set.factory_extradirs = true;
                break;
 
@@ -425,9 +419,9 @@ int main(int argc, char * const argv[]) {
      sort_factories(log);
 
      check_options_set(log, input->options_set(input), input->default_options(input), output->options_set(output), output->default_options(output));
-     options.filter_extradirs = (const char**)filterdirs.dirs;
-     options.fingerprint_extradirs = (const char**)fingerprintdirs.dirs;
-     options.factory_extradirs = (const char**)factorydirs.dirs;
+     options.filter_extradirs = array_to_dirs(&filterdirs);
+     options.fingerprint_extradirs = array_to_dirs(&fingerprintdirs);
+     options.factory_extradirs = array_to_dirs(&factorydirs);
      input->set_options(input, options);
      output->set_options(output, options);
 
