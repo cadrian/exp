@@ -54,7 +54,7 @@ typedef enum {
  * @param[in] format the message format
  * @param[in] ... the message arguments
  *
- * @return the length of the message after expansion
+ * @return the length of the message after expansion; 0 if the log is not emitted because of the level
  */
 typedef int (*logger_t) (level_t level, char *format, ...) __PRINTF__;
 

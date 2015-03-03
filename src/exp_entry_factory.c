@@ -47,10 +47,11 @@ void sort_factories(logger_t log) {
      if (factories_list != NULL) {
           factories_list->sort(factories_list, (comparator_fn)compare_factories);
           n = factories_list->count(factories_list);
-          log(debug, "Sorted entry factories:\n");
-          for (i = 0; i < n; i++) {
-               f = factories_list->get(factories_list, i);
-               log(debug, "%2d: %s (%d)\n", i+1, f->get_name(f), f->priority(f));
+          if (log(debug, "Sorted entry factories:\n")) {
+               for (i = 0; i < n; i++) {
+                    f = factories_list->get(factories_list, i);
+                    log(debug, "%2d: %s (%d)\n", i+1, f->get_name(f), f->priority(f));
+               }
           }
      }
 }
