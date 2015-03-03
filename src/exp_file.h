@@ -39,10 +39,6 @@ typedef struct line_s line_t;
 
 struct line_s {
      /**
-      * A link to the next line
-      */
-     line_t *next;
-     /**
       * The length of the line
       */
      size_t length;
@@ -76,13 +72,14 @@ typedef size_t (*file_lines_count_fn)(file_t *this);
 typedef size_t (*file_size_fn)(file_t *this);
 
 /**
- * Get all the file lines.
+ * Get a file line.
  *
  * @param[in] this the target file
+ * @param[in] index the index of the line
  *
- * @return a pointer to the first line
+ * @return a pointer to the `index`-th line
  */
-typedef line_t *(*file_lines_fn)(file_t *this);
+typedef line_t *(*file_line_fn)(file_t *this, int index);
 
 /**
  * Free the file
@@ -99,7 +96,7 @@ struct file_s {
      /**
       * @see file_lines_fn
       */
-     file_lines_fn lines;
+     file_line_fn line;
      /**
       * @see file_size_fn
       */
@@ -122,13 +119,12 @@ struct file_s {
 file_t *new_file(logger_t log, level_t error_level, const char *path);
 
 /**
- * Create a new line. The content is copied to the line buffer.
+ * Create a new line. The `content` is copied to the line buffer.
  *
- * @param[in] previous the previous line
  * @param[in] length the length of the line
  * @param[in] content the content of the line
  */
-line_t *new_line(line_t *previous, size_t length, const char *content);
+line_t *new_line(size_t length, const char *content);
 
 /**
  * @}

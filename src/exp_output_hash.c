@@ -149,7 +149,7 @@ static void fingerprint_increment(output_hash_t *this, input_file_t *fingerprint
      strcpy(buffer, fingerprint_file->get_name(fingerprint_file));
      filename = basename(buffer);
      this->log(info, "Adding fingerprint: %s\n", filename);
-     fingerprint_line = new_line(NULL, strlen(filename), filename);
+     fingerprint_line = new_line(strlen(filename), filename);
      fingerprint_entry = factory->new_entry(factory, fingerprint_line);
      hash_increment(this, filename, fingerprint_entry);
 }

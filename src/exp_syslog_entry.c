@@ -138,16 +138,17 @@ static bool_t read_regexps_(syslog_entry_factory_t *this, const char *dir, const
      file_t *file;
      line_t *line;
      regexp_t *regexp;
+     int i, n;
 
      sprintf(path, "%s%s", dir, filename);
      file = new_file(this->log, debug, path);
      if (file != NULL) {
           result = true;
-          line = file->lines(file);
-          while (line != NULL && line->length > 0) {
+          n = file->lines_count(file);
+          for (i = 0; i < n; i++) {
+               line = file->line(file, i);
                regexp = new_regexp(this->log, line->buffer, 0);
                regexps->insert(regexps, regexps->count(regexps), regexp);
-               line = line->next;
           }
      }
 

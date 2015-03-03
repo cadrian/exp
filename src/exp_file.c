@@ -25,6 +25,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
+#include <cad_array.h>
 
 #include "exp_file.h"
 
@@ -33,17 +34,16 @@ typedef struct file_impl_s file_impl_t;
 struct file_impl_s {
      file_t fn;
      logger_t log;
-     size_t length;
      size_t size;
-     line_t *lines;
+     cad_array_t *lines;
 };
 
 static size_t impl_lines_count(file_impl_t *this) {
-     return this->length;
+     return this->lines->count(this->lines);
 }
 
-static line_t *impl_lines(file_impl_t *this) {
-     return this->lines;
+static line_t *impl_line(file_impl_t *this, int index) {
+     return this->lines->get(this->lines, index);
 }
 
 static size_t impl_size(file_impl_t *this) {
@@ -51,30 +51,20 @@ static size_t impl_size(file_impl_t *this) {
 }
 
 static void impl_free(file_impl_t *this) {
-     line_t *line = this->lines;
-     line_t *next;
-     while (line != NULL) {
-          next = line->next;
-          free(line);
-          line = next;
-     }
+     this->lines->free(this->lines);
      free(this);
 }
 
 static file_t file_impl_fn = {
      .lines_count = (file_lines_count_fn)impl_lines_count,
-     .lines = (file_lines_fn)impl_lines,
+     .line = (file_line_fn)impl_line,
      .size = (file_size_fn)impl_size,
      .free = (file_free_fn)impl_free,
 };
 
-line_t *new_line(line_t *previous, size_t length, const char *content) {
+line_t *new_line(size_t length, const char *content) {
      line_t *result = malloc(sizeof(line_t) + length + 1);
      char *line = (char*)result->buffer;
-     if (previous != NULL) {
-          previous->next = result;
-     }
-     result->next = NULL;
      result->length = length;
      memcpy(line, content, length + 1);
      line[length] = '\0';
@@ -83,40 +73,37 @@ line_t *new_line(line_t *previous, size_t length, const char *content) {
 
 static void read_all_lines(file_impl_t *this, FILE *in) {
      static char buffer[MAX_LINE_SIZE];
-     static char line[MAX_LINE_SIZE];
+     static char linebuf[MAX_LINE_SIZE];
 
-     line_t *first = NULL;
-     line_t *last = NULL;
+     line_t *line = NULL;
 
      size_t buffer_length;
      size_t line_length = 0;
      size_t buffer_index;
      bool_t line_too_long_flag = false;
      size_t count_lines_too_long = 0;
+     int count = 0;
 
-     this->length = 0;
+     this->lines = cad_new_array(stdlib_memory);
      this->size = 0;
 
      while ((buffer_length = fread(buffer, 1, MAX_LINE_SIZE, in)) > 0) {
           for (buffer_index = 0; buffer_index < buffer_length; buffer_index++) {
                if (buffer[buffer_index] == '\n') {
-                    last = new_line(last, line_length, line);
-                    if (first == NULL) {
-                         first = last;
-                    }
+                    line = new_line(line_length, linebuf);
+                    this->lines->insert(this->lines, count++, line);
                     this->size += line_length;
-                    this->length++;
                     line_length = 0;
                     line_too_long_flag = false;
                } else if (line_length >= MAX_LINE_SIZE) {
                     if (!line_too_long_flag) {
-                         this->log(info, "Truncating line %lu\n", (unsigned long)this->length);
+                         this->log(info, "Truncating line %lu\n", (unsigned long)count);
                          count_lines_too_long++;
                          line_too_long_flag = true;
-                         line[MAX_LINE_SIZE - 1] = '\0';
+                         linebuf[MAX_LINE_SIZE - 1] = '\0';
                     }
                } else {
-                    line[line_length++] = buffer[buffer_index];
+                    linebuf[line_length++] = buffer[buffer_index];
                }
           }
      }
@@ -124,22 +111,17 @@ static void read_all_lines(file_impl_t *this, FILE *in) {
      if (ferror(in)) {
           this->log(warn, "Error during read: %s\n", strerror(errno));
      } else if (line_length > 0) {
-          last = new_line(last, line_length, line);
-          if (first == NULL) {
-               first = last;
-          }
+          line = new_line(line_length, linebuf);
+          this->lines->insert(this->lines, count++, line);
           this->size += line_length;
-          this->length++;
      }
 
-     this->size += this->length; /* count 1 per EOL */
+     this->size += count; /* count 1 per EOL */
 
      if (count_lines_too_long > 0) {
           this->log(warn, "%lu line%s too long, truncated to %d characters\n", (unsigned long)count_lines_too_long, count_lines_too_long > 1 ? "s" : "", MAX_LINE_SIZE - 1);
      }
-     this->log(debug, "Read %lu line%s\n", (unsigned long)this->length, this->length > 1 ? "s" : "");
-
-     this->lines = first;
+     this->log(debug, "Read %lu line%s\n", (unsigned long)count, count > 1 ? "s" : "");
 }
 
 file_t *new_file(logger_t log, level_t error_level, const char *path) {

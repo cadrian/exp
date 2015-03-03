@@ -112,9 +112,9 @@ static void impl_sort_files(input_impl_t *this) {
      }
 }
 
-static entry_factory_t *select_entry_factory(logger_t log, line_t *lines) {
+static entry_factory_t *select_entry_factory(logger_t log, file_t *file) {
      entry_factory_t *result = NULL;
-     int i, f, n, nl, nlines;
+     int i, f, nl, nlines;
      int nf = entry_factories_length();
      line_t *line;
      entry_factory_t *factory;
@@ -122,18 +122,12 @@ static entry_factory_t *select_entry_factory(logger_t log, line_t *lines) {
      bool_t found;
      memset(tally, 0, sizeof(size_t) * nf);
 
-     nlines = 0;
-     for (line = lines; line != NULL; line = line->next) {
-          nlines++;
-     }
-
+     nlines = file->lines_count(file);
      if (nlines > 0) {
           do {
                for (i = 0; i < SAMPLE_SIZE; i++) {
-                    n = nl = rand() % nlines;
-                    for (line = lines; n --> 0; line = line->next) {
-                         // TODO change the lines structure from linked list to array (this is dumb)
-                    }
+                    nl = rand() % nlines;
+                    line = file->line(file, nl);
                     log(debug, "Sample line %4d/%4d [%d %s] | %.*s\n", nl+1, nlines, nf, nf == 1 ? "factory" : "factories", (int)line->length, line->buffer);
                     found = false;
                     for (f = 0; !found && f < nf; f++) {
@@ -168,10 +162,9 @@ static entry_factory_t *select_entry_factory(logger_t log, line_t *lines) {
 
 static input_file_impl_t *do_parse(input_impl_t *this, file_t *in, const char *filename) {
      input_file_impl_t *result = NULL;
-     line_t *lines = in->lines(in);
-     entry_factory_t *factory = select_entry_factory(this->log, lines);
+     entry_factory_t *factory = select_entry_factory(this->log, in);
      line_t *line;
-     int i = 0;
+     int i, n = in->lines_count(in);
 
      if (factory == NULL) {
           this->log(warn, "Input factory not found for file %s\n", filename);
@@ -186,8 +179,9 @@ static input_file_impl_t *do_parse(input_impl_t *this, file_t *in, const char *f
           result->size = in->size(in);
           result->entries = malloc(result->length * sizeof(entry_t*));
           strcpy(result->filename, filename);
-          for (line = lines; line != NULL; line = line->next) {
-               result->entries[i++] = factory->new_entry(factory, line);
+          for (i = 0; i < n; i++) {
+               line = in->line(in, i);
+               result->entries[i] = factory->new_entry(factory, line);
           }
      }
 

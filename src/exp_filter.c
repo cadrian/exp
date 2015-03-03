@@ -140,23 +140,24 @@ static bool_t impl_extend_(filter_impl_t *this, const char *dir, const char *fil
      bool_t has_replacement = replacement != NULL;
      static char re_[MAX_LINE_SIZE];
      char *re;
-     int i;
+     int i, j, n;
 
      sprintf(path, "%s%s", dir, filename);
      file = new_file(this->log, debug, path);
      if (file != NULL) {
           result = true;
-          line = file->lines(file);
-          while (line != NULL && line->length > 0) {
+          n = file->lines_count(file);
+          for (i = 0; i < n; i++) {
+               line = file->line(file, i);
                if (has_replacement) {
                     re = (char*)line->buffer;
                } else {
                     strncpy(re_, line->buffer, line->length);
-                    i = line->length - 1;
-                    while(i >= 0 && re_[i] == ' ') {
-                         i--;
+                    j = line->length - 1;
+                    while(j >= 0 && re_[j] == ' ') {
+                         j--;
                     }
-                    re_[i+1] = '\0';
+                    re_[j+1] = '\0';
                     re = re_;
                     replacement = split(&re);
                     if (replacement == NULL) {
@@ -169,7 +170,6 @@ static bool_t impl_extend_(filter_impl_t *this, const char *dir, const char *fil
                          add_regexp(this, regexp, replacement);
                     }
                }
-               line = line->next;
           }
           file->free(file);
      }
