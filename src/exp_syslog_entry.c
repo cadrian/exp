@@ -329,7 +329,7 @@ static entry_t *syslog_new_entry(syslog_entry_factory_t *this, line_t *line) {
      result->log     = this->log;
 
      if (this->regexp == NULL && !syslog_is_type(this, line)) {
-          this->log(warn, "Incompatible factory %s | %.*s\n", this->name, line->length, line->buffer);
+          this->log(warn, "Incompatible factory %s | %.*s\n", this->name, (int)line->length, line->buffer);
      } else {
           match = this->regexp->match(this->regexp, line->buffer, 0, line->length, 0);
      }
