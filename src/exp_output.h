@@ -25,6 +25,7 @@
 #include "exp.h"
 #include "exp_log.h"
 #include "exp_input.h"
+#include "exp_options.h"
 
 /**
  * @addtogroup exp_output
@@ -35,70 +36,6 @@
  * The output interface.
  */
 typedef struct output_s output_t;
-
-/**
- * The sample type.
- */
-typedef enum {
-     /** don't sample */
-     sample_none=0,
-     /** sample under a threshold */
-     sample_threshold=1,
-     /** sample always */
-     sample_all=2
-} sample_t;
-
-/**
- * The mode type. Defines the output mode.
- */
-typedef enum {
-     mode_undefined=0,
-     mode_hash,
-     mode_wordcount,
-     mode_daemon,
-     mode_host,
-     mode_sgraph,
-     mode_mgraph,
-     mode_hgraph,
-     mode_dgraph,
-     mode_mograph,
-     mode_ygraph
-} expmode_t;
-
-/**
- * The user-supplied output options
- */
-typedef struct {
-     bool_t   filter;
-     bool_t   fingerprint;
-     char    *tick;
-     bool_t   wide;
-     sample_t sample;
-     char   **filter_extradirs;
-     char   **fingerprint_extradirs;
-     int      year;
-     bool_t   exp_mode;
-     int      dev;
-} output_options_t;
-
-/**
- * An options setting mask, useful to check which options were set and
- * if they were allowed to be set.
- *
- * @see output_options_set_fn
- */
-typedef struct {
-     bool_t filter;
-     bool_t fingerprint;
-     bool_t tick;
-     bool_t wide;
-     bool_t sample;
-     bool_t filter_extradirs;
-     bool_t fingerprint_extradirs;
-     bool_t year;
-     bool_t exp_mode;
-     bool_t dev;
-} options_set_t;
 
 /**
  * Called by the [fingerprint](@ref exp_fingerprint.h)
@@ -127,7 +64,7 @@ typedef options_set_t (*output_options_set_fn)(output_t *this);
  *
  * @return the default options
  */
-typedef output_options_t (*output_default_options_fn)(output_t *this);
+typedef options_t (*output_default_options_fn)(output_t *this);
 
 /**
  * Set the user-supplied options
@@ -135,7 +72,7 @@ typedef output_options_t (*output_default_options_fn)(output_t *this);
  * @param[in] this the target output
  * @param[in] options the user-supplied options
  */
-typedef void (*output_set_options_fn)(output_t *this, output_options_t options);
+typedef void (*output_set_options_fn)(output_t *this, options_t options);
 
 /**
  * Prepare the log analysis and display relevant results.

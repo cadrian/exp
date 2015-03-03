@@ -29,6 +29,7 @@
 
 #include "exp.h"
 #include "exp_log.h"
+#include "exp_options.h"
 #include "exp_input.h"
 #include "exp_output.h"
 #include "exp_entry_factory.h"
@@ -44,6 +45,7 @@ typedef struct {
 
 static dirs_t filterdirs = {0,0,NULL};
 static dirs_t fingerprintdirs = {0,0,NULL};
+static dirs_t factorydirs = {0,0,NULL};
 
 /**
  * The options setting mask.
@@ -55,7 +57,7 @@ static options_set_t options_set = {
 /**
  * The actual options.
  */
-static output_options_t options = {
+static options_t options = {
      .filter = true,
      .fingerprint = false,
      .tick = "#",
@@ -117,6 +119,7 @@ static void usage(const char *cmd) {
              "  --year=YEAR            Change the \"current year\" (default is sysdate's)\n"
              "  --filterdir=DIR        Add a directory to scan for filter files\n"
              "  --fingerprintdir=DIR   Add a directory to scan for fingerprint files\n"
+             "  --factorydir=DIR       Add a directory to scan for factory files\n"
              "\n"
              "If no file is provided, data is read from stdin.\n"
              "\n",
@@ -160,13 +163,14 @@ static struct option long_options[] = {
      {"mograph",        no_argument,       NULL, 'M'},
      {"ygraph",         no_argument,       NULL, 'y'},
 
-     {"filterdir",      required_argument, NULL,  8 },
-     {"fingerprintdir", required_argument, NULL,  9 },
      {"year",           required_argument, NULL, 10 },
      {"exp_mode",       no_argument,       NULL, 11 },
-
      {"dev1",           no_argument,       NULL, 12 },
      {"dev2",           no_argument,       NULL, 13 },
+
+     {"filterdir",      required_argument, NULL, 20 },
+     {"fingerprintdir", required_argument, NULL, 21 },
+     {"factorydir",     required_argument, NULL, 22 },
 
      {0,0,0,0}
 };
@@ -286,16 +290,6 @@ static void parse_options(int argc, char * const argv[]) {
           case 'M': set_mode(mode_mograph);   break;
           case 'y': set_mode(mode_ygraph);    break;
 
-          case 8:
-               add_extradir(&filterdirs, optarg);
-               options_set.filter_extradirs = true;
-               break;
-
-          case 9:
-               add_extradir(&fingerprintdirs, optarg);
-               options_set.fingerprint_extradirs = true;
-               break;
-
           case 10:
                options.year = atoi(optarg);
                options_set.year = true;
@@ -316,6 +310,21 @@ static void parse_options(int argc, char * const argv[]) {
                options_set.dev = true;
                break;
 
+          case 20:
+               add_extradir(&filterdirs, optarg);
+               options_set.filter_extradirs = true;
+               break;
+
+          case 21:
+               add_extradir(&fingerprintdirs, optarg);
+               options_set.fingerprint_extradirs = true;
+               break;
+
+          case 22:
+               add_extradir(&factorydirs, optarg);
+               options_set.factory_extradirs = true;
+               break;
+
           case '?':
           default:
                usage(argv[0]);
@@ -325,17 +334,22 @@ static void parse_options(int argc, char * const argv[]) {
 }
 
 #define check_option(option) do {                                       \
-     if (allowed_options.option) {                                      \
-          if (!options_set.option) {                                    \
-               options.option = default_options.option;                 \
-               log(debug, "Setting default option: %s\n", #option);     \
+          if (allowed_input_options.option) {                           \
+               if (!options_set.option) {                               \
+                    options.option = default_input_options.option;      \
+                    log(debug, "Setting default input option: %s\n", #option); \
+               }                                                        \
+          } else if (allowed_output_options.option) {                   \
+               if (!options_set.option) {                               \
+                    options.option = default_output_options.option;     \
+                    log(debug, "Setting default output option: %s\n", #option); \
+               }                                                        \
+          } else if (options_set.option) {                              \
+               log(warn, "Incompatible option: %s (ignored)\n", #option); \
           }                                                             \
-     } else if (options_set.option) {                                   \
-          log(warn, "Incompatible option: %s (ignored)\n", #option);    \
-     }                                                                  \
-} while(0)
+     } while(0)
 
-static void check_options_set(logger_t log, options_set_t allowed_options, output_options_t default_options) {
+static void check_options_set(logger_t log, options_set_t allowed_input_options, options_t default_input_options, options_set_t allowed_output_options, options_t default_output_options) {
      check_option(filter);
      check_option(fingerprint);
      check_option(tick);
@@ -343,6 +357,7 @@ static void check_options_set(logger_t log, options_set_t allowed_options, outpu
      check_option(sample);
      check_option(filter_extradirs);
      check_option(fingerprint_extradirs);
+     check_option(factory_extradirs);
      check_option(year);
      check_option(dev);
 }
@@ -409,9 +424,11 @@ int main(int argc, char * const argv[]) {
      register_all_factories(log);
      sort_factories(log);
 
-     check_options_set(log, output->options_set(output), output->default_options(output));
-     options.filter_extradirs = filterdirs.dirs;
-     options.fingerprint_extradirs = fingerprintdirs.dirs;
+     check_options_set(log, input->options_set(input), input->default_options(input), output->options_set(output), output->default_options(output));
+     options.filter_extradirs = (const char**)filterdirs.dirs;
+     options.fingerprint_extradirs = (const char**)fingerprintdirs.dirs;
+     options.factory_extradirs = (const char**)factorydirs.dirs;
+     input->set_options(input, options);
      output->set_options(output, options);
 
      if (optind == argc) {

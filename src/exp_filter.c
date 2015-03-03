@@ -51,7 +51,7 @@ struct filter_impl_s {
      size_t capacity;
      regexp_t **stopwords;
      char **replacements;
-     char **extradirs;
+     const char **extradirs;
 };
 
 static const char *impl_scrub(filter_impl_t *this, const char *line) {
@@ -209,7 +209,7 @@ static filter_t filter_impl_fn = {
      .bleach = (filter_bleach_fn)impl_bleach,
 };
 
-filter_t *new_filter(logger_t log, char **extradirs) {
+filter_t *new_filter(logger_t log, const char **extradirs) {
      filter_impl_t *result = malloc(sizeof(filter_impl_t));
 
      result->fn = filter_impl_fn;

@@ -76,6 +76,7 @@ static input_file_t input_file_impl_fn = {
 typedef struct {
      input_t fn;
      logger_t log;
+     options_t options;
      size_t count;
      size_t capacity;
      input_file_impl_t **files;
@@ -207,11 +208,51 @@ static input_file_impl_t *impl_parse(input_impl_t *this, const char *filename) {
      return result;
 }
 
+static options_set_t impl_options_set(input_impl_t *this) {
+     static options_set_t result = {
+          .filter=false,
+          .fingerprint=false,
+          .tick=false,
+          .wide=false,
+          .sample=false,
+          .filter_extradirs=false,
+          .fingerprint_extradirs=false,
+          .factory_extradirs=true,
+          .year=false,
+          .exp_mode=false,
+          .dev=true,
+     };
+     return result;
+}
+
+static options_t impl_default_options(input_impl_t *this) {
+     static options_t result = {
+          .factory_extradirs = NULL,
+     };
+     return result;
+}
+
+static void impl_set_options(input_impl_t *this, options_t options) {
+     int i, n = entry_factories_length();
+     entry_factory_t *factory;
+
+     this->options = options;
+     if (this->options.factory_extradirs != NULL) {
+          for (i = 0; i < n; i++) {
+               factory = entry_factory(i);
+               factory->set_extradirs(factory, this->options.factory_extradirs);
+          }
+     }
+}
+
 static input_t input_impl_fn = {
      .parse = (input_parse_fn)impl_parse,
      .files_length = (input_files_length_fn)impl_files_length,
      .file = (input_file_fn)impl_file,
      .sort_files = (input_sort_files_fn)impl_sort_files,
+     .options_set = (input_options_set_fn)impl_options_set,
+     .default_options = (input_default_options_fn)impl_default_options,
+     .set_options = (input_set_options_fn)impl_set_options,
 };
 
 input_t *new_input(logger_t log) {

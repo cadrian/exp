@@ -42,7 +42,7 @@ struct output_graph_s {
      output_t fn;
      logger_t log;
      input_t *input;
-     output_options_t options;
+     options_t options;
      const char *unit;
      int duration;
      time_fn time;
@@ -296,15 +296,16 @@ static options_set_t output_graph_options_set(output_graph_t *this) {
           .sample=false,
           .filter_extradirs=false,
           .fingerprint_extradirs=false,
-          .year = true,
-          .exp_mode = true,
-          .dev = false,
+          .factory_extradirs=false,
+          .year=true,
+          .exp_mode=true,
+          .dev=false,
      };
      return result;
 }
 
-static output_options_t output_graph_default_options(output_graph_t *this) {
-     static output_options_t result = {
+static options_t output_graph_default_options(output_graph_t *this) {
+     static options_t result = {
           .tick = "#",
           .wide = false,
           .exp_mode = false,
@@ -319,7 +320,7 @@ static output_options_t output_graph_default_options(output_graph_t *this) {
      return result;
 }
 
-static void output_graph_set_options(output_graph_t *this, output_options_t options) {
+static void output_graph_set_options(output_graph_t *this, options_t options) {
      this->options = options;
 }
 
@@ -346,7 +347,7 @@ static output_t *new_output_graph(logger_t log, input_t *input, const char *unit
      result->minh = result->minz = result->max = 0;
      result->keys = malloc(duration * sizeof(char*));
      memset(result->keys, 0, duration * sizeof(char*));
-     memset(&(result->options), 0, sizeof(output_options_t));
+     memset(&(result->options), 0, sizeof(options_t));
      return &(result->fn);
 }
 

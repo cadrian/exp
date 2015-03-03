@@ -46,7 +46,7 @@ struct fingerprint_impl_s {
      logger_t log;
      input_t *input;
      output_t *output;
-     char **extradirs;
+     const char **extradirs;
 };
 
 static void fingerprint_impl_run(fingerprint_impl_t *this, void *output) {
@@ -111,8 +111,8 @@ static void prepare_input(fingerprint_impl_t *this) {
      this->input->sort_files(this->input);
 }
 
-fingerprint_t *new_fingerprint(logger_t log, output_options_t output_options) {
-     output_options_t options = {
+fingerprint_t *new_fingerprint(logger_t log, options_t output_options) {
+     options_t options = {
           .filter = true,
           .fingerprint = false,
           .sample = sample_none,

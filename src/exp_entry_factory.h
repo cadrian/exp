@@ -85,6 +85,8 @@ typedef bool_t (*entry_factory_is_type_fn)(entry_factory_t *this, line_t *line);
  */
 typedef entry_t *(*entry_factory_new_entry_fn)(entry_factory_t *this, line_t *line);
 
+typedef void (*entry_factory_set_extradirs_fn)(entry_factory_t *this, const char **extradirs);
+
 struct entry_factory_s {
      /**
       * @see entry_factory_get_name_fn
@@ -106,6 +108,10 @@ struct entry_factory_s {
       * @see entry_factory_new_entry_fn
       */
      entry_factory_new_entry_fn new_entry;
+     /**
+      * @see entry_factory_set_extradirs_fn
+      */
+     entry_factory_set_extradirs_fn set_extradirs;
 };
 
 /**

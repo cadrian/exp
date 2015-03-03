@@ -63,11 +63,11 @@ Yet, `ExP` has extentions of its own. Here are those extensions:
 * `--dev1` and `--dev2` allow to display only the data out of once
   (resp. twice) the standard deviation from the average.
   This idea comes from *Petit*'s Roadmap.
+* Outsourced entries regexps to be able to customize them; this allows
+  more than one regexp per entry type
 
 # Future work
 
-* Outsource entries regexps to be able to customize them; maybe allow
-  more than one regexp per entry type
 * Color graphs
 * XDG support for easier development *and* standard deployment of
   configuration files

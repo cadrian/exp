@@ -43,7 +43,7 @@ struct output_hash_s {
      const char *type;
      logger_t log;
      input_t *input;
-     output_options_t options;
+     options_t options;
      filter_t **filters;
      cad_hash_t *dict;
      size_t max_count;
@@ -410,15 +410,16 @@ static options_set_t output_hash_options_set(output_hash_t *this) {
           .sample=true,
           .filter_extradirs=true,
           .fingerprint_extradirs=true,
-          .year = true,
-          .exp_mode = false,
-          .dev = true,
+          .factory_extradirs=false,
+          .year=true,
+          .exp_mode=false,
+          .dev=true,
      };
      return result;
 }
 
-static output_options_t output_hash_default_options(output_hash_t *this) {
-     static output_options_t result = {
+static options_t output_hash_default_options(output_hash_t *this) {
+     static options_t result = {
           .filter = true,
           .fingerprint = false,
           .sample = sample_threshold,
@@ -434,8 +435,8 @@ static output_options_t output_hash_default_options(output_hash_t *this) {
      return result;
 }
 
-static output_options_t output_nothash_default_options(output_hash_t *this) {
-     static output_options_t result = {
+static options_t output_nothash_default_options(output_hash_t *this) {
+     static options_t result = {
           .filter = true,
           .fingerprint = false,
           .sample = sample_none,
@@ -443,7 +444,7 @@ static output_options_t output_nothash_default_options(output_hash_t *this) {
      return result;
 }
 
-static void output_hash_set_options(output_hash_t *this, output_options_t options) {
+static void output_hash_set_options(output_hash_t *this, options_t options) {
      this->options = options;
      if (options.fingerprint) {
           this->fingerprint = new_fingerprint(this->log, options);
@@ -469,7 +470,7 @@ static output_t *new_output_(logger_t log, input_t *input, const char *type, voi
      result->max_count = result->meancount = result->devcount = 0;
      result->fill = fill;
      result->fingerprint = NULL;
-     memset(&(result->options), 0, sizeof(output_options_t));
+     memset(&(result->options), 0, sizeof(options_t));
      return &(result->fn);
 }
 

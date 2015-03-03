@@ -29,6 +29,8 @@
 #include <string.h>
 #include <time.h>
 
+#include <cad_array.h>
+
 #include "exp.h"
 #include "exp_regexp.h"
 #include "exp_entry.h"
@@ -36,15 +38,25 @@
 
 #define THIS_YEAR 0
 
+static const char *dirs[] = {
+     "/var/lib/exp/factories/",
+     "/usr/local/exp/var/lib/factories/",
+     "/opt/exp/var/lib/factories/",
+     "/var/lib/petit/factories/",
+     "/usr/local/petit/var/lib/factories/",
+     "/opt/petit/var/lib/factories/",
+     NULL
+};
+
 typedef struct syslog_entry_factory_s syslog_entry_factory_t;
 
-typedef regexp_t *(*regexp_fn)(logger_t log);
 typedef bool_t (*extra_is_type_fn)(syslog_entry_factory_t *this, match_t *match);
 
 struct syslog_entry_factory_s {
      entry_factory_t fn;
      logger_t log;
-     regexp_fn regexp;
+     cad_array_t *regexps;
+     regexp_t *regexp;
      const char *name;
      extra_is_type_fn extra_is_type;
      int priority;
@@ -52,81 +64,13 @@ struct syslog_entry_factory_s {
      const char *default_daemon;
      const char *default_logline;
      int default_year;
+     const char **extradirs;
 };
-
-static regexp_t *syslog_regexp(logger_t log) {
-     static regexp_t *result = NULL;
-     if (result == NULL) {
-          result = new_regexp(log,
-                              "^(?<date>(?<strmonth>[A-Z][a-z]{2})[[:space:]]+(?<day>[0-9][0-9]?)[[:space:]]+(?<hour>[0-9]{2}):(?<minute>[0-9]{2}):(?<second>[0-9]{2}))[[:space:]]+"
-                              "(?<host>[^[:space:]]+)[[:space:]]+(?<daemon>[^[:space:]]+)[[:space:]]+(?<log>.*?)[[:space:]]*$", 0);
-          if (result == NULL) {
-               exit(1);
-          }
-     }
-     return result;
-}
-
-static regexp_t *rsyslog_regexp(logger_t log) {
-     static regexp_t *result = NULL;
-     if (result == NULL) {
-          result = new_regexp(log,
-                              "^(?<date>(?<year>[0-9]{4})-(?<month>[0-9]{2})-(?<day>[0-9]{2})T(?<hour>[0-9]{2}):(?<minute>[0-9]{2}):(?<second>[0-9]{2})(\\.[0-9]{6})?[-+][0-9]{2}:[0-9]{2})[[:space:]]+"
-                              "(?<host>[^[:space:]]+)[[:space:]]+(?<daemon>[^[:space:]]+)[[:space:]]+(?<log>[^[:space:]].*?)[[:space:]]*$", 0);
-          if (result == NULL) {
-               exit(1);
-          }
-     }
-     return result;
-}
-
-static regexp_t *apache_access_regexp(logger_t log) {
-     static regexp_t *result = NULL;
-     if (result == NULL) {
-          // 127.0.0.1 - frank [10/Oct/2000:13:55:36 -0700] "GET /apache_pb.gif HTTP/1.0" 200 2326
-          result = new_regexp(log,
-                              "^(?<ip>[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}) (?<rhost>[^[:space:]]+) - ((?<user>[^[:space:]]*) - )?"
-                              "\\[(?<date>(?<day>[0-9][0-9]?)/+(?<strmonth>[A-Z][a-z]{2})/(?<year>[0-9]{4}):(?<hour>[0-9]{2}):(?<minute>[0-9]{2}):(?<second>[0-9]{2})[[:space:]]+[-+][0-9]{4})\\][[:space:]]+"
-                              "\"(?<query>[A-Z]+[[:space:]]+(?<host>(?<log>[^\"]+?))[[:space:]]+HTTP/[12]\\.[01])\"[[:space:]]+(?<status>[0-9]{3})[[:space:]]+(?<contentlength>([0-9]+|-)).*?[[:space:]]*$", 0);
-          if (result == NULL) {
-               exit(1);
-          }
-     }
-     return result;
-}
-
-static regexp_t *apache_error_regexp(logger_t log) {
-     static regexp_t *result = NULL;
-     if (result == NULL) {
-          // [Wed Oct 11 14:32:52 2000] [error] [client 127.0.0.1] client denied by server configuration: /export/home/live/ap/htdocs/test
-          result = new_regexp(log,
-                              "^\\[(?<date>(?<strday>[A-Z][a-z]{2})[[:space:]]+(?<strmonth>[A-Z][a-z]{2})[[:space:]]+(?<day>[0-9][0-9]?)[[:space:]]+(?<hour>[0-9]{2}):(?<minute>[0-9]{2}):(?<second>[0-9]{2})[[:space:]]+(?<year>[0-9]{4}))\\][[:space:]]+"
-                              "(?<log>\\[(?<level>[a-z]+)\\][[:space:]]+(\\[(?<client>[^]]+)\\][[:space:]]+)?(?<message>.*?))[[:space:]]*$", 0);
-          if (result == NULL) {
-               exit(1);
-          }
-     }
-     return result;
-}
-
-static regexp_t *snort_regexp(logger_t log) {
-     static regexp_t *result = NULL;
-     if (result == NULL) {
-          result = new_regexp(log,
-                              "^(?<date>(?<month>[0-9]{2})/(?<day>[0-9]{2})-(?<hour>[0-9]{2}):(?<minute>[0-9]{2}):(?<second>[0-9]{2})\\.[0-9]{6})[[:space:]]+"
-                              "(?<log>.*?)[[:space:]]*$", 0);
-          if (result == NULL) {
-               exit(1);
-          }
-     }
-     return result;
-}
 
 static regexp_t *raw_regexp(logger_t log) {
      static regexp_t *result = NULL;
      if (result == NULL) {
-          result = new_regexp(log,
-                              "^(?<log>.*?)[[:space:]]*$", 0);
+          result = new_regexp(log, "^(?<log>.*?)[[:space:]]*$", 0);
           if (result == NULL) {
                exit(1);
           }
@@ -137,8 +81,7 @@ static regexp_t *raw_regexp(logger_t log) {
 static regexp_t *space_regexp(logger_t log) {
      static regexp_t *result = NULL;
      if (result == NULL) {
-          result = new_regexp(log,
-                              "[[:space:]]+", 0);
+          result = new_regexp(log, "[[:space:]]+", 0);
           if (result == NULL) {
                exit(1);
           }
@@ -185,18 +128,83 @@ static bool_t syslog_extra_is_type(syslog_entry_factory_t *this, match_t *match)
      return !securelog_extra_is_type(this, match);
 }
 
+static bool_t default_extra_is_type(syslog_entry_factory_t *this, match_t *match) {
+     return true;
+}
+
+static bool_t read_regexps_(syslog_entry_factory_t *this, const char *dir, const char *filename, cad_array_t *regexps) {
+     bool_t result = false;
+     char *path = malloc(strlen(dir) + strlen(filename) + 1);
+     file_t *file;
+     line_t *line;
+     regexp_t *regexp;
+
+     sprintf(path, "%s%s", dir, filename);
+     file = new_file(this->log, debug, path);
+     if (file != NULL) {
+          result = true;
+          line = file->lines(file);
+          while (line != NULL && line->length > 0) {
+               regexp = new_regexp(this->log, line->buffer, 0);
+               regexps->insert(regexps, regexps->count(regexps), regexp);
+               line = line->next;
+          }
+     }
+
+     return result;
+}
+
+static cad_array_t *read_regexps(syslog_entry_factory_t *this) {
+     cad_array_t *result = cad_new_array(stdlib_memory);
+     bool_t found = false, f;
+     static char filename[MAX_LINE_SIZE];
+     const char *dir;
+     int i;
+
+     snprintf(filename, MAX_LINE_SIZE, "%s.factory", this->name);
+
+     if (this->extradirs != NULL) {
+          for (i = 0; (dir = this->extradirs[i]) != NULL; i++) {
+               f = read_regexps_(this, dir, filename, result);
+               found |= f;
+          }
+     }
+     for (i = 0; (dir = dirs[i]) != NULL; i++) {
+          f = read_regexps_(this, dir, filename, result);
+          found |= f;
+     }
+
+     if (!found) {
+          this->log(debug, "%s not found\n", filename);
+     }
+     return result;
+}
+
 static bool_t syslog_is_type(syslog_entry_factory_t *this, line_t *line) {
      bool_t result = false;
-     regexp_t *regexp = this->regexp(this->log);
-     match_t *match = regexp->match(regexp, line->buffer, 0, line->length, 0);
-     if (match != NULL) {
-          if (this->extra_is_type == NULL) {
-               result = true;
-          } else {
-               result = this->extra_is_type(this, match);
-          }
-          match->free(match);
+     cad_array_t *regexps = this->regexps;
+     regexp_t *regexp;
+     match_t *match;
+     int i, n;
+
+     if (regexps == NULL) {
+          regexps = this->regexps = read_regexps(this);
      }
+     this->regexp = NULL;
+
+     n = regexps->count(regexps);
+     for (i = 0; !result && i < n; i++) {
+          regexp = regexps->get(regexps, i);
+          match = regexp->match(regexp, line->buffer, 0, line->length, 0);
+          if (match != NULL) {
+               result = this->extra_is_type(this, match);
+               if (result) {
+                    this->regexp = regexp;
+               }
+               match->free(match);
+          }
+     }
+
      return result;
 }
 
@@ -311,15 +319,20 @@ static char *string_clone(const char *string, const char *def) {
 static entry_t *syslog_new_entry(syslog_entry_factory_t *this, line_t *line) {
      syslog_entry_t *result = malloc(sizeof(syslog_entry_t));
 
-     regexp_t *regexp = this->regexp(this->log);
      regexp_t *re_sp = space_regexp(this->log);
      regexp_t *re_raw = raw_regexp(this->log);
-     match_t *match = regexp->match(regexp, line->buffer, 0, line->length, 0);
+     match_t *match = NULL;
      char *logline = NULL;
 
      result->fn = syslog_entry_fn;
      result->name    = this->name;
      result->log     = this->log;
+
+     if (this->regexp == NULL && !syslog_is_type(this, line)) {
+          this->log(warn, "Incompatible factory %s | %.*s\n", this->name, line->length, line->buffer);
+     } else {
+          match = this->regexp->match(this->regexp, line->buffer, 0, line->length, 0);
+     }
 
      if (match != NULL) {
           result->year    = string_2_int(this, match, "year",   default_year);
@@ -355,19 +368,25 @@ static entry_t *syslog_new_entry(syslog_entry_factory_t *this, line_t *line) {
      return &(result->fn);
 }
 
+static void syslog_set_extradirs(syslog_entry_factory_t *this, const char **extradirs) {
+     this->extradirs = extradirs;
+}
+
 static entry_factory_t syslog_entry_factory_fn = {
      .get_name = (entry_factory_get_name_fn)syslog_factory_get_name,
      .priority = (entry_factory_priority_fn)syslog_factory_priority,
      .tally_logic = (entry_factory_tally_logic_fn)syslog_tally_logic,
      .is_type = (entry_factory_is_type_fn)syslog_is_type,
-     .new_entry = (entry_factory_new_entry_fn)syslog_new_entry
+     .new_entry = (entry_factory_new_entry_fn)syslog_new_entry,
+     .set_extradirs = (entry_factory_set_extradirs_fn)syslog_set_extradirs,
 };
 
 entry_factory_t *new_syslog_entry_factory(logger_t log) {
      syslog_entry_factory_t *result = malloc(sizeof(syslog_entry_factory_t));
      result->fn = syslog_entry_factory_fn;
      result->log = log;
-     result->regexp = syslog_regexp;
+     result->regexps = NULL;
+     result->regexp = NULL;
      result->name = "syslog";
      result->extra_is_type = syslog_extra_is_type;
      result->priority = 1;
@@ -382,9 +401,10 @@ entry_factory_t *new_rsyslog_entry_factory(logger_t log) {
      syslog_entry_factory_t *result = malloc(sizeof(syslog_entry_factory_t));
      result->fn = syslog_entry_factory_fn;
      result->log = log;
-     result->regexp = rsyslog_regexp;
+     result->regexps = NULL;
+     result->regexp = NULL;
      result->name = "rsyslog";
-     result->extra_is_type = NULL;
+     result->extra_is_type = default_extra_is_type;
      result->priority = 1;
      result->default_host = "";
      result->default_daemon = "";
@@ -397,9 +417,10 @@ entry_factory_t *new_apache_access_entry_factory(logger_t log) {
      syslog_entry_factory_t *result = malloc(sizeof(syslog_entry_factory_t));
      result->fn = syslog_entry_factory_fn;
      result->log = log;
-     result->regexp = apache_access_regexp;
+     result->regexps = NULL;
+     result->regexp = NULL;
      result->name = "apache_access";
-     result->extra_is_type = NULL;
+     result->extra_is_type = default_extra_is_type;
      result->priority = 0;
      result->default_host = "";
      result->default_daemon = "";
@@ -412,9 +433,10 @@ entry_factory_t *new_apache_error_entry_factory(logger_t log) {
      syslog_entry_factory_t *result = malloc(sizeof(syslog_entry_factory_t));
      result->fn = syslog_entry_factory_fn;
      result->log = log;
-     result->regexp = apache_error_regexp;
+     result->regexps = NULL;
+     result->regexp = NULL;
      result->name = "apache_error";
-     result->extra_is_type = NULL;
+     result->extra_is_type = default_extra_is_type;
      result->priority = 0;
      result->default_host = "";
      result->default_daemon = "";
@@ -428,7 +450,8 @@ entry_factory_t *new_securelog_entry_factory(logger_t log) {
      result->fn = syslog_entry_factory_fn;
      result->fn.tally_logic = (entry_factory_tally_logic_fn)securelog_tally_logic;
      result->log = log;
-     result->regexp = syslog_regexp;
+     result->regexps = NULL;
+     result->regexp = NULL;
      result->name = "securelog";
      result->extra_is_type = securelog_extra_is_type;
      result->priority = 2;
@@ -443,9 +466,10 @@ entry_factory_t *new_snort_entry_factory(logger_t log) {
      syslog_entry_factory_t *result = malloc(sizeof(syslog_entry_factory_t));
      result->fn = syslog_entry_factory_fn;
      result->log = log;
-     result->regexp = snort_regexp;
+     result->regexps = NULL;
+     result->regexp = NULL;
      result->name = "snort";
-     result->extra_is_type = NULL;
+     result->extra_is_type = default_extra_is_type;
      result->priority = 0;
      result->default_host = "";
      result->default_daemon = "";
@@ -458,9 +482,11 @@ entry_factory_t *new_raw_entry_factory(logger_t log) { /* is it used? */
      syslog_entry_factory_t *result = malloc(sizeof(syslog_entry_factory_t));
      result->fn = syslog_entry_factory_fn;
      result->log = log;
-     result->regexp = raw_regexp;
+     result->regexps = cad_new_array(stdlib_memory);
+     result->regexps->insert(result->regexps, 0, raw_regexp(log));
+     result->regexp = NULL;
      result->name = "raw";
-     result->extra_is_type = NULL;
+     result->extra_is_type = default_extra_is_type;
      result->priority = -1;
      result->default_host = "";
      result->default_daemon = "";

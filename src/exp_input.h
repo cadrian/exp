@@ -26,6 +26,7 @@
 #include "exp_log.h"
 #include "exp_entry.h"
 #include "exp_entry_factory.h"
+#include "exp_options.h"
 
 /**
  * @addtogroup exp_input
@@ -78,6 +79,32 @@ typedef input_file_t *(*input_file_fn)(input_t *this, int index);
  */
 typedef void (*input_sort_files_fn)(input_t *this);
 
+/**
+ * The options mask allowed by this input.
+ *
+ * @param[in] this the target input
+ *
+ * @return the options set mask
+ */
+typedef options_set_t (*input_options_set_fn)(input_t *this);
+
+/**
+ * The default options for this input.
+ *
+ * @param[in] this the target input
+ *
+ * @return the default options
+ */
+typedef options_t (*input_default_options_fn)(input_t *this);
+
+/**
+ * Set the user-supplied options
+ *
+ * @param[in] this the target input
+ * @param[in] options the user-supplied options
+ */
+typedef void (*input_set_options_fn)(input_t *this, options_t options);
+
 struct input_s {
      /**
       * @see input_parse_fn
@@ -95,6 +122,18 @@ struct input_s {
       * @see input_sort_files_fn
       */
      input_sort_files_fn sort_files;
+     /**
+      * @see input_options_set_fn
+      */
+     input_options_set_fn options_set;
+     /**
+      * @see input_default_options_fn
+      */
+     input_default_options_fn default_options;
+     /**
+      * @see input_set_options_fn
+      */
+     input_set_options_fn set_options;
 };
 
 /**
