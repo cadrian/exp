@@ -65,10 +65,10 @@ Yet, `ExP` has extentions of its own. Here are those extensions:
   This idea comes from *Petit*'s Roadmap.
 * Outsourced entries regexps to be able to customize them; this allows
   more than one regexp per entry type
+* Color graphs using `--color`
 
 # Future work
 
-* Color graphs
 * XDG support for easier development *and* standard deployment of
   configuration files
 * Cumulated data in graphs: what happens *each* second, minute, etc.

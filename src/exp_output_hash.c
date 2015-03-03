@@ -336,6 +336,8 @@ static void hash_display_count(output_hash_t *this, size_t count) {
      dict_sort_buf buf = { count, 0, entries };
      dict_entry_t *dictentry;
      entry_t *entry;
+     const char *color_on  = this->options.color ? DARK_GREEN : "";
+     const char *color_off = this->options.color ? OFF : "";
 
      this->dict->iterate(this->dict, (cad_hash_iterator_fn)hash_display_fill_buf, &buf);
      if (buf.n > 0) {
@@ -344,20 +346,20 @@ static void hash_display_count(output_hash_t *this, size_t count) {
                dictentry = entries[i];
                switch(this->options.sample) {
                case sample_none:
-                    printf("%lu:\t%s\n", (unsigned long)count, dictentry->key);
+                    printf("%s%lu%s:\t%s\n", color_on, (unsigned long)count, color_off, dictentry->key);
                     break;
                case sample_threshold:
                     if (count <= SAMPLE_THRESHOLD) {
                          entry = dictentry->entries->get(dictentry->entries, 0);
-                         printf("%lu:\t%s\n", (unsigned long)count, entry->logline(entry));
+                         printf("%s%lu%s:\t%s\n", color_on, (unsigned long)count, color_off, entry->logline(entry));
                     } else {
-                         printf("%lu:\t%s\n", (unsigned long)count, dictentry->key);
+                         printf("%s%lu%s:\t%s\n", color_on, (unsigned long)count, color_off, dictentry->key);
                     }
                     break;
                case sample_all:
                     r = rand() % count;
                     entry = dictentry->entries->get(dictentry->entries, r);
-                    printf("%lu:\t%s\n", (unsigned long)count, entry->logline(entry));
+                    printf("%s%lu%s:\t%s\n", color_on, (unsigned long)count, color_off, entry->logline(entry));
                     break;
                }
           }
@@ -401,17 +403,18 @@ static void output_hash_display(output_hash_t *this) {
 
 static options_set_t output_hash_options_set(output_hash_t *this) {
      static options_set_t result = {
-          .filter=true,
-          .fingerprint=true,
-          .tick=false,
-          .wide=false,
-          .sample=true,
-          .filter_extradirs=true,
-          .fingerprint_extradirs=true,
-          .factory_extradirs=false,
-          .year=true,
-          .exp_mode=false,
-          .dev=true,
+          .filter = true,
+          .fingerprint = true,
+          .tick = false,
+          .wide = false,
+          .sample = true,
+          .filter_extradirs = true,
+          .fingerprint_extradirs = true,
+          .factory_extradirs = false,
+          .year = true,
+          .exp_mode = false,
+          .dev = true,
+          .color = true,
      };
      return result;
 }
@@ -422,6 +425,7 @@ static options_t output_hash_default_options(output_hash_t *this) {
           .fingerprint = false,
           .sample = sample_threshold,
           .dev = 0,
+          .color = false,
      };
      time_t tm;
      static bool_t init = false;

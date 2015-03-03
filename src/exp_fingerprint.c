@@ -46,7 +46,7 @@ struct fingerprint_impl_s {
      logger_t log;
      input_t *input;
      output_t *output;
-     const char **extradirs;
+     const char * const*extradirs;
 };
 
 static void fingerprint_impl_run(fingerprint_impl_t *this, void *output) {

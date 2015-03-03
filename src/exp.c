@@ -42,24 +42,31 @@ static cad_array_t *filterdirs = NULL;
 static cad_array_t *fingerprintdirs = NULL;
 static cad_array_t *factorydirs = NULL;
 
-static const char** array_to_dirs(cad_array_t **dirsp) {
+static const char* const *array_to_dirs(cad_array_t **dirsp) {
      cad_array_t *dirs = *dirsp;
-     int i, n = dirs->count(dirs);
-     char** result = malloc((n + 1) * sizeof(char*));
-     for (i = 0; i < n; i++) {
-          result[i] = dirs->get(dirs, i);
+     int i, n = 0;
+     char** result;
+     static const char *nodirs = NULL;
+     if (dirs == NULL) {
+          result = (char**)&nodirs;
+     } else {
+          n = dirs->count(dirs);
+          result = malloc((n + 1) * sizeof(char*));
+          for (i = 0; i < n; i++) {
+               result[i] = dirs->get(dirs, i);
+          }
+          result[n] = NULL;
+          dirs->free(dirs);
+          *dirsp = NULL;
      }
-     result[n] = NULL;
-     dirs->free(dirs);
-     *dirsp = NULL;
-     return (const char **)result;
+     return (const char * const*)result;
 }
 
 /**
  * The options setting mask.
  */
 static options_set_t options_set = {
-     false, false, false, false, false, false, false, false,
+     false, false, false, false, false, false, false, false, false,
 };
 
 /**
@@ -76,6 +83,7 @@ static options_t options = {
      .factory_extradirs = NULL,
      .year = 0,
      .exp_mode = false,
+     .color = false,
 };
 
 /**
@@ -129,6 +137,7 @@ static void usage(const char *cmd) {
              "  --filterdir=DIR        Add a directory to scan for filter files\n"
              "  --fingerprintdir=DIR   Add a directory to scan for fingerprint files\n"
              "  --factorydir=DIR       Add a directory to scan for factory files\n"
+             "  --color                Use some color\n"
              "\n"
              "If no file is provided, data is read from stdin.\n"
              "\n",
@@ -176,6 +185,7 @@ static struct option long_options[] = {
      {"exp_mode",       no_argument,       NULL, 11 },
      {"dev1",           no_argument,       NULL, 12 },
      {"dev2",           no_argument,       NULL, 13 },
+     {"color",          no_argument,       NULL, 14 },
 
      {"filterdir",      required_argument, NULL, 20 },
      {"fingerprintdir", required_argument, NULL, 21 },
@@ -293,6 +303,11 @@ static void parse_options(int argc, char * const argv[]) {
           case 13:
                options.dev = 2;
                options_set.dev = true;
+               break;
+
+          case 14:
+               options.color = true;
+               options_set.color = true;
                break;
 
           case 20:

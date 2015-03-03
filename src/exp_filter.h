@@ -99,7 +99,7 @@ struct filter_s {
  *
  * @return the new filter
  */
-filter_t *new_filter(logger_t log, const char **extradirs);
+filter_t *new_filter(logger_t log, const char * const*extradirs);
 
 /**
  * @}

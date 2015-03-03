@@ -64,7 +64,7 @@ struct syslog_entry_factory_s {
      const char *default_daemon;
      const char *default_logline;
      int default_year;
-     const char **extradirs;
+     const char * const*extradirs;
 };
 
 static regexp_t *raw_regexp(logger_t log) {
@@ -369,7 +369,7 @@ static entry_t *syslog_new_entry(syslog_entry_factory_t *this, line_t *line) {
      return &(result->fn);
 }
 
-static void syslog_set_extradirs(syslog_entry_factory_t *this, const char **extradirs) {
+static void syslog_set_extradirs(syslog_entry_factory_t *this, const char * const*extradirs) {
      this->extradirs = extradirs;
 }
 

@@ -123,7 +123,7 @@ struct output_s {
  *
  * @return the new output
  */
-output_t *new_output_hash     (logger_t log, input_t *input);
+output_t *new_output_hash(logger_t log, input_t *input);
 
 /**
  * Create a new "wordcount" output.
@@ -143,7 +143,7 @@ output_t *new_output_wordcount(logger_t log, input_t *input);
  *
  * @return the new output
  */
-output_t *new_output_daemon   (logger_t log, input_t *input);
+output_t *new_output_daemon(logger_t log, input_t *input);
 
 /**
  * Create a new "hosy" output.
@@ -153,7 +153,7 @@ output_t *new_output_daemon   (logger_t log, input_t *input);
  *
  * @return the new output
  */
-output_t *new_output_host     (logger_t log, input_t *input);
+output_t *new_output_host(logger_t log, input_t *input);
 
 /**
  * Create a new "sgraph" output.
@@ -163,7 +163,7 @@ output_t *new_output_host     (logger_t log, input_t *input);
  *
  * @return the new output
  */
-output_t *new_output_sgraph (logger_t log, input_t *input);
+output_t *new_output_sgraph(logger_t log, input_t *input);
 
 /**
  * Create a new "mgraph" output.
@@ -173,7 +173,7 @@ output_t *new_output_sgraph (logger_t log, input_t *input);
  *
  * @return the new output
  */
-output_t *new_output_mgraph (logger_t log, input_t *input);
+output_t *new_output_mgraph(logger_t log, input_t *input);
 
 /**
  * Create a new "hgraph" output.
@@ -183,7 +183,7 @@ output_t *new_output_mgraph (logger_t log, input_t *input);
  *
  * @return the new output
  */
-output_t *new_output_hgraph (logger_t log, input_t *input);
+output_t *new_output_hgraph(logger_t log, input_t *input);
 
 /**
  * Create a new "dgraph" output.
@@ -193,7 +193,7 @@ output_t *new_output_hgraph (logger_t log, input_t *input);
  *
  * @return the new output
  */
-output_t *new_output_dgraph (logger_t log, input_t *input);
+output_t *new_output_dgraph(logger_t log, input_t *input);
 
 /**
  * Create a new "mograph" output.
@@ -213,7 +213,34 @@ output_t *new_output_mograph(logger_t log, input_t *input);
  *
  * @return the new output
  */
-output_t *new_output_ygraph (logger_t log, input_t *input);
+output_t *new_output_ygraph(logger_t log, input_t *input);
+
+/**
+ * Ansi color codes
+ * @{
+ */
+
+#define OFF         "\033[0m"
+#define BLACK       "\033[0;30m"
+#define DARK_RED    "\033[0;31m"
+#define DARK_GREEN  "\033[0;32m"
+#define BROWN       "\033[0;33m"
+#define DARK_BLUE   "\033[0;34m"
+#define PURPLE      "\033[0;35m"
+#define DARK_CYAN   "\033[0;36m"
+#define LIGHT_GRAY  "\033[0;37m"
+#define DARK_GRAY   "\033[1;30m"
+#define RED         "\033[1;31m"
+#define GREEN       "\033[1;32m"
+#define YELLOW      "\033[1;33m"
+#define BLUE        "\033[1;34m"
+#define MAGENTA     "\033[1;35m"
+#define CYAN        "\033[1;36m"
+#define WHITE       "\033[1;37m"
+
+/**
+ * @}
+ */
 
 /**
  * @}

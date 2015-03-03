@@ -62,17 +62,18 @@ typedef enum {
  * The user-supplied options
  */
 typedef struct {
-     bool_t       filter;
-     bool_t       fingerprint;
-     char        *tick;
-     bool_t       wide;
-     sample_t     sample;
-     const char **filter_extradirs;
-     const char **fingerprint_extradirs;
-     const char **factory_extradirs;
-     int          year;
-     bool_t       exp_mode;
-     int          dev;
+     bool_t             filter;
+     bool_t             fingerprint;
+     char              *tick;
+     bool_t             wide;
+     sample_t           sample;
+     const char * const*filter_extradirs;
+     const char * const*fingerprint_extradirs;
+     const char * const*factory_extradirs;
+     int                year;
+     bool_t             exp_mode;
+     int                dev;
+     bool_t             color;
 } options_t;
 
 /**
@@ -93,6 +94,7 @@ typedef struct {
      bool_t year;
      bool_t exp_mode;
      bool_t dev;
+     bool_t color;
 } options_set_t;
 
 /**

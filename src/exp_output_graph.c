@@ -183,13 +183,21 @@ static void output_graph_display(output_graph_t *this) {
      double scale;
      char char_fill[4];
      char char_blank[4];
-     char char_scale[64];
+     char char_scale[4];
+     char str_scale[64];
      int y, i, p;
 
      int graph_position_start, graph_position_middle, graph_position_end;
      int graph_width;
      const char *key;
      double *value;
+
+     const char *color_scale   = this->options.color ? LIGHT_GRAY : "";
+     const char *color_tick    = this->options.color ? BLUE : "";
+     const char *color_blank   = this->options.color ? BLACK : "";
+     const char *color_caption = this->options.color ? YELLOW : "";
+     const char *color_off     = this->options.color ? OFF : "";
+     int tickstate = 0;
 
      scale = (this->max - this->minz) / graph.height;
 
@@ -212,6 +220,7 @@ static void output_graph_display(output_graph_t *this) {
      if (this->options.wide) {
           sprintf(char_fill, "%c%c", this->options.tick[0], this->options.tick[1] == '\0' ? ' ' : this->options.tick[1]);
           strcpy(char_blank, "  ");
+          strcpy(char_scale, "| ");
           graph_width = graph.width * 2;
           graph_position_start = 1;
           graph_position_middle = graph.width - ((int)(graph.width) % 2);
@@ -219,12 +228,13 @@ static void output_graph_display(output_graph_t *this) {
      } else {
           sprintf(char_fill, "%c", this->options.tick[0]);
           strcpy(char_blank, " ");
+          strcpy(char_scale, "|");
           graph_width = graph.width;
           graph_position_start = 1;
           graph_position_middle = graph_width / 2;
           graph_position_end = graph_width - 2;
      }
-     this->log(debug, "wide: %s fill='%s' blank='%s'\n", this->options.wide ? "true":"false", char_fill, char_blank);
+     this->log(debug, "wide: %s fill='%s' blank='%s' scale='%s'\n", this->options.wide ? "true":"false", char_fill, char_blank, char_scale);
 
      if (this->options.exp_mode) {
           p = (int)ceil(log10(graph.max)) + 1;
@@ -232,40 +242,61 @@ static void output_graph_display(output_graph_t *this) {
 
      fputc('\n', stdout);
      for (y = graph.height; y > 0; y--) {
+          tickstate = 0;
           if (this->options.exp_mode) {
                if (y == graph.height) {
-                    sprintf(char_scale, "% *d", p, (int)graph.max);
+                    sprintf(str_scale, "% *d", p, (int)graph.max);
                } else if (y == 1) {
-                    sprintf(char_scale, "% *d", p, (int)graph.min);
+                    sprintf(str_scale, "% *d", p, (int)graph.min);
                } else {
-                    char_scale[0] = '\0';
+                    str_scale[0] = '\0';
                }
-               printf(" %*.*s - ", p+1, p+1, char_scale);
+               printf("%s %*.*s - ", color_scale, p+1, p+1, str_scale);
           }
           for (i = 0; i < this->duration; i++) {
                key = this->keys[i];
                value = this->dict->get(this->dict, key);
                if (value != NULL) {
                     if (*value >= y) {
+                         if (tickstate != 1) {
+                              printf("%s", color_tick);
+                              tickstate = 1;
+                         }
                          fputs(char_fill, stdout);
                     } else {
+                         if (tickstate != 2) {
+                              printf("%s", color_blank);
+                              tickstate = 2;
+                         }
                          fputs(char_blank, stdout);
                     }
                }
           }
-          fputc('\n', stdout);
+          printf("%s\n", color_off);
      }
 
      if (this->options.exp_mode) {
-          printf(" %*s   ", p+1, "");
+          printf("%s %*s   ", color_scale, p+1, "");
+     } else {
+          printf("%s", color_scale);
      }
      for (i = 0; i < this->duration; i++) {
-          fputs(char_fill, stdout);
+          if (i == 0) {
+               printf("%s%s%s", color_tick, char_scale, color_scale);
+          } else if (i == this->duration / 2) {
+               printf("%s%s%s", color_tick, char_scale, color_scale);
+          } else if (i == this->duration - 1) {
+               printf("%s%s%s", color_tick, char_scale, color_scale);
+          } else {
+               fputs(char_scale, stdout);
+          }
      }
-     fputc('\n', stdout);
+     printf("%s\n", color_off);
 
      if (this->options.exp_mode) {
-          printf(" %*s   ", p+1, "");
+          printf("%s %*s   ", color_scale, p+1, "");
+     } else {
+          printf("%s", color_scale);
      }
      for (i = 1; i < graph_width; i++) {
           if (i == graph_position_start) {
@@ -278,28 +309,29 @@ static void output_graph_display(output_graph_t *this) {
                fputc(' ', stdout);
           }
      }
-     fputc('\n', stdout);
+     printf("%s\n", color_off);
 
      fputc('\n', stdout);
-     printf("Start Time:\t%s\t\tMinimum Value: %g\n", strdate(&(this->start)), this->minz);
-     printf("End Time:\t%s\t\tMaximum Value: %g\n", strdate(&(this->end)), this->max);
-     printf("Duration:\t%d %ss \t\t\tScale: %.12g%s\n", this->duration, this->unit, scale, (scale == (int)scale) ? ".0" : "");
+     printf("%sStart Time:%s\t%s\t\t%sMinimum Value:%s %g\n", color_caption, color_off, strdate(&(this->start)), color_caption, color_off, this->minz);
+     printf("%sEnd Time:%s\t%s\t\t%sMaximum Value:%s %g\n", color_caption, color_off, strdate(&(this->end)), color_caption, color_off, this->max);
+     printf("%sDuration:%s\t%d %ss \t\t\t%sScale:%s %.12g%s\n", color_caption, color_off, this->duration, this->unit, color_caption, color_off, scale, (scale == (int)scale) ? ".0" : "");
      fputc('\n', stdout);
 }
 
 static options_set_t output_graph_options_set(output_graph_t *this) {
      static options_set_t result = {
-          .filter=false,
-          .fingerprint=false,
-          .tick=true,
-          .wide=true,
-          .sample=false,
-          .filter_extradirs=false,
-          .fingerprint_extradirs=false,
-          .factory_extradirs=false,
-          .year=true,
-          .exp_mode=true,
-          .dev=false,
+          .filter = false,
+          .fingerprint = false,
+          .tick = true,
+          .wide = true,
+          .sample = false,
+          .filter_extradirs = false,
+          .fingerprint_extradirs = false,
+          .factory_extradirs = false,
+          .year = true,
+          .exp_mode = true,
+          .dev = false,
+          .color = true,
      };
      return result;
 }
@@ -309,6 +341,7 @@ static options_t output_graph_default_options(output_graph_t *this) {
           .tick = "#",
           .wide = false,
           .exp_mode = false,
+          .color = false,
      };
      time_t tm;
      static bool_t init = false;
