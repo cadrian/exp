@@ -184,8 +184,11 @@ static void output_graph_display(output_graph_t *this) {
      char char_fill[4];
      char char_blank[4];
      char char_scale[4];
+     char char_scaletick[4];
      char str_scale[64];
      int y, i, p;
+     char c_scale     = this->options.exp_mode ? '-' : '#';
+     char c_scaletick = this->options.exp_mode ? '|' : '#';
 
      int graph_position_start, graph_position_middle, graph_position_end;
      int graph_width;
@@ -220,7 +223,8 @@ static void output_graph_display(output_graph_t *this) {
      if (this->options.wide) {
           sprintf(char_fill, "%c%c", this->options.tick[0], this->options.tick[1] == '\0' ? ' ' : this->options.tick[1]);
           strcpy(char_blank, "  ");
-          strcpy(char_scale, "| ");
+          sprintf(char_scale, "%c ", c_scale);
+          sprintf(char_scaletick, "%c ", c_scaletick);
           graph_width = graph.width * 2;
           graph_position_start = 1;
           graph_position_middle = graph.width - ((int)(graph.width) % 2);
@@ -228,7 +232,8 @@ static void output_graph_display(output_graph_t *this) {
      } else {
           sprintf(char_fill, "%c", this->options.tick[0]);
           strcpy(char_blank, " ");
-          strcpy(char_scale, "|");
+          sprintf(char_scale, "%c", c_scale);
+          sprintf(char_scaletick, "%c", c_scaletick);
           graph_width = graph.width;
           graph_position_start = 1;
           graph_position_middle = graph_width / 2;
@@ -282,11 +287,11 @@ static void output_graph_display(output_graph_t *this) {
      }
      for (i = 0; i < this->duration; i++) {
           if (i == 0) {
-               printf("%s%s%s", color_tick, char_scale, color_scale);
+               printf("%s%s%s", color_tick, char_scaletick, color_scale);
           } else if (i == this->duration / 2) {
-               printf("%s%s%s", color_tick, char_scale, color_scale);
+               printf("%s%s%s", color_tick, char_scaletick, color_scale);
           } else if (i == this->duration - 1) {
-               printf("%s%s%s", color_tick, char_scale, color_scale);
+               printf("%s%s%s", color_tick, char_scaletick, color_scale);
           } else {
                fputs(char_scale, stdout);
           }
