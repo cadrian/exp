@@ -42,24 +42,12 @@ static cad_array_t *filterdirs = NULL;
 static cad_array_t *fingerprintdirs = NULL;
 static cad_array_t *factorydirs = NULL;
 
-static const char* const *array_to_dirs(cad_array_t **dirsp) {
-     cad_array_t *dirs = *dirsp;
-     int i, n = 0;
-     char** result;
-     static const char *nodirs = NULL;
-     if (dirs == NULL) {
-          result = (char**)&nodirs;
-     } else {
-          n = dirs->count(dirs);
-          result = malloc((n + 1) * sizeof(char*));
-          for (i = 0; i < n; i++) {
-               result[i] = dirs->get(dirs, i);
-          }
-          result[n] = NULL;
-          dirs->free(dirs);
-          *dirsp = NULL;
-     }
-     return (const char * const*)result;
+static const char* const *array_to_dirs(cad_array_t *dirs) {
+     char *nodir = NULL;
+     int n = dirs->count(dirs);
+     dirs->insert(dirs, n, &nodir);
+     dirs->del(dirs, n);
+     return (const char * const*)dirs->get(dirs, 0);
 }
 
 /**
@@ -211,6 +199,7 @@ static void parse_options(int argc, char * const argv[]) {
      int option_index = 0;
      int c;
      bool_t done = false;
+     char *dir;
 
      while (!done) {
           c = getopt_long(argc, argv, "vt:VxwDHsmhdMy", long_options, &option_index);
@@ -312,25 +301,28 @@ static void parse_options(int argc, char * const argv[]) {
 
           case 20:
                if (filterdirs == NULL) {
-                    filterdirs = cad_new_array(stdlib_memory);
+                    filterdirs = cad_new_array(stdlib_memory, sizeof(char*));
                }
-               filterdirs->insert(filterdirs, filterdirs->count(filterdirs), strdup(optarg));
+               dir = strdup(optarg);
+               filterdirs->insert(filterdirs, filterdirs->count(filterdirs), &dir);
                options_set.filter_extradirs = true;
                break;
 
           case 21:
                if (fingerprintdirs == NULL) {
-                    fingerprintdirs = cad_new_array(stdlib_memory);
+                    fingerprintdirs = cad_new_array(stdlib_memory, sizeof(char*));
                }
-               fingerprintdirs->insert(fingerprintdirs, fingerprintdirs->count(fingerprintdirs), strdup(optarg));
+               dir = strdup(optarg);
+               fingerprintdirs->insert(fingerprintdirs, fingerprintdirs->count(fingerprintdirs), &dir);
                options_set.fingerprint_extradirs = true;
                break;
 
           case 22:
                if (factorydirs == NULL) {
-                    factorydirs = cad_new_array(stdlib_memory);
+                    factorydirs = cad_new_array(stdlib_memory, sizeof(char*));
                }
-               factorydirs->insert(factorydirs, factorydirs->count(factorydirs), strdup(optarg));
+               dir = strdup(optarg);
+               factorydirs->insert(factorydirs, factorydirs->count(factorydirs), &dir);
                options_set.factory_extradirs = true;
                break;
 
@@ -434,9 +426,9 @@ int main(int argc, char * const argv[]) {
      sort_factories(log);
 
      check_options_set(log, input->options_set(input), input->default_options(input), output->options_set(output), output->default_options(output));
-     options.filter_extradirs = array_to_dirs(&filterdirs);
-     options.fingerprint_extradirs = array_to_dirs(&fingerprintdirs);
-     options.factory_extradirs = array_to_dirs(&factorydirs);
+     options.filter_extradirs = array_to_dirs(filterdirs);
+     options.fingerprint_extradirs = array_to_dirs(fingerprintdirs);
+     options.factory_extradirs = array_to_dirs(factorydirs);
      input->set_options(input, options);
      output->set_options(output, options);
 

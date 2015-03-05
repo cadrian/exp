@@ -49,7 +49,7 @@ void sort_factories(logger_t log) {
           n = factories_list->count(factories_list);
           if (log(debug, "Sorted entry factories:\n")) {
                for (i = 0; i < n; i++) {
-                    f = factories_list->get(factories_list, i);
+                    f = *(entry_factory_t **)factories_list->get(factories_list, i);
                     log(debug, "%2d: %s (%d)\n", i+1, f->get_name(f), f->priority(f));
                }
           }
@@ -58,9 +58,9 @@ void sort_factories(logger_t log) {
 
 void register_factory(entry_factory_t *factory) {
      if (factories_list == NULL) {
-          factories_list = cad_new_array(stdlib_memory);
+          factories_list = cad_new_array(stdlib_memory, sizeof(entry_factory_t *));
      }
-     factories_list->insert(factories_list, factories_list->count(factories_list), factory);
+     factories_list->insert(factories_list, factories_list->count(factories_list), &factory);
      if (factories_map == NULL) {
           factories_map = cad_new_hash(stdlib_memory, cad_hash_strings);
      }
@@ -72,7 +72,7 @@ size_t entry_factories_length(void) {
 }
 
 entry_factory_t *entry_factory(int index) {
-     return factories_list->get(factories_list, index);
+     return *(entry_factory_t **)factories_list->get(factories_list, index);
 }
 
 entry_factory_t *entry_factory_named(const char *name) {

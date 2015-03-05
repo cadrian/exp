@@ -122,12 +122,12 @@ static int hash_increment(output_hash_t *this, const char *key, entry_t *value) 
      int count;
      if (entry == NULL) {
           entry = malloc(sizeof(dict_entry_t) + strlen(key) + 1);
-          entry->entries = cad_new_array(stdlib_memory);
-          this->dict->set(this->dict, key, entry);
+          entry->entries = cad_new_array(stdlib_memory, sizeof(entry_t *));
           strcpy(entry->key, key);
+          this->dict->set(this->dict, key, entry);
      }
      count = entry->entries->count(entry->entries);
-     entry->entries->insert(entry->entries, count, value);
+     entry->entries->insert(entry->entries, count, &value);
      count++; // = entry->entries->count(entry->entries);
      if (count > this->max_count) {
           this->max_count = count;
@@ -191,10 +191,12 @@ static bool_t output_hash_fingerprint_file(output_hash_t *this, int index, outpu
 static void hash_fill_(output_hash_t *this, input_file_t *file, filter_t *filter) {
      int i, n = file->entries_length(file);
      entry_t *entry;
-     const char *key;
+     const char *line, *key;
      for (i = 0; i < n; i++) {
           entry = file->entry(file, i);
-          key = filter->scrub(filter, hash_key(entry));
+          line = hash_key(entry);
+          key = filter->scrub(filter, line);
+          this->log(debug, "SCRUB|%s|%s|\n", line, key);
           hash_increment(this, key, entry);
      }
 }
@@ -350,7 +352,7 @@ static void hash_display_count(output_hash_t *this, size_t count) {
                     break;
                case sample_threshold:
                     if (count <= SAMPLE_THRESHOLD) {
-                         entry = dictentry->entries->get(dictentry->entries, 0);
+                         entry = *(entry_t **)dictentry->entries->get(dictentry->entries, 0);
                          printf("%s%lu%s:\t%s\n", color_on, (unsigned long)count, color_off, entry->logline(entry));
                     } else {
                          printf("%s%lu%s:\t%s\n", color_on, (unsigned long)count, color_off, dictentry->key);
@@ -358,7 +360,7 @@ static void hash_display_count(output_hash_t *this, size_t count) {
                     break;
                case sample_all:
                     r = rand() % count;
-                    entry = dictentry->entries->get(dictentry->entries, r);
+                    entry = *(entry_t **)dictentry->entries->get(dictentry->entries, r);
                     printf("%s%lu%s:\t%s\n", color_on, (unsigned long)count, color_off, entry->logline(entry));
                     break;
                }

@@ -63,7 +63,7 @@ static const char *impl_scrub(filter_impl_t *this, const char *line) {
      strncpy(result, line, MAX_LINE_SIZE);
      result[MAX_LINE_SIZE-1] = '\0';
      for (i = 0; i < n; i++) {
-          repl = this->replacements->get(this->replacements, i);
+          repl = *(filter_replacement_t**)this->replacements->get(this->replacements, i);
           repl->stopword->replace_all(repl->stopword, repl->replacement, result);
      }
      return result;
@@ -80,7 +80,7 @@ static void add_regexp(filter_impl_t *this, regexp_t *regexp, const char *replac
      repl->stopword = regexp;
      strcpy(repl->replacement, replacement);
      repl->replacement[n] = '\0';
-     this->replacements->insert(this->replacements, this->replacements->count(this->replacements), repl);
+     this->replacements->insert(this->replacements, this->replacements->count(this->replacements), &repl);
 }
 
 static char *split(char **regexp) {
@@ -206,7 +206,7 @@ filter_t *new_filter(logger_t log, const char * const*extradirs) {
 
      result->fn = filter_impl_fn;
      result->log = log;
-     result->replacements = cad_new_array(stdlib_memory);
+     result->replacements = cad_new_array(stdlib_memory, sizeof(filter_replacement_t*));
      result->extradirs = extradirs;
 
      return &(result->fn);

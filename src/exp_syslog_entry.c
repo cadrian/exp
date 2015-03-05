@@ -148,7 +148,7 @@ static bool_t read_regexps_(syslog_entry_factory_t *this, const char *dir, const
           for (i = 0; i < n; i++) {
                line = file->line(file, i);
                regexp = new_regexp(this->log, line->buffer, 0);
-               regexps->insert(regexps, regexps->count(regexps), regexp);
+               regexps->insert(regexps, regexps->count(regexps), &regexp);
           }
      }
 
@@ -156,7 +156,7 @@ static bool_t read_regexps_(syslog_entry_factory_t *this, const char *dir, const
 }
 
 static cad_array_t *read_regexps(syslog_entry_factory_t *this) {
-     cad_array_t *result = cad_new_array(stdlib_memory);
+     cad_array_t *result = cad_new_array(stdlib_memory, sizeof(regexp_t *));
      bool_t found = false, f;
      static char filename[MAX_LINE_SIZE];
      const char *dir;
@@ -195,7 +195,7 @@ static bool_t syslog_is_type(syslog_entry_factory_t *this, line_t *line) {
 
      n = regexps->count(regexps);
      for (i = 0; !result && i < n; i++) {
-          regexp = regexps->get(regexps, i);
+          regexp = *(regexp_t **)regexps->get(regexps, i);
           match = regexp->match(regexp, line->buffer, 0, line->length, 0);
           if (match != NULL) {
                result = this->extra_is_type(this, match);
@@ -481,10 +481,11 @@ entry_factory_t *new_snort_entry_factory(logger_t log) {
 
 entry_factory_t *new_raw_entry_factory(logger_t log) { /* is it used? */
      syslog_entry_factory_t *result = malloc(sizeof(syslog_entry_factory_t));
+     regexp_t *regexp = raw_regexp(log);
      result->fn = syslog_entry_factory_fn;
      result->log = log;
-     result->regexps = cad_new_array(stdlib_memory);
-     result->regexps->insert(result->regexps, 0, raw_regexp(log));
+     result->regexps = cad_new_array(stdlib_memory, sizeof(regexp_t *));
+     result->regexps->insert(result->regexps, 0, &regexp);
      result->regexp = NULL;
      result->name = "raw";
      result->extra_is_type = default_extra_is_type;

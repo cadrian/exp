@@ -86,7 +86,7 @@ static size_t impl_files_length(input_impl_t *this) {
 }
 
 static input_file_t *impl_file(input_impl_t *this, int index) {
-     return this->files->get(this->files, index);
+     return *(input_file_t **)this->files->get(this->files, index);
 }
 
 static int impl_file_comparator(input_file_impl_t **file1, input_file_impl_t **file2) {
@@ -106,7 +106,7 @@ static void impl_sort_files(input_impl_t *this) {
      this->files->sort(this->files, (comparator_fn)impl_file_comparator);
      if (this->log(debug, "Sorted files:\n")) {
           for (i = 0; i < n; i++) {
-               file = this->files->get(this->files, i);
+               file = *(input_file_impl_t **)this->files->get(this->files, i);
                this->log(debug, " %2d: %6lu | %4lu | %s\n", i+1, (unsigned long)file->size, (unsigned long)file->length, file->filename);
           }
      }
@@ -194,7 +194,7 @@ static input_file_impl_t *impl_parse(input_impl_t *this, const char *filename) {
      if (in != NULL) {
           result = do_parse(this, in, filename);
           if (result != NULL) {
-               this->files->insert(this->files, this->files->count(this->files), result);
+               this->files->insert(this->files, this->files->count(this->files), &result);
           }
      }
      return result;
@@ -251,6 +251,6 @@ input_t *new_input(logger_t log) {
      input_impl_t *result = malloc(sizeof(input_impl_t));
      result->fn = input_impl_fn;
      result->log = log;
-     result->files = cad_new_array(stdlib_memory);
+     result->files = cad_new_array(stdlib_memory, sizeof(input_file_t *));
      return &(result->fn);
 }

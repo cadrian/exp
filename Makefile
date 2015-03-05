@@ -42,7 +42,7 @@ target/$(PROJECT): $(OBJ) $(LIBCAD)
 target/out/%.o: src/%.c src/*.h Makefile
 	mkdir -p target/out
 	@echo "Compiling object: $<"
-	$(CC) $(CFLAGS) -I src $(LIBCADINCLUDE) -Wall -c $< -o $@
+	$(CC) $(CFLAGS) -I src $(LIBCADINCLUDE) -Wall -Werror -c $< -o $@
 
 src/_exp_entry_registry.c: src/exp_*_entry.c utils/generate_factory_registry.sh
 	@echo "Generating factory registry: $<"

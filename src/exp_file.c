@@ -43,7 +43,7 @@ static size_t impl_lines_count(file_impl_t *this) {
 }
 
 static line_t *impl_line(file_impl_t *this, int index) {
-     return this->lines->get(this->lines, index);
+     return *(line_t **)this->lines->get(this->lines, index);
 }
 
 static size_t impl_size(file_impl_t *this) {
@@ -84,14 +84,14 @@ static void read_all_lines(file_impl_t *this, FILE *in) {
      size_t count_lines_too_long = 0;
      int count = 0;
 
-     this->lines = cad_new_array(stdlib_memory);
+     this->lines = cad_new_array(stdlib_memory, sizeof(line_t *));
      this->size = 0;
 
      while ((buffer_length = fread(buffer, 1, MAX_LINE_SIZE, in)) > 0) {
           for (buffer_index = 0; buffer_index < buffer_length; buffer_index++) {
                if (buffer[buffer_index] == '\n') {
                     line = new_line(line_length, linebuf);
-                    this->lines->insert(this->lines, count++, line);
+                    this->lines->insert(this->lines, count++, &line);
                     this->size += line_length;
                     line_length = 0;
                     line_too_long_flag = false;
@@ -112,7 +112,7 @@ static void read_all_lines(file_impl_t *this, FILE *in) {
           this->log(warn, "Error during read: %s\n", strerror(errno));
      } else if (line_length > 0) {
           line = new_line(line_length, linebuf);
-          this->lines->insert(this->lines, count++, line);
+          this->lines->insert(this->lines, count++, &line);
           this->size += line_length;
      }
 
